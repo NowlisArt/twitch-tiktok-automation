@@ -21,7 +21,8 @@ STREAMERS = '''eliasn97 zarbex papaplatte trymacs canerkrd krokoboss xrohat mont
 RANK = {name: idx + 1 for idx, name in enumerate(STREAMERS)}
 # Permanent bans: BastiGHG and Trymacs already used on TikTok.
 # Previous QA sample rejected for weak narrative. Never recycle it.
-EXCLUDE_IDS = {'1885635439', 'PopularAgreeableBobaBatChest-T3Ga_Bm2CiWY5vII'}
+EXCLUDE_IDS = {'1885635439', 'PopularAgreeableBobaBatChest-T3Ga_Bm2CiWY5vII',
+               '1586086735', 'DiligentSarcasticArugulaKevinTurtle-gbC316ajn04-BalO'}
 KEYWORDS = ('witz', 'lach', 'rage', 'fail', 'wtf', 'omg', 'unfassbar', 'ausrast', 'schrei', 'haha', 'reaction', 'peinlich', 'lustig', 'unerwart')
 
 
@@ -211,6 +212,19 @@ def very_strong(clip):
     return clip['view_count'] >= 8000 and clip['view_count'] / max(1, clip['age_hours']) >= 150
 
 
+def worth_testing(clip):
+    """High-signal heuristic: do not force generic clips just to fill the calendar."""
+    title = clip['title'].lower()
+    velocity = clip['view_count'] / max(1.0, clip['age_hours'])
+    funny = any(keyword in title for keyword in KEYWORDS)
+    risk = any(keyword in title for keyword in (
+        'partner +', 'sponsor', 'vertrags', 'werbung', 'tier list',
+        'sponsored', 'ranking', 'advert'))
+    return not risk and (
+        (funny and velocity >= 60) or
+        (clip['view_count'] >= 2500 and velocity >= 150) or velocity >= 450)
+
+
 def selection_rank(clip):
     age = clip['age_hours']
     return (0 if age <= 24 else 1 if age <= 48 else 2, -score(clip))
@@ -263,6 +277,9 @@ def transcribe(path):
         condition_on_previous_text=False, vad_filter=True,
         vad_parameters=dict(min_silence_duration_ms=450))
     utterances = list(segments)
+    full_text = ' '.join(seg.text for seg in utterances).lower()
+    if re.search(r'scheidensaft|muttersaft|inzest|kinderporn|vergewaltig|nekr[oó]phil', full_text):
+        raise ValueError('Potentially unsuitable sexual/graphic clip; try another')
     reliable = [seg for seg in utterances
                 if seg.avg_logprob is not None and seg.avg_logprob > -0.95
                 and (seg.no_speech_prob is None or seg.no_speech_prob < 0.75)]
@@ -446,7 +463,7 @@ def fresh_candidates(now, used, used_urls, failed, channels):
                     pair[0], pair[1], now, int(os.getenv('MIN_VIEWS', '800'))), links)
             for clip in results:
                 if clip and clip['id'] not in used and clip['clip_slug'] not in used:
-                    if clip['age_hours'] <= 48 or very_strong(clip):
+                    if (clip['age_hours'] <= 48 or very_strong(clip)) and worth_testing(clip):
                         verified.append(clip)
         # Prefer a real number of views, strong view velocity, a fresh age and a usable length.
         verified.sort(key=selection_rank)
@@ -582,6 +599,9 @@ def self_test():
     assert 0 <= cut_start and 15 <= cut_length <= 42
     assert authorized_channels() is not None
     assert '1885635439' in EXCLUDE_IDS
+    assert '1586086735' in EXCLUDE_IDS
+    assert worth_testing(dict(example, title='Was ein WTF Moment', view_count=13000))
+    assert not worth_testing(dict(example, title='1 PARTNER + 1 STRIKE', view_count=1129, age_hours=8))
     print('SELFTEST OK: age checks, fallback, 15-42s speech cuts, subtitles and limits')
 
 
