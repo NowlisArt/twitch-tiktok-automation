@@ -1,0 +1,9 @@
+{
+  "decision": "approved_for_end_to_end_test",
+  "user_authorized_live_test": true,
+  "qa_run_id": 38823646939,
+  "qa_sample_folder": "montanablack88-jazzygentletigerwoop-ienobmqibjwwwdw2",
+  "original_clip_slug": "JazzyGentleTigerWOOP-ieNobMQibJWWwdW2",
+  "review_notes": "Reiner Live-End-to-End-Test auf ausdrücklichen Nutzerwunsch: 16,7 s, 1080x1920, AAC-Tonspur, Bildfolge und Untertitel technisch geprüft. Untertitel nicht vollständig sprachlich gegengehört, kreative Qualität nicht freigegeben; kein Duplikat in aktuellen Plänen.",
+  "upload_purpose": "Public TikTok integration smoke test via Metricool; no claim of editorial perfection"
+}
