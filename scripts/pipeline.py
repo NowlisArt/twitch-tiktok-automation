@@ -377,6 +377,55 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     path.write_text(header + '\n'.join(events) + '\n', encoding='utf-8')
     return len(events) >= 3
 
+def find_face_focus(source, duration):
+    """Best-effort reaction camera framing; leave original overview visible below."""
+    try:
+        import cv2
+        video = cv2.VideoCapture(str(source))
+        if not video.isOpened():
+            return None
+        width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        cascade = cv2.CascadeClassifier(
+            cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+        faces = []
+        for fraction in (0.2, 0.45, 0.7):
+            video.set(cv2.CAP_PROP_POS_MSEC, max(0, duration*fraction*1000))
+            ok, frame = video.read()
+            if not ok:
+                continue
+            small_width = min(width, 960)
+            factor = small_width/width
+            small = cv2.resize(frame, (small_width, int(height*factor)))
+            gray = cv2.cvtColor(small, cv2.COLOR_BGR2GRAY)
+            found = cascade.detectMultiScale(gray, scaleFactor=1.08,
+                                             minNeighbors=5, minSize=(30, 30))
+            for x,y,w,h in found:
+                faces.append((int(x/factor),int(y/factor),
+                              int(w/factor),int(h/factor)))
+        video.release()
+        if not faces:
+            return None
+        # Pick prominent face; do not crop too tightly around head.
+        fx, fy, fw, fh = max(faces, key=lambda box: box[2]*box[3])
+        cw = min(width, max(480, int(fw*5)))
+        ch = min(height, max(380, int(fh*5)))
+        ratio = 1080/860
+        if cw/ch < ratio:
+            cw = min(width, int(ch*ratio))
+        else:
+            ch = min(height, int(cw/ratio))
+        left = min(max(0, int(fx+fw/2-cw/2)), max(0,width-cw))
+        top = min(max(0, int(fy+fh/2-ch/2)), max(0,height-ch))
+        if cw < 100 or ch < 100:
+            return None
+        print('FOCUS REGION', left, top, cw, ch, 'source', width,height, flush=True)
+        return left, top, cw, ch
+    except Exception as exc:
+        print('WARN face detector fallback to central gameplay:', repr(exc)[:150], flush=True)
+        return None
+
+
 def render(clip, source):
     duration = probe(source)
     if not 15 <= duration <= 65:
@@ -391,13 +440,21 @@ def render(clip, source):
         encoding='utf-8')
     if not write_subs(words, start, length, OUT / 'subs.ass'):
         raise ValueError('Subtitles are too sparse; move to next candidate')
-    # 2-level layout: larger focal crop plus complete wide view so facecams stay visible.
-    # Exact facecam auto-detection is not supported; visual QA still required.
+    # Focus on a reaction face if detected, otherwise central gameplay; keep wide view below.
+    focus_roi = find_face_focus(source, duration)
+    if focus_roi:
+        left, top, cw, ch = focus_roi
+        focus_transform = (
+            f'crop={cw}:{ch}:{left}:{top},scale=1080:860:'
+            'force_original_aspect_ratio=increase,crop=1080:860,setsar=1')
+    else:
+        focus_transform = (
+            'scale=1080:860:force_original_aspect_ratio=increase,'
+            'crop=1080:860,setsar=1')
     filters = ('[0:v]split=3[bgsource][zoomsource][wide];'
                '[bgsource]scale=1080:1920:force_original_aspect_ratio=increase,'
                'crop=1080:1920,boxblur=18:8[bg];'
-               '[zoomsource]scale=1080:860:force_original_aspect_ratio=increase,'
-               'crop=1080:860,setsar=1[focus];'
+               '[zoomsource]' + focus_transform + '[focus];'
                '[wide]scale=1080:610:force_original_aspect_ratio=decrease,'
                'pad=1080:610:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1[overview];'
                '[bg][focus]overlay=0:285[t1];'
