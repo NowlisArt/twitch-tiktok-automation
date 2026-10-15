@@ -1,10 +1,14 @@
 # NowlisArt/twitch-tiktok-automation
-# Twitch clip research and editing only. TikTok publishing is handled separately by Metricool.
+# Adapted from the supplied Twitch Auto20 GitHub Actions workflow.
+# This file uses this repository's scripts/pipeline.py instead of embedding
+# another obsolete 400+ line copy of the Python pipeline.
+# This workflow prepares videos only. It does not publish TikTok posts.
 name: Twitch Auto20 | NowlisArt
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
       - .github/workflows/tiktok.yml
       - scripts/pipeline.py
@@ -12,29 +16,30 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'Select a safe test, QA render, or prepare approved clips'
+        description: "Run a test, render a QA video, or prepare candidates"
         required: true
-        default: selftest
         type: choice
+        default: selftest
         options:
           - selftest
           - diagnose
           - render-test
           - prepare
   schedule:
-    # Hourly, all year. Python respects the 09:00-22:59 UTC production window
-    # and the daily/monthly limits configured in scripts/pipeline.py.
+    # Like the original template: evaluate new clips every hour.
+    # The Python script additionally enforces a UTC production window.
     - cron: '19 * * * *'
 
 permissions:
   contents: read
 
 concurrency:
-  group: twitch-nowlisart-main
+  group: twitch-auto20-nowlisart-main
   cancel-in-progress: false
 
 jobs:
   checks:
+    name: Check Python pipeline
     if: ${{ github.repository == 'NowlisArt/twitch-tiktok-automation' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     timeout-minutes: 7
@@ -45,12 +50,13 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Syntax pruefen
+      - name: Python-Syntax pruefen
         run: python -m py_compile scripts/pipeline.py
       - name: Pipeline-Selbsttest
         run: python scripts/pipeline.py --self-test
 
   diagnose:
+    name: Twitch-Verbindung pruefen (keine Downloads)
     needs: checks
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'diagnose' }}
     runs-on: ubuntu-latest
@@ -60,32 +66,36 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Twitch-Diagnose vorbereiten
+      - name: yt-dlp installieren
         run: python -m pip install --upgrade yt-dlp
-      - name: Clip-URLs und Original-Metadaten pruefen
+      - name: Original-Links und Metadaten pruefen
         run: python scripts/pipeline.py --diagnose
 
   render_test:
+    name: Ein 9:16-Testvideo erstellen (keine Veroeffentlichung)
     needs: checks
-    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.mode == 'render-test') || (github.event_name == 'push' && github.event.head_commit.message == 'Run QA render via push (no posting)') }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'render-test' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Video-Tools installieren
+      - name: Clip-Tools installieren
+        shell: bash
         run: |
+          set -euo pipefail
           python -m pip install --upgrade yt-dlp 'faster-whisper==1.2.1' 'av>=11,<19' 'opencv-python-headless==4.11.0.86'
           python -m pip check
           sudo apt-get update -qq
           sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
-      - name: Frischen Clip suchen und als Testvideo schneiden
+      - name: Clip suchen, Ersatz versuchen und schneiden
         env:
           MIN_VIEWS: '800'
+          PYTHONUNBUFFERED: '1'
         run: python scripts/pipeline.py --render-test
-      - name: Private Testdateien zur Sichtpruefung sichern
+      - name: Video und Untertitel als privates Testartefakt speichern
         uses: actions/upload-artifact@v4
         with:
           name: twitch-video-qa
@@ -98,56 +108,63 @@ jobs:
           retention-days: 7
 
   prepare:
+    name: Automatische Clip-Vorbereitung (KEIN TikTok-Upload)
     needs: checks
     if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'prepare') }}
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 60
     permissions:
       contents: write
+    env:
+      MIN_VIEWS: '800'
+      PYTHONUNBUFFERED: '1'
     steps:
-      - name: Repository laden und Verlauf fuer Duplikatsperre behalten
+      - name: Repository laden
         uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
           persist-credentials: true
-      - uses: actions/setup-python@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Clip- und Video-Tools installieren
+      - name: Clip-Tools installieren
+        shell: bash
         run: |
+          set -euo pipefail
           python -m pip install --upgrade yt-dlp 'faster-whisper==1.2.1' 'av>=11,<19' 'opencv-python-headless==4.11.0.86'
           python -m pip check
           sudo apt-get update -qq
           sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
-      - name: Frische Clips finden, Ersatzclips versuchen und MP4s vorbereiten
+      - name: Frische Twitch-Clips pruefen, Ersatzclips schneiden und GitHub Release erstellen
         env:
           ENABLE_PREPARATION: 'true'
-          MIN_VIEWS: '800'
           GH_TOKEN: ${{ github.token }}
         run: python scripts/pipeline.py
-      - name: Verarbeitete IDs und Fehlversuche dauerhaft speichern
+      - name: Verarbeitete Clips und Fehlversuche gegen Duplikate speichern
         if: ${{ always() }}
         shell: bash
         run: |
           set -euo pipefail
           if [ ! -f state/auto20.json ]; then
-            echo "No state file was created; nothing to persist."
+            echo 'Keine neue Queue-Datei vorhanden.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add state/auto20.json
           if ! git diff --cached --quiet; then
-            git commit -m 'Persist clip IDs and retry backoff [skip ci]'
+            git commit -m 'Auto20: Zustand und Duplikatsperre aktualisieren [skip ci]'
             git pull --rebase origin main
             git push origin HEAD:main
           fi
-      - name: Sicherheitsstatus anzeigen
+      - name: Produktionsstatus anzeigen
         if: ${{ always() }}
+        shell: bash
         run: |
-          echo '## NowlisArt clip preparation' >> "$GITHUB_STEP_SUMMARY"
-          echo 'Rendered videos are QA candidates, not verified TikTok posts.' >> "$GITHUB_STEP_SUMMARY"
-          echo 'TikTok autopublishing via Metricool is NOT enabled by this workflow.' >> "$GITHUB_STEP_SUMMARY"
-          echo 'Watchlist: 50 seed channels; no automatic TwitchTracker ranking sync.' >> "$GITHUB_STEP_SUMMARY"
-          echo 'State: state/auto20.json (if created)' >> "$GITHUB_STEP_SUMMARY"
+          echo '## Twitch Auto20 | NowlisArt' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Prepared candidates are not quality-approved or posted to TikTok.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Watchlist: 50 static channels, not a live TwitchTracker ranking.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Queue: state/auto20.json (if generated)' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Metricool/TikTok posting is deliberately separate.' >> "$GITHUB_STEP_SUMMARY"
