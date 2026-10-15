@@ -420,6 +420,54 @@ def release(clip, video, cover, now):
     return video_url, prefix + cover_name
 
 
+def fresh_candidates(now, used, used_urls, failed, channels):
+    """Two-stage discovery; the seven-day page is only a fallback source."""
+    inspected = set()
+    for phase in ('24hr', '7d'):
+        links = [(channel, url) for channel, url in fetch_candidates(phase, channels)
+                 if twitch_slug(url) not in inspected
+                 and twitch_slug(url) not in used and url not in used_urls
+                 and twitch_slug(url) not in failed]
+        inspected.update(twitch_slug(url) for _, url in links)
+        verified = []
+        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+            results = pool.map(
+                lambda pair: inspect_original(
+                    pair[0], pair[1], now, int(os.getenv('MIN_VIEWS', '800'))), links)
+            for clip in results:
+                if clip and clip['id'] not in used and clip['clip_slug'] not in used:
+                    if clip['age_hours'] <= 48 or very_strong(clip):
+                        verified.append(clip)
+        # Prefer a real number of views, strong view velocity, a fresh age and a usable length.
+        verified.sort(key=selection_rank)
+        print('VERIFIED', phase, len(verified), 'candidate(s)', flush=True)
+        for clip in verified[:20]:
+            print('QUALIFIED', phase, clip['channel_login'], clip['id'],
+                  round(clip['age_hours'], 1), clip['view_count'], flush=True)
+        yield phase, verified
+
+
+def current_failed_ids(state, now):
+    recent = {}
+    for key, rec in state.get('failed_attempts', {}).items():
+        try:
+            stamp = dt.datetime.fromisoformat(rec['at'].replace('Z', '+00:00'))
+            if (now - stamp).total_seconds() < 6 * 3600:
+                recent[key] = rec
+        except (KeyError, ValueError, TypeError):
+            continue
+    state['failed_attempts'] = recent
+    return set(recent)
+
+
+def remember_failure(state, clip, now, exc):
+    state['failed_attempts'][clip['clip_slug']] = {
+        'at': iso(now), 'streamer': clip['channel_login'], 'reason': repr(exc)[:200]}
+    save_state(state)
+    print('FAILED CANDIDATE - NEXT CLIP', clip['channel_login'],
+          clip['clip_slug'], repr(exc)[:170], file=sys.stderr, flush=True)
+
+
 def main():
     if os.getenv('ENABLE_PREPARATION') != 'true':
         print('SKIP: ENABLE_PREPARATION != true')
@@ -429,67 +477,76 @@ def main():
     if not allowed:
         print('SKIP:', reason)
         return
+    channels = authorized_channels()
+    if not channels:
+        print('SKIP: no approved channels. No videos prepared.')
+        return
     used, used_urls = used_ids(state)
-    candidates = [(channel, url) for channel, url in fetch_candidates() if twitch_slug(url) not in used and url not in used_urls]
-    print('Discovered candidate URLs:', len(candidates))
-    # Check original per-clip Twitch metadata, not GitHub queue timestamps.
-    verified = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
-        for clip in pool.map(lambda pair: inspect_original(pair[0], pair[1], now, int(os.getenv('MIN_VIEWS', '800'))), candidates):
-            if clip and clip['id'] not in used and clip['clip_slug'] not in used:
-                if clip['age_hours'] <= 48 or very_strong(clip):
-                    verified.append(clip)
-    verified.sort(key=selection_rank)
-    print('Verified recent candidates:', len(verified))
-    # Audit every qualified fresh candidate, including those not rendered this run.
-    for candidate in verified[:20]:
-        print('QUALIFIED FRESH CLIP:', json.dumps({
-            'id': candidate['id'], 'streamer': candidate['channel_login'],
-            'source_url': candidate['url'], 'views': candidate['view_count'],
-            'original_created_at': candidate['original_created_at'],
-            'age_hours': round(candidate['age_hours'], 2),
-            'duration': candidate['duration']
-        }, ensure_ascii=False))
+    failed = current_failed_ids(state, now)
     monthly = [r for r in state['created'] if r.get('created_at', '').startswith(now.strftime('%Y-%m'))]
     daily = [r for r in monthly if r.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))]
-    remaining = min(max(0, 2 - len(daily)), max(0, 60 - len(monthly)))
-    prepared = 0
-    for clip in verified[:20]:
-        try:
-            source = download(clip)
-            movie, cover, has_subs = render(clip, source)
-            if not has_subs:
-                raise ValueError('Pflicht-Untertitel fehlen')
-            video_url, cover_url = release(clip, movie, cover, now)
-            state['created'].append({
-                'clip_id': clip['id'], 'clip_slug': clip['clip_slug'],
-                'streamer': clip['channel_login'], 'source_url': clip['url'],
-                'original_title': clip['title'], 'hook': headline(clip), 'caption': caption(clip),
-                'views_at_selection': clip['view_count'], 'original_duration': clip['duration'],
-                'original_created_at': clip['original_created_at'], 'video_url': video_url,
-                'cover_url': cover_url, 'transcript_subtitles': has_subs,
-                'created_at': iso(now), 'status': 'awaiting_metricool',
-                'rights_status': 'user_asserted_not_independently_verified',
-                'video_review_status': 'metadata_only',
-                'editing_status': 'rendered_9x16_with_burned_subtitles',
-                'subtitle_verified': False, 'subtitle_review_status': 'auto_generated_needs_manual_review'
-            })
-            state['processed_ids'].extend([clip['id'], clip['clip_slug']])
-            save_state(state)
-            print('VIDEO READY (NOT POSTED TO TIKTOK):', video_url)
-            summary = os.getenv('GITHUB_STEP_SUMMARY')
-            if summary:
-                with open(summary, 'a', encoding='utf-8') as handle:
-                    handle.write(f'## Neuer Clip: {clip["channel_login"]}\n- {clip["view_count"]} Twitch-Views\n- Originalalter: {clip["age_hours"]:.1f} Stunden\n- [MP4]({video_url})\n- **Noch nicht bei TikTok gepostet.**\n')
-            prepared += 1
-            if prepared >= remaining:
+    remaining = min(max(0, 2-len(daily)), max(0, 60-len(monthly)))
+    prepared, attempted = 0, 0
+    for phase, verified in fresh_candidates(now, used, used_urls, failed, channels):
+        attempts_this_phase = 0
+        for clip in verified:
+            if prepared >= remaining or attempts_this_phase >= 12:
                 break
-        except Exception as exc:
-            print('WARN video failed:', repr(exc), file=sys.stderr)
+            if clip['clip_slug'] in failed or clip['id'] in used:
+                continue
+            # Original created_at is never inferred from the GitHub queue timestamp.
+            if (now_utc() - dt.datetime.fromisoformat(
+                    clip['original_created_at'].replace('Z', '+00:00'))).total_seconds() > 72*3600:
+                continue
+            attempted += 1
+            attempts_this_phase += 1
+            try:
+                source = download(clip)
+                movie, cover, has_subs = render(clip, source)
+                if not has_subs:
+                    raise ValueError('Subtitles missing')
+                video_url, cover_url = release(clip, movie, cover, now)
+                state['created'].append({
+                    'clip_id': clip['id'], 'clip_slug': clip['clip_slug'],
+                    'streamer': clip['channel_login'], 'source_url': clip['url'],
+                    'original_title': clip['title'], 'hook': headline(clip),
+                    'caption': caption(clip), 'views_at_selection': clip['view_count'],
+                    'original_duration': clip['duration'],
+                    'original_created_at': clip['original_created_at'],
+                    'video_url': video_url, 'cover_url': cover_url,
+                    'transcript_subtitles': has_subs, 'created_at': iso(now),
+                    'status': 'awaiting_review_not_posted',
+                    'rights_status': 'user_asserted_not_independently_verified',
+                    'video_review_status': 'metadata_only',
+                    'editing_status': '9x16_focal_plus_fullscreen_cropped_15_42s',
+                    'subtitle_verified': False,
+                    'subtitle_review_status': 'auto_generated_needs_manual_review'
+                })
+                state['processed_ids'].extend([clip['id'], clip['clip_slug']])
+                used.update([clip['id'], clip['clip_slug']])
+                save_state(state)
+                print('VIDEO READY (NOT POSTED TO TIKTOK):', video_url, flush=True)
+                summary = os.getenv('GITHUB_STEP_SUMMARY')
+                if summary:
+                    with open(summary, 'a', encoding='utf-8') as handle:
+                        handle.write(
+                            f'## New candidate: {clip["channel_login"]}\n'
+                            f'- Twitch views: {clip["view_count"]}\n'
+                            f'- Original age: {clip["age_hours"]:.1f} hours\n'
+                            f'- [Rendered MP4]({video_url})\n'
+                            '- **NOT posted to TikTok. Manual QA needed.**\n')
+                prepared += 1
+            except Exception as exc:
+                remember_failure(state, clip, now, exc)
+                failed.add(clip['clip_slug'])
+        if prepared >= remaining:
+            break
+    print('PREPARATION SUMMARY', json.dumps({
+        'channels_considered': len(channels), 'attempted': attempted,
+        'produced': prepared, 'target_this_run': remaining,
+        'tiktok_posts': 0}, ensure_ascii=False), flush=True)
     if not prepared:
-        print('No eligible new clip produced. No TikTok posting.')
-    else:
-        print('TOTAL NEW READY CLIPS:', prepared, '— still no automatic TikTok posting.')
+        print('No suitable new clip could be rendered; do NOT recycle old clips.')
 
 
 def self_test():
@@ -509,53 +566,55 @@ def self_test():
     assert not can_prepare({'created': [example_record, example_record], 'processed_ids': []},
                            dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
     assert 'Quelle:' not in caption(dict(example, title='Quelle: https://example.org Mega fail'))
-    print('SELFTEST OK: 50 channels, verified age, mandatory subtitles, replacement buffer, captions, limits')
+    sample_words = [(i*1.1, i*1.1+0.6, ('word.' if i in (9, 19, 29, 39) else 'word'))
+                    for i in range(40)]
+    cut_start, cut_length = pick_window(44, sample_words)
+    assert 0 <= cut_start and 15 <= cut_length <= 42
+    assert authorized_channels() is not None
+    print('SELFTEST OK: age checks, fallback, 15-42s speech cuts, subtitles and limits')
 
 
 def render_test():
-    """Build one QA sample as an Actions artifact: no Release, queue entry or TikTok."""
+    """Render one QA sample, retry other clips and sources, never publish it."""
     now = now_utc()
-    channels = ('papaplatte', 'eliasn97', 'trymacs', 'krokoboss')
-    urls = []
-    for channel in channels:
-        urls.extend(channel_urls(channel))
-    unique = list({link: (channel, link) for channel, link in urls}.values())
-    verified = []
-    print('SAFE RENDER INPUT LINKS', len(unique), flush=True)
-    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
-        for clip in pool.map(lambda pair: inspect_original(pair[0], pair[1], now, 800), unique):
-            if clip and (clip['age_hours'] <= 48 or very_strong(clip)):
-                verified.append(clip)
-    verified.sort(key=selection_rank)
-    print('SAFE RENDER VERIFIED', len(verified), flush=True)
-    for clip in verified[:8]:
-        try:
-            print('SAFE RENDER ATTEMPT', clip['channel_login'], clip['id'], flush=True)
-            source = download(clip)
-            movie, cover, has_subs = render(clip, source)
-            if not has_subs:
-                raise ValueError('No subtitles')
-            manifest = {
-                'sample_only': True, 'posted_to_tiktok': False,
-                'no_public_release': True,
-                'streamer': clip['channel_login'],
-                'original_clip_url': clip['url'],
-                'original_created_at': clip['original_created_at'],
-                'original_age_hours_at_selection': round(clip['age_hours'], 2),
-                'original_views_at_selection': clip['view_count'],
-                'original_duration': clip['duration'],
-                'video_file': str(movie),
-                'cover_file': str(cover),
-                'subtitle_status': 'auto_generated_needs_review',
-                'quality_review': 'not_performed'
-            }
-            (OUT / 'test_manifest.json').write_text(
-                json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-            print('SAFE RENDER READY', json.dumps(manifest, ensure_ascii=False), flush=True)
-            return
-        except Exception as exc:
-            print('SAFE RENDER FAILED, trying next candidate', repr(exc), file=sys.stderr, flush=True)
-    raise SystemExit('No safe sample rendered. Check logs for clip/download/ffmpeg errors.')
+    channels = authorized_channels()
+    if not channels:
+        raise SystemExit('No approved channels for safe render test')
+    attempted = 0
+    for phase, verified in fresh_candidates(now, set(), set(), set(), channels):
+        for clip in verified:
+            if attempted >= 12:
+                break
+            attempted += 1
+            try:
+                print('SAFE RENDER ATTEMPT', phase, clip['channel_login'], clip['id'], flush=True)
+                source = download(clip)
+                movie, cover, has_subs = render(clip, source)
+                if not has_subs:
+                    raise ValueError('No subtitles')
+                manifest = {
+                    'sample_only': True, 'posted_to_tiktok': False,
+                    'no_public_release': True, 'streamer': clip['channel_login'],
+                    'original_clip_url': clip['url'],
+                    'original_created_at': clip['original_created_at'],
+                    'original_age_hours_at_selection': round(clip['age_hours'], 2),
+                    'original_views_at_selection': clip['view_count'],
+                    'original_duration': clip['duration'], 'rendered_duration': probe(movie),
+                    'video_file': str(movie), 'cover_file': str(cover),
+                    'subtitle_status': 'auto_generated_needs_review',
+                    'quality_review': 'not_performed'
+                }
+                (OUT / 'test_manifest.json').write_text(
+                    json.dumps(manifest, ensure_ascii=False, indent=2) + '\n',
+                    encoding='utf-8')
+                print('SAFE RENDER READY', json.dumps(manifest, ensure_ascii=False), flush=True)
+                return
+            except Exception as exc:
+                print('SAFE RENDER FAILED - NEXT CLIP', clip['channel_login'],
+                      repr(exc), file=sys.stderr, flush=True)
+        if attempted >= 12:
+            break
+    raise SystemExit('No eligible sample could be rendered. No posting; inspect logs.')
 
 
 def source_diagnostic():
