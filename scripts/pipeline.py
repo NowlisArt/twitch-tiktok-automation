@@ -148,6 +148,18 @@ def inspect_original(channel, link, now, min_views=800):
     try:
         result = run(['yt-dlp', '--no-warnings', '--no-playlist', '--skip-download', '--dump-single-json', link], capture_output=True, timeout=45)
         info = json.loads(result.stdout)
+        if os.getenv('DIAG_SOURCE_METADATA') == 'true':
+            print('DIAGNOSTIC ORIGINAL META', json.dumps({
+                'url': link, 'id': info.get('id'),
+                'extractor_key': info.get('extractor_key'),
+                'view_count': info.get('view_count'),
+                'duration': info.get('duration'),
+                'timestamp': info.get('timestamp'),
+                'upload_date': info.get('upload_date'),
+                'release_timestamp': info.get('release_timestamp'),
+                'webpage_url': info.get('webpage_url'),
+                'title': info.get('title')
+            }, ensure_ascii=False), flush=True)
         clip_url = info.get('webpage_url') or link
         current_slug = twitch_slug(clip_url) or twitch_slug(link)
         source_id = str(info.get('id') or current_slug or '')
@@ -443,6 +455,7 @@ def source_diagnostic():
     found = 0
     confirmed = 0
     now = now_utc()
+    os.environ['DIAG_SOURCE_METADATA'] = 'true'
     for channel in channels:
         links = channel_urls(channel)
         print('DIAGNOSTIC CHANNEL', channel, 'clip_links:', len(links), flush=True)
