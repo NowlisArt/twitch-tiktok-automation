@@ -93,22 +93,29 @@ def can_prepare(state, now, event='schedule'):
 
 
 def channel_urls(channel):
-    """Discover candidates; this listing alone does NOT verify clip age or views."""
-    source = f'https://www.twitch.tv/{channel}/clips?filter=clips&range=7d'
-    try:
-        proc = run(['yt-dlp', '--no-warnings', '--flat-playlist', '--playlist-end', '30', '--dump-single-json', source], capture_output=True, timeout=65)
-        data = json.loads(proc.stdout)
-        found = []
-        for item in data.get('entries') or []:
-            if not isinstance(item, dict):
-                continue
-            link = item.get('webpage_url') or item.get('url') or ''
-            if isinstance(link, str) and twitch_slug(link):
-                found.append((channel, link))
-        return found[:5]  # Five candidates per channel for automatic replacement
-    except Exception as exc:
-        print('WARN listing', channel, repr(exc)[:140], file=sys.stderr)
-        return []
+    """Prioritize 24h clip list; sample 7d list only for older fallback clips."""
+    found = []
+    seen = set()
+    for range_code, max_take in (('24hr', 7), ('7d', 5)):
+        source = f'https://www.twitch.tv/{channel}/clips?filter=clips&range={range_code}'
+        try:
+            proc = run(['yt-dlp', '--no-warnings', '--flat-playlist', '--playlist-end', '20',
+                        '--dump-single-json', source], capture_output=True, timeout=65)
+            data = json.loads(proc.stdout)
+            selected = 0
+            for item in data.get('entries') or []:
+                if not isinstance(item, dict):
+                    continue
+                link = item.get('webpage_url') or item.get('url') or ''
+                if isinstance(link, str) and twitch_slug(link) and twitch_slug(link) not in seen:
+                    found.append((channel, link))
+                    seen.add(twitch_slug(link))
+                    selected += 1
+                    if selected >= max_take:
+                        break
+        except Exception as exc:
+            print('WARN listing', channel, range_code, repr(exc)[:140], file=sys.stderr)
+    return found
 
 
 def fetch_candidates():
