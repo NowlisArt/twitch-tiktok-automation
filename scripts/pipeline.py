@@ -129,7 +129,7 @@ def channel_urls(channel, range_code='24hr'):
             url = item.get('webpage_url') or item.get('url') or ''
             if isinstance(url, str) and twitch_slug(url):
                 links.append((channel, url))
-        return list(dict.fromkeys(links))[:(15 if range_code == '24hr' else 20)]
+        return list(dict.fromkeys(links))[:(20 if range_code == '24hr' else 35)]
     except Exception as exc:
         print('WARN listing', channel, range_code, repr(exc)[:150], file=sys.stderr, flush=True)
         return []
