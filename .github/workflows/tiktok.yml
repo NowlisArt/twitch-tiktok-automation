@@ -13,6 +13,7 @@ on:
       - .github/workflows/tiktok.yml
       - scripts/pipeline.py
       - config/approved_channels.txt
+      - config/rejected_clips.txt
   workflow_dispatch:
     inputs:
       mode:
@@ -94,6 +95,7 @@ jobs:
         env:
           MIN_VIEWS: '800'
           QA_SAMPLE_COUNT: '2'
+          ASR_MODEL: 'medium'
           PYTHONUNBUFFERED: '1'
         run: python scripts/pipeline.py --render-test
       - name: Video und Untertitel als privates Testartefakt speichern
@@ -119,6 +121,7 @@ jobs:
       contents: write
     env:
       MIN_VIEWS: '800'
+      ASR_MODEL: 'medium'
       PYTHONUNBUFFERED: '1'
     steps:
       - name: Repository laden
