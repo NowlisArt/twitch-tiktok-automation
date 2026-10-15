@@ -1,0 +1,14 @@
+# Manuell abgelehnte Clips aus der Bild- und Untertitelpruefung.
+# Twitch-Clip-ID und / oder Slug pro Zeile. Diese nicht erneut rendern/posten.
+# Trymacs: unpassende Pointe und Transkriptionsfehler (frueherer QA-Test)
+1885635439
+PopularAgreeableBobaBatChest-T3Ga_Bm2CiWY5vII
+# EliasN97: keine klare Pointe, generische Hook und falsche ASR-Untertitel
+1971178535
+JazzyRoughDadMcaT-0BGiWmmWGrinz4ZP
+# Coachlim: Insiderkontext und zahlreiche ASR-Fehler
+2845373187
+AliveCautiousMonitorPJSalt-_khBUBf020YdG7yv
+# MontanaBlack: fehlende starke Pointe trotz technisch gutem Schnitt
+86542195
+ThirstyThankfulMuleMcaT-szXm4yaw1IPwFVde
