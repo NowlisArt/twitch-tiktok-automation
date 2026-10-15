@@ -93,6 +93,7 @@ jobs:
       - name: Clip suchen, Ersatz versuchen und schneiden
         env:
           MIN_VIEWS: '800'
+          QA_SAMPLE_COUNT: '2'
           PYTHONUNBUFFERED: '1'
         run: python scripts/pipeline.py --render-test
       - name: Video und Untertitel als privates Testartefakt speichern
@@ -104,6 +105,7 @@ jobs:
             rendered/cover.jpg
             rendered/subs.ass
             rendered/test_manifest.json
+            rendered/qa_samples/**
           if-no-files-found: error
           retention-days: 7
 
