@@ -250,8 +250,21 @@ def worth_testing(clip):
 
 
 def selection_rank(clip):
-    age = clip['age_hours']
-    return (0 if age <= 24 else 1 if age <= 48 else 2, -score(clip))
+    """Prefer clips with verified high views across the allowed time window."""
+    age, views = clip['age_hours'], clip['view_count']
+    if views >= 5000 and age <= 48:
+        tier = 0
+    elif views >= 3000 and age <= 48:
+        tier = 1
+    elif views >= 1500 and age <= 24:
+        tier = 2
+    elif age <= 24:
+        tier = 3
+    elif age <= 48:
+        tier = 4
+    else:
+        tier = 5
+    return (tier, -score(clip), -views, age)
 
 
 def headline(clip):
@@ -703,6 +716,8 @@ def self_test():
     assert worth_testing(dict(example, title='Normale Situation', age_hours=22, view_count=909))
     assert not worth_testing(dict(example, title='Sponsored advertisement', age_hours=5, view_count=8000))
     assert not worth_testing(dict(example, title='Normale Situation', age_hours=52, view_count=909))
+    assert selection_rank(dict(example, age_hours=36, view_count=9000)) < selection_rank(
+        dict(example, age_hours=8, view_count=800))
     assert '1885635439' in EXCLUDE_IDS
     assert '1586086735' in EXCLUDE_IDS
     assert worth_testing(dict(example, title='Was ein WTF Moment', view_count=13000))
@@ -712,63 +727,77 @@ def self_test():
 
 
 def render_test():
-    """Render up to two QA samples from different clips; never publish anything."""
+    """Find and prepare several ranked QA samples. Never post to TikTok."""
     now = now_utc()
     channels = authorized_channels()
     if not channels:
         raise SystemExit('No approved channels for safe render test')
     known, used_urls = used_ids(read_state())
     attempts, produced = 0, 0
-    target = min(3, max(1, int(os.getenv('QA_SAMPLE_COUNT', '2'))))
-    for phase, verified in fresh_candidates(now, known, used_urls, set(EXCLUDE_IDS), channels):
-        for clip in verified:
-            if attempts >= 10 or produced >= target:
-                break
-            attempts += 1
-            try:
-                print('SAFE RENDER ATTEMPT', phase, clip['channel_login'], clip['id'], flush=True)
-                source = download(clip)
-                movie, cover, has_subs = render(clip, source)
-                if not has_subs:
-                    raise ValueError('No subtitles')
-                sample_dir = OUT / 'qa_samples' / slug(clip['channel_login'] + '-' + clip['clip_slug'], 90)
-                sample_dir.mkdir(parents=True, exist_ok=True)
-                target_movie, target_cover, target_subtitles = (
-                    sample_dir / 'tiktok.mp4', sample_dir / 'cover.jpg', sample_dir / 'subs.ass')
-                target_movie.write_bytes(movie.read_bytes())
-                target_cover.write_bytes(cover.read_bytes())
-                target_subtitles.write_bytes((OUT / 'subs.ass').read_bytes())
-                manifest = {
-                    'sample_only': True, 'posted_to_tiktok': False,
-                    'no_public_release': True,
-                    'streamer': clip['channel_login'],
-                    'original_clip_url': clip['url'],
-                    'original_created_at': clip['original_created_at'],
-                    'original_age_hours_at_selection': round(clip['age_hours'], 2),
-                    'original_views_at_selection': clip['view_count'],
-                    'original_duration': clip['duration'],
-                    'rendered_duration': probe(target_movie),
-                    'video_file': str(target_movie), 'cover_file': str(target_cover),
-                    'subtitle_status': 'auto_generated_needs_review',
-                    'quality_review': 'not_performed',
-                    'editing_version': 'v2_small_asr_speech_aware_focal'
-                }
-                (sample_dir / 'test_manifest.json').write_text(
-                    json.dumps(manifest, ensure_ascii=False, indent=2)+'\n',
-                    encoding='utf-8')
-                (OUT / 'test_manifest.json').write_text(
-                    json.dumps(manifest, ensure_ascii=False, indent=2)+'\n',
-                    encoding='utf-8')
-                print('SAFE RENDER READY', json.dumps(manifest, ensure_ascii=False), flush=True)
-                known.update([clip['id'], clip['clip_slug']])
-                produced += 1
-            except Exception as exc:
-                print('SAFE RENDER FAILED - NEXT CLIP', clip['channel_login'],
-                      repr(exc), file=sys.stderr, flush=True)
-        if attempts >= 10 or produced >= target:
+    target = min(4, max(1, int(os.getenv('QA_SAMPLE_COUNT', '3'))))
+    discovered = []
+    for phase, verified in fresh_candidates(
+            now, known, used_urls, set(EXCLUDE_IDS) | rejected_clips(), channels):
+        discovered.extend((phase, clip) for clip in verified)
+    discovered.sort(key=lambda item: selection_rank(item[1]))
+    print('QA GLOBAL RANKING', json.dumps([
+        {'channel': clip['channel_login'], 'views': clip['view_count'],
+         'age': round(clip['age_hours'], 1), 'phase': phase}
+        for phase, clip in discovered[:20]], ensure_ascii=False), flush=True)
+    for phase, clip in discovered:
+        if attempts >= 16 or produced >= target:
             break
+        attempts += 1
+        try:
+            if (now_utc() - dt.datetime.fromisoformat(
+                    clip['original_created_at'].replace('Z', '+00:00'))).total_seconds() > 72*3600:
+                print('SAFE RENDER SKIP: clip too old', clip['id'], flush=True)
+                continue
+            print('SAFE RENDER ATTEMPT', phase, clip['channel_login'], clip['id'], flush=True)
+            source = download(clip)
+            movie, cover, has_subs = render(clip, source)
+            if not has_subs:
+                raise ValueError('No subtitles')
+            sample_dir = OUT / 'qa_samples' / slug(
+                clip['channel_login'] + '-' + clip['clip_slug'], 90)
+            sample_dir.mkdir(parents=True, exist_ok=True)
+            video_file = sample_dir / 'tiktok.mp4'
+            cover_file = sample_dir / 'cover.jpg'
+            subtitle_file = sample_dir / 'subs.ass'
+            video_file.write_bytes(movie.read_bytes())
+            cover_file.write_bytes(cover.read_bytes())
+            subtitle_file.write_bytes((OUT / 'subs.ass').read_bytes())
+            manifest = {
+                'sample_only': True, 'posted_to_tiktok': False,
+                'no_public_release': True,
+                'streamer': clip['channel_login'],
+                'original_clip_url': clip['url'],
+                'original_title': clip['title'],
+                'original_created_at': clip['original_created_at'],
+                'original_age_hours_at_selection': round(clip['age_hours'], 2),
+                'original_views_at_selection': clip['view_count'],
+                'original_duration': clip['duration'],
+                'rendered_duration': probe(video_file),
+                'video_file': str(video_file), 'cover_file': str(cover_file),
+                'subtitle_status': 'auto_generated_needs_review',
+                'quality_review': 'not_performed',
+                'editing_version': 'v3_popularity_ranked'
+            }
+            (sample_dir / 'test_manifest.json').write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2)+'\n',
+                encoding='utf-8')
+            (OUT / 'test_manifest.json').write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2)+'\n',
+                encoding='utf-8')
+            print('SAFE RENDER READY', json.dumps(manifest, ensure_ascii=False), flush=True)
+            known.update([clip['id'], clip['clip_slug']])
+            produced += 1
+        except Exception as exc:
+            print('SAFE RENDER FAILED - NEXT CLIP', clip['channel_login'],
+                  repr(exc), file=sys.stderr, flush=True)
     print('QA RENDER SUMMARY', json.dumps({
-        'attempted': attempts, 'produced': produced, 'target': target, 'posted': False}), flush=True)
+        'attempted': attempts, 'produced': produced, 'target': target,
+        'found_originals': len(discovered), 'tiktok_posts': 0}), flush=True)
     if produced < 1:
         raise SystemExit('No eligible sample rendered. Nothing posted; inspect logs.')
 
