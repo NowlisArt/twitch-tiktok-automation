@@ -21,8 +21,16 @@ STREAMERS = '''eliasn97 zarbex papaplatte trymacs canerkrd krokoboss xrohat mont
 RANK = {name: idx + 1 for idx, name in enumerate(STREAMERS)}
 # Permanent bans: BastiGHG and Trymacs already used on TikTok.
 # Previous QA sample rejected for weak narrative. Never recycle it.
-EXCLUDE_IDS = {'1885635439', 'PopularAgreeableBobaBatChest-T3Ga_Bm2CiWY5vII',
-               '1586086735', 'DiligentSarcasticArugulaKevinTurtle-gbC316ajn04-BalO'}
+EXCLUDE_IDS = {
+    # Already rejected QA samples:
+    '1885635439', 'PopularAgreeableBobaBatChest-T3Ga_Bm2CiWY5vII',
+    '1586086735', 'DiligentSarcasticArugulaKevinTurtle-gbC316ajn04-BalO',
+    # Clips used/scheduled in the friend's original example: avoid cross-account copying.
+    '1497602893', 'PeppyBloodyTeaRlyTho-BUSJgy71xak5-60U',
+    '2169900339', 'CreativeSpeedyMetalPipeHype-WuzCUT11-Pk1F9WY',
+    '3570577492', 'AltruisticVenomousVelociraptorSpicyBoy-ECiYgUQC2M1vchxM',
+    'GrossTubularAntelopeWow-1KWH2cn3DcuhqWSe'
+}
 KEYWORDS = ('witz', 'lach', 'rage', 'fail', 'wtf', 'omg', 'unfassbar', 'ausrast', 'schrei', 'haha', 'reaction', 'peinlich', 'lustig', 'unerwart')
 
 
