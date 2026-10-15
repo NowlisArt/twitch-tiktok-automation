@@ -456,6 +456,52 @@ def self_test():
     print('SELFTEST OK: 50 channels, verified age, mandatory subtitles, replacement buffer, captions, limits')
 
 
+def render_test():
+    """Build one QA sample as an Actions artifact: no Release, queue entry or TikTok."""
+    now = now_utc()
+    channels = ('papaplatte', 'eliasn97', 'trymacs', 'krokoboss')
+    urls = []
+    for channel in channels:
+        urls.extend(channel_urls(channel))
+    unique = list({link: (channel, link) for channel, link in urls}.values())
+    verified = []
+    print('SAFE RENDER INPUT LINKS', len(unique), flush=True)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
+        for clip in pool.map(lambda pair: inspect_original(pair[0], pair[1], now, 800), unique):
+            if clip and (clip['age_hours'] <= 48 or very_strong(clip)):
+                verified.append(clip)
+    verified.sort(key=selection_rank)
+    print('SAFE RENDER VERIFIED', len(verified), flush=True)
+    for clip in verified[:8]:
+        try:
+            print('SAFE RENDER ATTEMPT', clip['channel_login'], clip['id'], flush=True)
+            source = download(clip)
+            movie, cover, has_subs = render(clip, source)
+            if not has_subs:
+                raise ValueError('No subtitles')
+            manifest = {
+                'sample_only': True, 'posted_to_tiktok': False,
+                'no_public_release': True,
+                'streamer': clip['channel_login'],
+                'original_clip_url': clip['url'],
+                'original_created_at': clip['original_created_at'],
+                'original_age_hours_at_selection': round(clip['age_hours'], 2),
+                'original_views_at_selection': clip['view_count'],
+                'original_duration': clip['duration'],
+                'video_file': str(movie),
+                'cover_file': str(cover),
+                'subtitle_status': 'auto_generated_needs_review',
+                'quality_review': 'not_performed'
+            }
+            (OUT / 'test_manifest.json').write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+            print('SAFE RENDER READY', json.dumps(manifest, ensure_ascii=False), flush=True)
+            return
+        except Exception as exc:
+            print('SAFE RENDER FAILED, trying next candidate', repr(exc), file=sys.stderr, flush=True)
+    raise SystemExit('No safe sample rendered. Check logs for clip/download/ffmpeg errors.')
+
+
 def source_diagnostic():
     """Read-only test of public Twitch clip listing and source metadata."""
     channels = ('papaplatte', 'eliasn97', 'trymacs', 'krokoboss')
@@ -492,5 +538,7 @@ if __name__ == '__main__':
         self_test()
     elif '--diagnose' in sys.argv:
         source_diagnostic()
+    elif '--render-test' in sys.argv:
+        render_test()
     else:
         main()
