@@ -295,9 +295,11 @@ def download(clip):
 def transcribe(path):
     """Transcribe real German audio; reject low-confidence / nonsensical outputs."""
     from faster_whisper import WhisperModel
-    model = WhisperModel('small', device='cpu', compute_type='int8', cpu_threads=4)
+    model_name = os.getenv('ASR_MODEL', 'medium')
+    model = WhisperModel(model_name, device='cpu', compute_type='int8', cpu_threads=4)
+    print('ASR MODEL', model_name, flush=True)
     segments, _ = model.transcribe(
-        str(path), language='de', beam_size=4, word_timestamps=True,
+        str(path), language='de', beam_size=5, word_timestamps=True,
         condition_on_previous_text=False, vad_filter=True,
         vad_parameters=dict(min_silence_duration_ms=450))
     utterances = list(segments)
@@ -391,13 +393,22 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             group = []
     if group:
         groups.append(group)
-    events = []
+    cues = []
     for group in groups:
         a, b = group[0][0], group[-1][1]
         label = ' '.join(x[2] for x in group).upper()
         label = label.replace('\\', '').replace('{', '(').replace('}', ')').replace('\n', ' ').strip()
         if label:
-            events.append(f'Dialogue: 0,{ass_time(a)},{ass_time(min(length, max(a + 0.45, b + 0.12)))},TikTok,,0,0,0,,{label}')
+            cues.append((a, b, label))
+    events = []
+    for index, (a, b, label) in enumerate(cues):
+        # Never render two text cards at once: cap each card before the next begins.
+        next_start = cues[index+1][0] if index+1 < len(cues) else length
+        end = min(length, max(a+0.25, b+0.08), next_start-0.02)
+        if end <= a+0.05:
+            continue
+        events.append(
+            f'Dialogue: 0,{ass_time(a)},{ass_time(end)},TikTok,,0,0,0,,{label}')
     path.write_text(header + '\n'.join(events) + '\n', encoding='utf-8')
     return len(events) >= 3
 
