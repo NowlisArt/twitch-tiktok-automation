@@ -24,6 +24,7 @@ RANK = {name: idx + 1 for idx, name in enumerate(STREAMERS)}
 EXCLUDE_IDS = {
     # Already rejected QA samples:
     '1885635439', 'PopularAgreeableBobaBatChest-T3Ga_Bm2CiWY5vII',
+    '1971178535', 'JazzyRoughDadMcaT-0BGiWmmWGrinz4ZP',
     '1586086735', 'DiligentSarcasticArugulaKevinTurtle-gbC316ajn04-BalO',
     # Clips used/scheduled in the friend's original example: avoid cross-account copying.
     '1497602893', 'PeppyBloodyTeaRlyTho-BUSJgy71xak5-60U',
@@ -690,47 +691,65 @@ def self_test():
 
 
 def render_test():
-    """Render one QA sample, retry other clips and sources, never publish it."""
+    """Render up to two QA samples from different clips; never publish anything."""
     now = now_utc()
     channels = authorized_channels()
     if not channels:
         raise SystemExit('No approved channels for safe render test')
-    attempted = 0
-    for phase, verified in fresh_candidates(now, set(EXCLUDE_IDS), set(), set(EXCLUDE_IDS), channels):
+    known, used_urls = used_ids(read_state())
+    attempts, produced = 0, 0
+    target = min(3, max(1, int(os.getenv('QA_SAMPLE_COUNT', '2'))))
+    for phase, verified in fresh_candidates(now, known, used_urls, set(EXCLUDE_IDS), channels):
         for clip in verified:
-            if attempted >= 12:
+            if attempts >= 10 or produced >= target:
                 break
-            attempted += 1
+            attempts += 1
             try:
                 print('SAFE RENDER ATTEMPT', phase, clip['channel_login'], clip['id'], flush=True)
                 source = download(clip)
                 movie, cover, has_subs = render(clip, source)
                 if not has_subs:
                     raise ValueError('No subtitles')
+                sample_dir = OUT / 'qa_samples' / slug(clip['channel_login'] + '-' + clip['clip_slug'], 90)
+                sample_dir.mkdir(parents=True, exist_ok=True)
+                target_movie, target_cover, target_subtitles = (
+                    sample_dir / 'tiktok.mp4', sample_dir / 'cover.jpg', sample_dir / 'subs.ass')
+                target_movie.write_bytes(movie.read_bytes())
+                target_cover.write_bytes(cover.read_bytes())
+                target_subtitles.write_bytes((OUT / 'subs.ass').read_bytes())
                 manifest = {
                     'sample_only': True, 'posted_to_tiktok': False,
-                    'no_public_release': True, 'streamer': clip['channel_login'],
+                    'no_public_release': True,
+                    'streamer': clip['channel_login'],
                     'original_clip_url': clip['url'],
                     'original_created_at': clip['original_created_at'],
                     'original_age_hours_at_selection': round(clip['age_hours'], 2),
                     'original_views_at_selection': clip['view_count'],
-                    'original_duration': clip['duration'], 'rendered_duration': probe(movie),
-                    'video_file': str(movie), 'cover_file': str(cover),
+                    'original_duration': clip['duration'],
+                    'rendered_duration': probe(target_movie),
+                    'video_file': str(target_movie), 'cover_file': str(target_cover),
                     'subtitle_status': 'auto_generated_needs_review',
                     'quality_review': 'not_performed',
                     'editing_version': 'v2_small_asr_speech_aware_focal'
                 }
+                (sample_dir / 'test_manifest.json').write_text(
+                    json.dumps(manifest, ensure_ascii=False, indent=2)+'\n',
+                    encoding='utf-8')
                 (OUT / 'test_manifest.json').write_text(
-                    json.dumps(manifest, ensure_ascii=False, indent=2) + '\n',
+                    json.dumps(manifest, ensure_ascii=False, indent=2)+'\n',
                     encoding='utf-8')
                 print('SAFE RENDER READY', json.dumps(manifest, ensure_ascii=False), flush=True)
-                return
+                known.update([clip['id'], clip['clip_slug']])
+                produced += 1
             except Exception as exc:
                 print('SAFE RENDER FAILED - NEXT CLIP', clip['channel_login'],
                       repr(exc), file=sys.stderr, flush=True)
-        if attempted >= 12:
+        if attempts >= 10 or produced >= target:
             break
-    raise SystemExit('No eligible sample could be rendered. No posting; inspect logs.')
+    print('QA RENDER SUMMARY', json.dumps({
+        'attempted': attempts, 'produced': produced, 'target': target, 'posted': False}), flush=True)
+    if produced < 1:
+        raise SystemExit('No eligible sample rendered. Nothing posted; inspect logs.')
 
 
 def source_diagnostic():
