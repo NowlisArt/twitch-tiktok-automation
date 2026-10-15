@@ -437,5 +437,40 @@ def self_test():
     print('SELFTEST OK: 50 channels, verified age, mandatory subtitles, replacement buffer, captions, limits')
 
 
+def source_diagnostic():
+    """Read-only test of public Twitch clip listing and source metadata."""
+    channels = ('papaplatte', 'eliasn97', 'trymacs', 'krokoboss')
+    found = 0
+    confirmed = 0
+    now = now_utc()
+    for channel in channels:
+        links = channel_urls(channel)
+        print('DIAGNOSTIC CHANNEL', channel, 'clip_links:', len(links), flush=True)
+        found += len(links)
+        for _, link in links[:2]:
+            clip = inspect_original(channel, link, now, min_views=0)
+            if clip:
+                confirmed += 1
+                print('DIAGNOSTIC VERIFIED', json.dumps({
+                    'streamer': channel, 'source_url': link,
+                    'original_created_at': clip['original_created_at'],
+                    'age_hours': round(clip['age_hours'], 2),
+                    'views': clip['view_count'], 'duration': clip['duration']
+                }, ensure_ascii=False), flush=True)
+            else:
+                print('DIAGNOSTIC UNVERIFIED', channel, link, flush=True)
+    print('DIAGNOSTIC SUMMARY', json.dumps({
+        'tested_channels': len(channels), 'clip_links': found,
+        'verified_fresh_clips': confirmed, 'no_download_or_upload': True
+    }), flush=True)
+    if found == 0:
+        raise SystemExit('FAILED: no Twitch clip listings; check yt-dlp and Twitch access')
+
+
 if __name__ == '__main__':
-    self_test() if '--self-test' in sys.argv else main()
+    if '--self-test' in sys.argv:
+        self_test()
+    elif '--diagnose' in sys.argv:
+        source_diagnostic()
+    else:
+        main()
