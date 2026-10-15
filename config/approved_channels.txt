@@ -1,0 +1,3 @@
+# Nur Kanäle eintragen, für deren Clips du eine gültige Veröffentlichungserlaubnis hast.
+# Ein Kanal-Login pro Zeile, ohne @.
+# Leer lassen bis die Rechte geklärt sind. Dadurch erzeugt die Pipeline keine Videos.
