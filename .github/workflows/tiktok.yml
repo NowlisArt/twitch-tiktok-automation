@@ -94,7 +94,7 @@ jobs:
       - name: Clip suchen, Ersatz versuchen und schneiden
         env:
           MIN_VIEWS: '800'
-          QA_SAMPLE_COUNT: '2'
+          QA_SAMPLE_COUNT: '3'
           ASR_MODEL: 'medium'
           PYTHONUNBUFFERED: '1'
         run: python scripts/pipeline.py --render-test
