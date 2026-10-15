@@ -67,7 +67,7 @@ jobs:
 
   render_test:
     needs: checks
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'render-test' }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.mode == 'render-test') || (github.event_name == 'push' && github.event.head_commit.message == 'Run QA render via push (no posting)') }}
     runs-on: ubuntu-latest
     timeout-minutes: 55
     steps:
