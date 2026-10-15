@@ -15,6 +15,7 @@ on:
         options:
           - selftest
           - diagnose
+          - render-test
 
 permissions:
   contents: read
@@ -22,7 +23,7 @@ permissions:
 jobs:
   self-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 50
 
     steps:
       - name: Repository laden
@@ -46,3 +47,26 @@ jobs:
       - name: Twitch-Clip-Quellen pruefen (nur lesen, kein Upload)
         if: ${{ github.event_name == 'push' || inputs.mode == 'diagnose' }}
         run: python scripts/pipeline.py --diagnose
+
+      - name: Video-Render-Test-Abhaengigkeiten
+        if: ${{ inputs.mode == 'render-test' || github.event.head_commit.message == 'Run sample video rendering test' }}
+        run: |
+          python -m pip install --upgrade yt-dlp 'faster-whisper==1.2.1' 'av>=11,<19'
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+
+      - name: Ein Beispielvideo rendern (ohne Release und TikTok)
+        if: ${{ inputs.mode == 'render-test' || github.event.head_commit.message == 'Run sample video rendering test' }}
+        run: python scripts/pipeline.py --render-test
+
+      - name: Beispielvideo fuer Qualitaetspruefung sichern
+        if: ${{ inputs.mode == 'render-test' || github.event.head_commit.message == 'Run sample video rendering test' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: twitch-video-sample
+          path: |
+            rendered/tiktok.mp4
+            rendered/cover.jpg
+            rendered/test_manifest.json
+          if-no-files-found: error
+          retention-days: 7
