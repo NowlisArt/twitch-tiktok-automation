@@ -12,3 +12,10 @@ AliveCautiousMonitorPJSalt-_khBUBf020YdG7yv
 # MontanaBlack: fehlende starke Pointe trotz technisch gutem Schnitt
 86542195
 ThirstyThankfulMuleMcaT-szXm4yaw1IPwFVde
+
+# QA 2026-10-16: EliasN97, verstaendnislose Untertitel, keine deutliche Pointe
+404128939
+SmokyCorrectGiraffeJonCarnage-FfYkxRmCid5SsodU
+# QA 2026-10-16: Trymacs, Werbeplacement-Ton widerspricht Lava-Headline
+3762039162
+WittyFrozenWitchRaccAttack-_MbUoDA1pUj1_av6
