@@ -99,8 +99,7 @@ def can_prepare(state, now, event='schedule'):
     if sum(rec.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))
            for rec in monthly) >= 2:
         return False, 'Heute bereits zwei Clip-Kandidaten erstellt'
-    if event == 'schedule' and not 9 <= now.hour <= 22:
-        return False, 'Ausserhalb des Produktionszeitfensters (UTC)'
+    # Continuous hourly discovery/production. Keep the per-day and per-month caps.
     return True, 'OK'
 
 
