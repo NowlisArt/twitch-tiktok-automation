@@ -87,7 +87,7 @@ def scheduled_slot(now):
 
 
 def can_prepare(state, now, event='schedule'):
-    """Production buffer: max 60 prepared / month, max 2 / day.
+    """Production buffer: max 60 prepared / month, max 3 / day.
 
     GitHub production is NOT the separate Metricool 20-post monthly limit.
     More production candidates allow genuine replacement when clips fail review.
@@ -97,8 +97,8 @@ def can_prepare(state, now, event='schedule'):
     if len(monthly) >= 60:
         return False, 'GitHub-Pufferlimit von 60 Produktionen in diesem Monat erreicht'
     if sum(rec.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))
-           for rec in monthly) >= 2:
-        return False, 'Heute bereits zwei Clip-Kandidaten erstellt'
+           for rec in monthly) >= 3:
+        return False, 'Heute bereits drei Clip-Kandidaten erstellt'
     # Continuous hourly discovery/production. Keep the per-day and per-month caps.
     return True, 'OK'
 
@@ -608,6 +608,7 @@ def remember_failure(state, clip, now, exc):
 
 
 def main():
+    """Produce a small buffer of reviewed-later MP4s; never directly post to TikTok."""
     if os.getenv('ENABLE_PREPARATION') != 'true':
         print('SKIP: ENABLE_PREPARATION != true')
         return
@@ -624,68 +625,68 @@ def main():
     failed = current_failed_ids(state, now)
     monthly = [r for r in state['created'] if r.get('created_at', '').startswith(now.strftime('%Y-%m'))]
     daily = [r for r in monthly if r.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))]
-    remaining = min(max(0, 2-len(daily)), max(0, 60-len(monthly)))
-    prepared, attempted = 0, 0
+    daily_limit = 3
+    remaining = min(max(0, daily_limit-len(daily)), max(0, 60-len(monthly)))
+    if remaining <= 0:
+        print('SKIP: production buffer already filled')
+        return
+    all_candidates = []
     for phase, verified in fresh_candidates(now, used, used_urls, failed, channels):
-        attempts_this_phase = 0
-        for clip in verified:
-            if prepared >= remaining or attempts_this_phase >= 12:
-                break
-            if clip['clip_slug'] in failed or clip['id'] in used:
-                continue
-            # Original created_at is never inferred from the GitHub queue timestamp.
-            if (now_utc() - dt.datetime.fromisoformat(
-                    clip['original_created_at'].replace('Z', '+00:00'))).total_seconds() > 72*3600:
-                continue
-            attempted += 1
-            attempts_this_phase += 1
-            try:
-                source = download(clip)
-                movie, cover, has_subs = render(clip, source)
-                if not has_subs:
-                    raise ValueError('Subtitles missing')
-                video_url, cover_url = release(clip, movie, cover, now)
-                state['created'].append({
-                    'clip_id': clip['id'], 'clip_slug': clip['clip_slug'],
-                    'streamer': clip['channel_login'], 'source_url': clip['url'],
-                    'original_title': clip['title'], 'hook': headline(clip),
-                    'caption': caption(clip), 'views_at_selection': clip['view_count'],
-                    'original_duration': clip['duration'],
-                    'original_created_at': clip['original_created_at'],
-                    'video_url': video_url, 'cover_url': cover_url,
-                    'transcript_subtitles': has_subs, 'created_at': iso(now),
-                    'status': 'awaiting_review_not_posted',
-                    'rights_status': 'user_asserted_not_independently_verified',
-                    'video_review_status': 'metadata_only',
-                    'editing_status': '9x16_focal_plus_fullscreen_cropped_15_42s',
-                    'subtitle_verified': False,
-                    'subtitle_review_status': 'auto_generated_needs_manual_review'
-                })
-                state['processed_ids'].extend([clip['id'], clip['clip_slug']])
-                used.update([clip['id'], clip['clip_slug']])
-                save_state(state)
-                print('VIDEO READY (NOT POSTED TO TIKTOK):', video_url, flush=True)
-                summary = os.getenv('GITHUB_STEP_SUMMARY')
-                if summary:
-                    with open(summary, 'a', encoding='utf-8') as handle:
-                        handle.write(
-                            f'## New candidate: {clip["channel_login"]}\n'
-                            f'- Twitch views: {clip["view_count"]}\n'
-                            f'- Original age: {clip["age_hours"]:.1f} hours\n'
-                            f'- [Rendered MP4]({video_url})\n'
-                            '- **NOT posted to TikTok. Manual QA needed.**\n')
-                prepared += 1
-            except Exception as exc:
-                remember_failure(state, clip, now, exc)
-                failed.add(clip['clip_slug'])
-        if prepared >= remaining:
+        all_candidates.extend((phase, clip) for clip in verified)
+    all_candidates.sort(key=lambda x: selection_rank(x[1]))
+    print('PRODUCTION CANDIDATE RANKING', json.dumps([
+        {'source': p, 'channel': c['channel_login'], 'views': c['view_count'],
+         'age_hours': round(c['age_hours'], 1)} for p, c in all_candidates[:15]],
+        ensure_ascii=False), flush=True)
+    prepared, attempted = 0, 0
+    for phase, clip in all_candidates:
+        if prepared >= remaining or attempted >= 16:
             break
+        if clip['clip_slug'] in failed or clip['id'] in used:
+            continue
+        if (now_utc() - dt.datetime.fromisoformat(
+                clip['original_created_at'].replace('Z', '+00:00'))).total_seconds() > 72*3600:
+            continue
+        attempted += 1
+        try:
+            print('PRODUCTION ATTEMPT', attempted, phase, clip['channel_login'],
+                  clip['clip_slug'], clip['view_count'], flush=True)
+            source = download(clip)
+            movie, cover, has_subs = render(clip, source)
+            if not has_subs:
+                raise ValueError('Subtitles missing')
+            video_url, cover_url = release(clip, movie, cover, now)
+            state['created'].append({
+                'clip_id': clip['id'], 'clip_slug': clip['clip_slug'],
+                'streamer': clip['channel_login'], 'source_url': clip['url'],
+                'original_title': clip['title'], 'hook': headline(clip),
+                'caption': caption(clip), 'views_at_selection': clip['view_count'],
+                'original_duration': clip['duration'], 'rendered_duration': probe(movie),
+                'original_created_at': clip['original_created_at'],
+                'video_url': video_url, 'cover_url': cover_url,
+                'transcript_subtitles': has_subs, 'created_at': iso(now),
+                'status': 'awaiting_review_not_posted',
+                'rights_status': 'user_asserted_not_independently_verified',
+                'video_review_status': 'technical_checks_only',
+                'editing_status': '9x16_face_focus_fullscreen_overview_15_42s',
+                'subtitle_verified': False,
+                'subtitle_review_status': 'auto_generated_needs_review'
+            })
+            state['processed_ids'].extend([clip['id'], clip['clip_slug']])
+            used.update([clip['id'], clip['clip_slug']])
+            save_state(state)
+            print('VIDEO READY FOR QA, NOT POSTED:', video_url, flush=True)
+            prepared += 1
+        except Exception as exc:
+            remember_failure(state, clip, now, exc)
+            failed.add(clip['clip_slug'])
     print('PREPARATION SUMMARY', json.dumps({
-        'channels_considered': len(channels), 'attempted': attempted,
-        'produced': prepared, 'target_this_run': remaining,
-        'tiktok_posts': 0}, ensure_ascii=False), flush=True)
+        'channels_considered': len(channels),
+        'new_candidates_considered': len(all_candidates),
+        'attempted': attempted, 'produced': prepared,
+        'target_this_run': remaining, 'tiktok_posts': 0}, ensure_ascii=False), flush=True)
     if not prepared:
-        print('No suitable new clip could be rendered; do NOT recycle old clips.')
+        print('No suitable clip this run. Retry all eligible 50 sources next scheduled hour.')
 
 
 def self_test():
@@ -702,7 +703,9 @@ def self_test():
     example_record = {'created_at': iso(dt.datetime(2026, 10, 13, 13, tzinfo=UTC))}
     assert can_prepare({'created': [example_record], 'processed_ids': []},
                        dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
-    assert not can_prepare({'created': [example_record, example_record], 'processed_ids': []},
+    assert can_prepare({'created': [example_record, example_record], 'processed_ids': []},
+                       dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
+    assert not can_prepare({'created': [example_record]*3, 'processed_ids': []},
                            dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
     assert 'Quelle:' not in caption(dict(example, title='Quelle: https://example.org Mega fail'))
     sample_words = [(i*1.1, i*1.1+0.6, ('word.' if i in (9, 19, 29, 39) else 'word'))
