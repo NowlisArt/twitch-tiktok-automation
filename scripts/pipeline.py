@@ -148,8 +148,17 @@ def fetch_candidates(range_code='24hr', channels=None):
     print('DISCOVERY', range_code, 'channels', len(channels), 'links', len(unique), flush=True)
     return list(unique.values())
 
+def rejected_clips():
+    """Human QA rejections: block IDs and slugs before future searches/renders."""
+    path = Path('config/rejected_clips.txt')
+    if not path.exists():
+        return set()
+    return {line.strip() for line in path.read_text(encoding='utf-8').splitlines()
+            if line.strip() and not line.lstrip().startswith('#')}
+
+
 def used_ids(state):
-    used = set(EXCLUDE_IDS) | set(map(str, state['processed_ids']))
+    used = set(EXCLUDE_IDS) | rejected_clips() | set(map(str, state['processed_ids']))
     used_urls = set()
     for rec in state['created']:
         used.add(str(rec.get('clip_id', '')))
@@ -678,6 +687,7 @@ def self_test():
     cut_start, cut_length = pick_window(44, sample_words)
     assert 0 <= cut_start and 15 <= cut_length <= 42
     assert authorized_channels() is not None
+    assert isinstance(rejected_clips(), set)
     # Verified clips should not be rejected only because their titles are mundane.
     assert worth_testing(dict(example, title='Normale Situation', age_hours=22, view_count=909))
     assert not worth_testing(dict(example, title='Sponsored advertisement', age_hours=5, view_count=8000))
