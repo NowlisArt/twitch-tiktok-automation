@@ -213,16 +213,17 @@ def very_strong(clip):
 
 
 def worth_testing(clip):
-    """High-signal heuristic: do not force generic clips just to fill the calendar."""
+    """Clip discovery gate, not a quality endorsement; real media QA still required."""
     title = clip['title'].lower()
     velocity = clip['view_count'] / max(1.0, clip['age_hours'])
     funny = any(keyword in title for keyword in KEYWORDS)
-    risk = any(keyword in title for keyword in (
+    risky_context = any(keyword in title for keyword in (
         'partner +', 'sponsor', 'vertrags', 'werbung', 'tier list',
         'sponsored', 'ranking', 'advert'))
-    return not risk and (
-        (funny and velocity >= 60) or
-        (clip['view_count'] >= 2500 and velocity >= 150) or velocity >= 450)
+    return not risky_context and (
+        (funny and velocity >= 40) or
+        (clip['view_count'] >= 800 and velocity >= 90) or
+        (clip['view_count'] >= 3500 and velocity >= 35))
 
 
 def selection_rank(clip):
@@ -659,6 +660,7 @@ def self_test():
     assert '1586086735' in EXCLUDE_IDS
     assert worth_testing(dict(example, title='Was ein WTF Moment', view_count=13000))
     assert not worth_testing(dict(example, title='1 PARTNER + 1 STRIKE', view_count=1129, age_hours=8))
+    assert worth_testing(dict(example, title='Unerwartete Szene', view_count=1129, age_hours=8))
     print('SELFTEST OK: age checks, fallback, 15-42s speech cuts, subtitles and limits')
 
 
