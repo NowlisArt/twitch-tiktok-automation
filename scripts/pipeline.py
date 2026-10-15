@@ -20,7 +20,8 @@ OUT = Path('rendered')
 STREAMERS = '''eliasn97 zarbex papaplatte trymacs canerkrd krokoboss xrohat montanablack88 gamerbrother kubafps bonjwa xthesolutiontv handofblood noway4u_sir metashi12 gronkhtv gronkh tolkin gtasty orangemorange schradin dhalucard shlorox mertabimula rumathra elotrix bastighg maxim dracon staiy spontent marli onlyjson naguura phunkroyal niklaswilson pietsmiet scurrows h0llylp rezo letshugotv edopeh amar sterzik repaz gtimetv mckytv rezonfn fregepaul coachlim'''.split()
 RANK = {name: idx + 1 for idx, name in enumerate(STREAMERS)}
 # Permanent bans: BastiGHG and Trymacs already used on TikTok.
-EXCLUDE_IDS = set()  # New account: no foreign user's already-posted IDs imported
+# Previous QA sample rejected for weak narrative. Never recycle it.
+EXCLUDE_IDS = {'1885635439', 'PopularAgreeableBobaBatChest-T3Ga_Bm2CiWY5vII'}
 KEYWORDS = ('witz', 'lach', 'rage', 'fail', 'wtf', 'omg', 'unfassbar', 'ausrast', 'schrei', 'haha', 'reaction', 'peinlich', 'lustig', 'unerwart')
 
 
@@ -254,19 +255,27 @@ def download(clip):
 
 
 def transcribe(path):
-    """Mandatory real word timestamps. Failure means TRY THE NEXT CLIP."""
+    """Transcribe real German audio; reject low-confidence / nonsensical outputs."""
     from faster_whisper import WhisperModel
-    model = WhisperModel('base', device='cpu', compute_type='int8', cpu_threads=4)
+    model = WhisperModel('small', device='cpu', compute_type='int8', cpu_threads=4)
     segments, _ = model.transcribe(
-        str(path), language='de', beam_size=2, word_timestamps=True,
-        condition_on_previous_text=False, vad_filter=False)
+        str(path), language='de', beam_size=4, word_timestamps=True,
+        condition_on_previous_text=False, vad_filter=True,
+        vad_parameters=dict(min_silence_duration_ms=450))
+    utterances = list(segments)
+    reliable = [seg for seg in utterances
+                if seg.avg_logprob is not None and seg.avg_logprob > -0.95
+                and (seg.no_speech_prob is None or seg.no_speech_prob < 0.75)]
+    if not reliable:
+        raise ValueError('No reliable spoken content for subtitles; try another clip')
     words = [(float(word.start), float(word.end), word.word.strip())
-             for segment in segments for word in (segment.words or [])
+             for segment in reliable for word in (segment.words or [])
              if word.word and word.word.strip()]
-    if len(words) < 3:
-        raise ValueError('Zu wenig verstaendlicher gesprochener Inhalt fuer echte Untertitel')
+    if len(words) < 8 or len(' '.join(w[2] for w in words)) < 45:
+        raise ValueError('Insufficient reliable speech; try another clip')
+    quality = sum(seg.avg_logprob for seg in reliable)/len(reliable)
+    print('ASR CONFIDENCE', round(quality,3), 'words', len(words), flush=True)
     return words
-
 
 def pick_window(duration, words):
     """Trim at speech/pause boundaries and prefer complete endings, not random seconds."""
@@ -571,6 +580,7 @@ def self_test():
     cut_start, cut_length = pick_window(44, sample_words)
     assert 0 <= cut_start and 15 <= cut_length <= 42
     assert authorized_channels() is not None
+    assert '1885635439' in EXCLUDE_IDS
     print('SELFTEST OK: age checks, fallback, 15-42s speech cuts, subtitles and limits')
 
 
@@ -581,7 +591,7 @@ def render_test():
     if not channels:
         raise SystemExit('No approved channels for safe render test')
     attempted = 0
-    for phase, verified in fresh_candidates(now, set(), set(), set(), channels):
+    for phase, verified in fresh_candidates(now, set(EXCLUDE_IDS), set(), set(EXCLUDE_IDS), channels):
         for clip in verified:
             if attempted >= 12:
                 break
@@ -602,7 +612,8 @@ def render_test():
                     'original_duration': clip['duration'], 'rendered_duration': probe(movie),
                     'video_file': str(movie), 'cover_file': str(cover),
                     'subtitle_status': 'auto_generated_needs_review',
-                    'quality_review': 'not_performed'
+                    'quality_review': 'not_performed',
+                    'editing_version': 'v2_small_asr_speech_aware_focal'
                 }
                 (OUT / 'test_manifest.json').write_text(
                     json.dumps(manifest, ensure_ascii=False, indent=2) + '\n',
