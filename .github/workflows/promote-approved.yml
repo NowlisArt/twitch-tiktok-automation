@@ -1,0 +1,67 @@
+# A separate manual-quality-approval bridge: only an explicitly reviewed
+# QA sample is promoted to a PUBLIC GitHub Release. It NEVER posts to TikTok.
+name: Promote reviewed TikTok clip to public MP4
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - config/approved_for_release.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: twitch-auto20-nowlisart-main
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: ${{ github.repository == 'NowlisArt/twitch-tiktok-automation' }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - name: Read main branch and state
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Verify promotion script
+        run: python -m py_compile scripts/promote_approved.py scripts/pipeline.py
+
+      - name: Check release tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          gh --version
+
+      - name: Fetch exact reviewed QA artifact and publish verified MP4
+        run: python scripts/promote_approved.py
+
+      - name: Commit approved clip ID to duplicate prevention state
+        if: ${{ success() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f state/auto20.json ]; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add state/auto20.json
+            if ! git diff --cached --quiet; then
+              git commit -m 'Save promoted QA clip ID [skip ci]'
+              git pull --rebase origin main
+              git push origin HEAD:main
+            fi
+          fi
