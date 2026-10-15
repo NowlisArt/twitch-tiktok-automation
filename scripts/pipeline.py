@@ -418,7 +418,8 @@ def release(clip, video, cover, now):
     cover_file.write_bytes(cover.read_bytes())
     if run(['gh', 'release', 'view', tag, '-R', repo], check=False, capture_output=True).returncode != 0:
         run(['gh', 'release', 'create', tag, '-R', repo, '--title', f'Video-Kandidaten {now:%Y-%m}', '--notes', 'Automatisch produzierte Kandidaten; Rechte und Duplikate vor Veroeffentlichung pruefen.'], timeout=60)
-    run(['gh', 'release', 'upload', tag, str(video_file), str(cover_file), '-R', repo, '--clobber'], timeout=120)
+    # Never clobber an existing public asset: it might already have been shared.
+    run(['gh', 'release', 'upload', tag, str(video_file), str(cover_file), '-R', repo], timeout=120)
     prefix = f'https://github.com/{repo}/releases/download/{tag}/'
     video_url = prefix + video_name
     # This checks PUBLIC reachability, not only asset existence in GitHub's API.
