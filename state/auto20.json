@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "created": [
+    {
+      "clip_slug": "JazzyGentleTigerWOOP-ieNobMQibJWWwdW2",
+      "clip_id": "JazzyGentleTigerWOOP-ieNobMQibJWWwdW2",
+      "source_url": "https://www.twitch.tv/montanablack88/clip/JazzyGentleTigerWOOP-ieNobMQibJWWwdW2",
+      "original_created_at": "2026-10-14T06:58:12Z",
+      "views_at_selection": 1459,
+      "streamer": "montanablack88",
+      "created_at": "2026-10-15T23:41:55Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/montanablack88-jazzygentletigerwoop-ienobmqibjwwwdw2.mp4",
+      "status": "qa_approved_metricool_pending",
+      "quality_review_status": "approved_for_end_to_end_test",
+      "review_notes": "Reiner Live-End-to-End-Test auf ausdrücklichen Nutzerwunsch: 16,7 s, 1080x1920, AAC-Tonspur, Bildfolge und Untertitel technisch geprüft. Untertitel nicht vollständig sprachlich gegengehört, kreative Qualität nicht freigegeben; kein Duplikat in aktuellen Plänen.",
+      "subtitle_verified": false,
+      "posted_to_tiktok": false,
+      "test_only": true,
+      "rights_status": "user_asserted_not_independently_verified"
+    }
+  ],
+  "processed_ids": [
+    "JazzyGentleTigerWOOP-ieNobMQibJWWwdW2"
+  ],
+  "failed_attempts": {}
+}
