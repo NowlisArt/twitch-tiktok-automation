@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "Selftest, diagnostic or one private QA render; never TikTok posts."
+        description: "Choose selftest, diagnose, or a private QA render. Never post to TikTok."
         type: choice
         required: true
         default: selftest
