@@ -29,11 +29,14 @@ def main():
         print('No approved clip manifest; do not upload.')
         return
     request = json.loads(APPROVAL.read_text(encoding='utf-8'))
-    if request.get('decision') != 'approved_after_audio_visual_review':
-        raise ValueError('Actual audio-visual approval is mandatory')
+    decision = request.get('decision')
+    if decision not in ('approved_after_audio_visual_review', 'approved_for_end_to_end_test'):
+        raise ValueError('Explicit review or end-to-end test approval is required')
     notes = str(request.get('review_notes') or '').strip()
     if len(notes) < 35:
         raise ValueError('A substantive review note is required')
+    if decision == 'approved_for_end_to_end_test' and not request.get('user_authorized_live_test'):
+        raise ValueError('Public end-to-end test was not authorized by user')
     run_id = request.get('qa_run_id')
     channel_slug = request.get('qa_sample_folder')
     if type(run_id) is not int or not (1 <= run_id):
@@ -101,9 +104,9 @@ def main():
         'views_at_selection':info['original_views_at_selection'],
         'streamer':info['streamer'],'created_at':iso(stamp),
         'video_url':video_url,'status':'qa_approved_metricool_pending',
-        'quality_review_status':'approved_after_audio_visual_review',
-        'review_notes':notes,'subtitle_verified':True,
-        'posted_to_tiktok':False,
+        'quality_review_status':decision,
+        'review_notes':notes,'subtitle_verified': decision == 'approved_after_audio_visual_review',
+        'posted_to_tiktok':False, 'test_only': decision == 'approved_for_end_to_end_test',
         'rights_status':'user_asserted_not_independently_verified'
     })
     state['processed_ids'].append(clip_slug)
