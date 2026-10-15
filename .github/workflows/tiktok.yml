@@ -74,7 +74,7 @@ jobs:
   render_test:
     name: Ein 9:16-Testvideo erstellen (keine Veroeffentlichung)
     needs: checks
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'render-test' }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.mode == 'render-test') || (github.event_name == 'push' && github.event.head_commit.message == 'Run QA render via push (no posting)') }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
