@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "Safe preview mode. Prepares videos only on schedule; never TikTok posts."
+        description: "Selftest, diagnostic or one private QA render; never TikTok posts."
         type: choice
         required: true
         default: selftest
