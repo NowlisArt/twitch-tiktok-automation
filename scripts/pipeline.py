@@ -61,6 +61,7 @@ def read_state():
         state = {'version': 2, 'created': [], 'processed_ids': []}
     state.setdefault('created', [])
     state.setdefault('processed_ids', [])
+    state.setdefault('failed_attempts', {})
     return state
 
 
@@ -92,50 +93,49 @@ def can_prepare(state, now, event='schedule'):
     return True, 'OK'
 
 
-def channel_urls(channel):
-    """Prioritize 24h clip list; sample 7d list only for older fallback clips."""
-    found = []
-    seen = set()
-    for range_code, max_take in (('24hr', 7), ('7d', 5)):
-        source = f'https://www.twitch.tv/{channel}/clips?filter=clips&range={range_code}'
-        try:
-            proc = run(['yt-dlp', '--no-warnings', '--flat-playlist', '--playlist-end', '20',
-                        '--dump-single-json', source], capture_output=True, timeout=65)
-            data = json.loads(proc.stdout)
-            selected = 0
-            for item in data.get('entries') or []:
-                if not isinstance(item, dict):
-                    continue
-                link = item.get('webpage_url') or item.get('url') or ''
-                if isinstance(link, str) and twitch_slug(link) and twitch_slug(link) not in seen:
-                    found.append((channel, link))
-                    seen.add(twitch_slug(link))
-                    selected += 1
-                    if selected >= max_take:
-                        break
-        except Exception as exc:
-            print('WARN listing', channel, range_code, repr(exc)[:140], file=sys.stderr)
-    return found
-
-
-def fetch_candidates():
-    # Publication candidates are limited to explicitly approved source channels.
-    approved_file = Path('config/approved_channels.txt')
-    if not approved_file.exists():
-        print('SKIP: no approved sources configured')
+def authorized_channels():
+    source = Path('config/approved_channels.txt')
+    if not source.exists():
         return []
-    approved = {line.strip().lower() for line in approved_file.read_text(encoding='utf-8').splitlines()
+    approved = {line.strip().lower() for line in source.read_text(encoding='utf-8').splitlines()
                 if line.strip() and not line.lstrip().startswith('#')}
-    channels = [channel for channel in STREAMERS if channel in approved]
+    # A stable 50-channel seed list; it is not a live TwitchTracker ranking.
+    return [channel for channel in STREAMERS if channel in approved]
+
+
+def channel_urls(channel, range_code='24hr'):
+    """Discover fresh URLs first; failed listings do not abort other channels."""
+    source = f'https://www.twitch.tv/{channel}/clips?filter=clips&range={range_code}'
+    try:
+        proc = run(['yt-dlp', '--no-warnings', '--flat-playlist',
+                    '--playlist-end', '30', '--dump-single-json', source],
+                   capture_output=True, timeout=65)
+        data = json.loads(proc.stdout)
+        links = []
+        for item in data.get('entries') or []:
+            if not isinstance(item, dict):
+                continue
+            url = item.get('webpage_url') or item.get('url') or ''
+            if isinstance(url, str) and twitch_slug(url):
+                links.append((channel, url))
+        return list(dict.fromkeys(links))[:(8 if range_code == '24hr' else 12)]
+    except Exception as exc:
+        print('WARN listing', channel, range_code, repr(exc)[:150], file=sys.stderr, flush=True)
+        return []
+
+
+def fetch_candidates(range_code='24hr', channels=None):
+    channels = channels if channels is not None else authorized_channels()
     if not channels:
-        print('SKIP: no approved source channel present in watchlist')
+        print('SKIP: no authorized channels configured', flush=True)
         return []
     all_links = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
-        for links in pool.map(channel_urls, channels):
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+        for links in pool.map(lambda ch: channel_urls(ch, range_code), channels):
             all_links.extend(links)
-    return list({url: (channel, url) for channel, url in all_links}.values())
-
+    unique = {twitch_slug(url): (channel, url) for channel, url in all_links}
+    print('DISCOVERY', range_code, 'channels', len(channels), 'links', len(unique), flush=True)
+    return list(unique.values())
 
 def used_ids(state):
     used = set(EXCLUDE_IDS) | set(map(str, state['processed_ids']))
@@ -269,17 +269,46 @@ def transcribe(path):
 
 
 def pick_window(duration, words):
-    if duration <= 45:
-        if not words:
-            return 0.0, duration
-        start = min(3.0, max(0.0, words[0][0] - .7))
-        end = max(duration - 3, min(duration, words[-1][1] + .8))
-        return (round(start, 2), round(end - start, 2)) if end - start >= 15 else (0.0, duration)
-    length = 42.0
-    end = max(0, int(duration - length))
-    start = max(range(end + 1), key=lambda k: sum(k <= (a + b) / 2 < k + length for a, b, _ in words)) if words else 0
-    return float(start), min(length, duration - start)
-
+    """Trim at speech/pause boundaries and prefer complete endings, not random seconds."""
+    if not words:
+        raise ValueError('Cannot cut without speech timing')
+    if duration <= 20:
+        return 0.0, round(duration, 2)
+    start_candidates = {0.0}
+    end_candidates = {round(duration, 2)}
+    for i, (a, b, word) in enumerate(words):
+        if i == 0 or a - words[i-1][1] >= 0.60 or re.search(r'[.!?…]$', words[i-1][2]):
+            start_candidates.add(round(max(0.0, a - 0.35), 2))
+        if i == len(words)-1 or words[i+1][0] - b >= 0.65 or re.search(r'[.!?…]$', word):
+            end_candidates.add(round(min(duration, b + 0.35), 2))
+    best = None
+    target = min(32.0, duration - 0.4)
+    for start in sorted(start_candidates):
+        for end in sorted(end_candidates):
+            length = end - start
+            if not (15 <= length <= min(42, duration)):
+                continue
+            selected = [w for w in words if w[0] >= start - 0.1 and w[1] <= end + 0.1]
+            if len(selected) < 7:
+                continue
+            first, last = selected[0], selected[-1]
+            ending_complete = bool(re.search(r'[.!?…]$', last[2])) or (
+                end < duration - 0.7 and not any(
+                    0 < w[0] - last[1] < 0.5 for w in words if w[0] > last[1]))
+            ending_incomplete = last[1] >= end - 0.13 and not re.search(r'[.!?…]$', last[2])
+            title_terms = ('haha', 'lach', 'wtf', 'krass', 'nein', 'what', 'nicht', 'wow', 'lol')
+            moment = sum(any(k in w[2].lower() for k in title_terms) for w in selected)
+            density = len(selected) / max(length, 1)
+            score_value = density * 6 + min(moment, 3) * 0.8 + 5 * ending_complete
+            score_value -= 6 * ending_incomplete
+            score_value -= abs(length - target) * 0.13
+            if start == 0:
+                score_value += 0.2
+            if best is None or score_value > best[0]:
+                best = (score_value, start, length)
+    if best is None:
+        raise ValueError('No coherent 15-42s speech window; try next clip')
+    return round(best[1], 2), round(best[2], 2)
 
 def ass_time(seconds):
     ticks = int(max(0, seconds) * 100)
@@ -294,52 +323,79 @@ PlayResY: 1920
 WrapStyle: 2
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: TikTok,DejaVu Sans,58,&H00FFFFFF,&H00FFFFFF,&H00000000,&H70000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,300,1
+Style: TikTok,DejaVu Sans,61,&H00FFFFFF,&H00FFFFFF,&H00000000,&H75000000,-1,0,0,0,100,100,0,0,1,4,1,2,65,65,310,1
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 '''
-    selected = [(max(0, a - start), min(length, b - start), w) for a, b, w in words if b > start and a < start + length]
+    selected = [(max(0, a-start), min(length, b-start), w) for a, b, w in words
+                if a >= start and b <= start+length and b > a and w.strip()]
+    groups, group = [], []
+    for item in selected:
+        tentative = ' '.join(x[2] for x in group + [item])
+        if group and (len(tentative) > 31 or len(group) >= 4 or item[0] - group[-1][1] > .5):
+            groups.append(group)
+            group = []
+        group.append(item)
+        if re.search(r'[.!?…]$', item[2]):
+            groups.append(group)
+            group = []
+    if group:
+        groups.append(group)
     events = []
-    for idx in range(0, len(selected), 3):
-        group = selected[idx:idx + 3]
+    for group in groups:
         a, b = group[0][0], group[-1][1]
-        text = ' '.join(word for _, _, word in group).upper().replace('\\', '').replace('{', '(').replace('}', ')').replace('\n', ' ')[:90]
-        events.append(f'Dialogue: 0,{ass_time(a)},{ass_time(min(length, max(a + .4, b)))},TikTok,,0,0,0,,{text}')
+        label = ' '.join(x[2] for x in group).upper()
+        label = label.replace('\\', '').replace('{', '(').replace('}', ')').replace('\n', ' ').strip()
+        if label:
+            events.append(f'Dialogue: 0,{ass_time(a)},{ass_time(min(length, max(a + 0.45, b + 0.12)))},TikTok,,0,0,0,,{label}')
     path.write_text(header + '\n'.join(events) + '\n', encoding='utf-8')
-    return bool(events)
-
+    return len(events) >= 3
 
 def render(clip, source):
     duration = probe(source)
     if not 15 <= duration <= 65:
-        raise ValueError('Originalvideo hat ungeeignete Laenge')
+        raise ValueError('Originalvideo outside supported range')
     words = transcribe(source)
     start, length = pick_window(duration, words)
-    if length < 15:
-        raise ValueError('Zielvideo unter 15 Sekunden')
-    (OUT / 'headline.txt').write_text('\n'.join(textwrap.wrap(headline(clip), 21, break_long_words=False)[:3]), encoding='utf-8')
-    has_subs = write_subs(words, start, length, OUT / 'subs.ass')
-    if not has_subs:
-        raise ValueError('Untertitel konnten nicht erstellt werden: naechsten Clip pruefen')
-    filters = ('[0:v]split=2[a][b];'
-               '[a]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=20:10[bg];'
-               '[b]scale=1080:1500:force_original_aspect_ratio=decrease,setsar=1[fg];'
-               '[bg][fg]overlay=(W-w)/2:(H-h)/2,'
+    if length < 15 or length > 45:
+        raise ValueError('Cut must be between 15 and 45 seconds')
+    OUT.mkdir(exist_ok=True)
+    (OUT / 'headline.txt').write_text(
+        '\n'.join(textwrap.wrap(headline(clip), 21, break_long_words=False)[:3]),
+        encoding='utf-8')
+    if not write_subs(words, start, length, OUT / 'subs.ass'):
+        raise ValueError('Subtitles are too sparse; move to next candidate')
+    # 2-level layout: larger focal crop plus complete wide view so facecams stay visible.
+    # Exact facecam auto-detection is not supported; visual QA still required.
+    filters = ('[0:v]split=3[bgsource][zoomsource][wide];'
+               '[bgsource]scale=1080:1920:force_original_aspect_ratio=increase,'
+               'crop=1080:1920,boxblur=18:8[bg];'
+               '[zoomsource]scale=1080:860:force_original_aspect_ratio=increase,'
+               'crop=1080:860,setsar=1[focus];'
+               '[wide]scale=1080:610:force_original_aspect_ratio=decrease,'
+               'pad=1080:610:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1[overview];'
+               '[bg][focus]overlay=0:285[t1];'
+               '[t1][overview]overlay=0:1170,'
+               'drawbox=x=0:y=110:width=1080:height=140:color=black@0.7:t=fill,'
                'drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:'
-               'textfile=rendered/headline.txt:fontsize=54:fontcolor=white:borderw=3:'
-               'bordercolor=black:box=1:boxcolor=black@0.65:boxborderw=15:x=(w-text_w)/2:y=220,')
-    filters += 'ass=rendered/subs.ass,format=yuv420p[v]'
+               'textfile=rendered/headline.txt:fontsize=55:fontcolor=white:borderw=3:'
+               'bordercolor=black:x=(w-text_w)/2:y=142,'
+               'ass=rendered/subs.ass,format=yuv420p[v];'
+               '[0:a:0]loudnorm=I=-16:LRA=9:TP=-1.5[a]')
     movie = OUT / 'tiktok.mp4'
-    run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', str(start), '-t', str(length), '-i', str(source), '-filter_complex', filters, '-map', '[v]', '-map', '0:a:0?', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '23', '-r', '30', '-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart', str(movie)], timeout=360)
-    if not 15 <= probe(movie) <= 65 or probe(movie, size=True) != '1080x1920':
-        raise ValueError('MP4 validation failed')
-    # Decode 2 seconds to detect corrupted MP4s before adding them to the queue.
-    run(['ffmpeg', '-v', 'error', '-i', str(movie), '-t', '2', '-f', 'null', '-'],
-        capture_output=True, timeout=30)
+    run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', str(start),
+         '-t', str(length), '-i', str(source), '-filter_complex', filters,
+         '-map', '[v]', '-map', '[a]', '-c:v', 'libx264', '-preset', 'veryfast',
+         '-crf', '23', '-r', '30', '-c:a', 'aac', '-b:a', '160k',
+         '-movflags', '+faststart', str(movie)], timeout=360)
+    if not 15 <= probe(movie) <= 45.5 or probe(movie, size=True) != '1080x1920':
+        raise ValueError('Rendered MP4 failed duration or size check')
+    run(['ffmpeg', '-v', 'error', '-i', str(movie), '-f', 'null', '-'],
+        capture_output=True, timeout=120)
     cover = OUT / 'cover.jpg'
-    run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', '1', '-i', str(movie), '-frames:v', '1', '-q:v', '3', str(cover)], timeout=30)
-    return movie, cover, has_subs
-
+    run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', '1',
+         '-i', str(movie), '-frames:v', '1', '-q:v', '3', str(cover)], timeout=30)
+    return movie, cover, True
 
 def release(clip, video, cover, now):
     repo = os.getenv('GITHUB_REPOSITORY', '')
