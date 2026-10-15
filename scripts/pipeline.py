@@ -128,7 +128,7 @@ def channel_urls(channel, range_code='24hr'):
             url = item.get('webpage_url') or item.get('url') or ''
             if isinstance(url, str) and twitch_slug(url):
                 links.append((channel, url))
-        return list(dict.fromkeys(links))[:(8 if range_code == '24hr' else 12)]
+        return list(dict.fromkeys(links))[:(15 if range_code == '24hr' else 20)]
     except Exception as exc:
         print('WARN listing', channel, range_code, repr(exc)[:150], file=sys.stderr, flush=True)
         return []
@@ -221,17 +221,22 @@ def very_strong(clip):
 
 
 def worth_testing(clip):
-    """Clip discovery gate, not a quality endorsement; real media QA still required."""
+    """Cheap discovery gate, not an assessment of whether the moment is funny.
+
+    Keyword and high velocity requirements used to eliminate clips whose
+    metadata was valid (800+ views), even before inspecting actual content.
+    Quality must be checked from the video, not guessed from its title.
+    """
     title = clip['title'].lower()
-    velocity = clip['view_count'] / max(1.0, clip['age_hours'])
-    funny = any(keyword in title for keyword in KEYWORDS)
     risky_context = any(keyword in title for keyword in (
-        'partner +', 'sponsor', 'vertrags', 'werbung', 'tier list',
-        'sponsored', 'ranking', 'advert'))
-    return not risky_context and (
-        (funny and velocity >= 40) or
-        (clip['view_count'] >= 800 and velocity >= 90) or
-        (clip['view_count'] >= 3500 and velocity >= 35))
+        'partner +', 'sponsor', 'vertrags', 'werbung',
+        'sponsored', 'advert'))
+    velocity = clip['view_count'] / max(1.0, clip['age_hours'])
+    return (
+        not risky_context and clip['view_count'] >= 800
+        and ((clip['age_hours'] <= 48 and velocity >= 15)
+             or (48 < clip['age_hours'] <= 72 and very_strong(clip)))
+    )
 
 
 def selection_rank(clip):
@@ -523,14 +528,22 @@ def fresh_candidates(now, used, used_urls, failed, channels):
                  and twitch_slug(url) not in failed]
         inspected.update(twitch_slug(url) for _, url in links)
         verified = []
+        metadata_passed, selection_rejected = 0, 0
         with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
             results = pool.map(
                 lambda pair: inspect_original(
                     pair[0], pair[1], now, int(os.getenv('MIN_VIEWS', '800'))), links)
             for clip in results:
                 if clip and clip['id'] not in used and clip['clip_slug'] not in used:
+                    metadata_passed += 1
                     if (clip['age_hours'] <= 48 or very_strong(clip)) and worth_testing(clip):
                         verified.append(clip)
+                    else:
+                        selection_rejected += 1
+        print('DISCOVERY_DIAGNOSTIC', phase, json.dumps({
+            'urls': len(links), 'valid_original_metadata': metadata_passed,
+            'rejected_by_candidate_gate': selection_rejected,
+            'eligible_for_quality_test': len(verified)}), flush=True)
         # Prefer a real number of views, strong view velocity, a fresh age and a usable length.
         verified.sort(key=selection_rank)
         print('VERIFIED', phase, len(verified), 'candidate(s)', flush=True)
@@ -664,6 +677,10 @@ def self_test():
     cut_start, cut_length = pick_window(44, sample_words)
     assert 0 <= cut_start and 15 <= cut_length <= 42
     assert authorized_channels() is not None
+    # Verified clips should not be rejected only because their titles are mundane.
+    assert worth_testing(dict(example, title='Normale Situation', age_hours=22, view_count=909))
+    assert not worth_testing(dict(example, title='Sponsored advertisement', age_hours=5, view_count=8000))
+    assert not worth_testing(dict(example, title='Normale Situation', age_hours=52, view_count=909))
     assert '1885635439' in EXCLUDE_IDS
     assert '1586086735' in EXCLUDE_IDS
     assert worth_testing(dict(example, title='Was ein WTF Moment', view_count=13000))
