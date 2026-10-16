@@ -114,7 +114,7 @@ jobs:
   prepare:
     name: Automatische Clip-Vorbereitung (KEIN TikTok-Upload)
     needs: checks
-    if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'prepare') }}
+    if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'prepare') || (github.event_name == 'push' && github.event.head_commit.message == 'Run automated clip preparation smoke test') }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
