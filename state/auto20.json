@@ -34,17 +34,20 @@
       "streamer": "krokoboss",
       "created_at": "2026-10-15T23:56:45Z",
       "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/krokoboss-cloudyephemeralantelopevohiyo-dqro4itw56defx65.mp4",
-      "status": "metricool_scheduled",
+      "status": "metricool_published",
       "quality_review_status": "approved_for_end_to_end_test",
       "review_notes": "Nutzer wünscht einen zweiten automatischen TikTok-Upload nach erfolgreichem ersten Video. Twitch-Clip Niek sein Urteil: 19,9 Sekunden, Minecraft-Vollbild mit kleiner Facecam, echte Original-Metadaten und Audiotrack; Wortgenauigkeit der Untertitel ist nicht vollständig gegengeprüft. Nur als End-to-End-Test freigegeben, kein garantierter Viral-Clip.",
       "subtitle_verified": false,
-      "posted_to_tiktok": false,
+      "posted_to_tiktok": true,
       "test_only": true,
       "rights_status": "user_asserted_not_independently_verified",
       "metricool_post_id": 397303423,
       "metricool_uuid": "5994225811500450341",
       "metricool_scheduled_at": "2026-10-16T10:00:00+02:00",
-      "metricool_provider_status": "PENDING"
+      "metricool_provider_status": "PUBLISHED",
+      "metricool_detailed_status": "Published",
+      "metricool_tiktok_video_id": "7697173571239529750",
+      "metricool_public_url": "https://www.tiktok.com/@Novel%20Novel/video/7697173571239529750"
     },
     {
       "clip_id": "3362507598",
