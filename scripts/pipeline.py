@@ -113,6 +113,93 @@ def authorized_channels():
     return [channel for channel in STREAMERS if channel in approved]
 
 
+def twitch_api_candidates(range_code='24hr', channels=None):
+    """Official Helix discovery; metadata must come from Twitch, not guessed."""
+    import urllib.request
+    import urllib.parse
+    channels = channels if channels is not None else authorized_channels()
+    client_id = os.getenv('TWITCH_CLIENT_ID', '').strip()
+    client_secret = os.getenv('TWITCH_CLIENT_SECRET', '').strip()
+    if not client_id or not client_secret:
+        raise RuntimeError('TWITCH_CLIENT_ID / TWITCH_CLIENT_SECRET missing')
+    form = urllib.parse.urlencode({
+        'client_id': client_id, 'client_secret': client_secret,
+        'grant_type': 'client_credentials'}).encode()
+    request = urllib.request.Request(
+        'https://id.twitch.tv/oauth2/token', data=form, method='POST')
+    with urllib.request.urlopen(request, timeout=20) as response:
+        token = json.load(response)['access_token']
+    headers = {'Client-Id': client_id, 'Authorization': 'Bearer ' + token}
+    def get(path, params):
+        url = 'https://api.twitch.tv/helix/' + path + '?' + urllib.parse.urlencode(params, doseq=True)
+        with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=25) as response:
+            return json.load(response)
+    users = get('users', [('login', ch) for ch in channels]).get('data', [])
+    logins = {u['id']: u['login'].lower() for u in users
+              if u.get('login', '').lower() in channels}
+    now = now_utc()
+    # '7d' is a fallback discovery source, but eligibility is always <=72 hours.
+    hours = 24 if range_code == '24hr' else 72
+    start = iso(now - dt.timedelta(hours=hours))
+    end = iso(now)
+    found = []
+    def clips_for_user(item):
+        broadcaster_id, login = item
+        result = []
+        cursor = None
+        for _ in range(3):
+            params = {'broadcaster_id': broadcaster_id, 'started_at': start,
+                      'ended_at': end, 'first': 100}
+            if cursor:
+                params['after'] = cursor
+            response = get('clips', params)
+            result.extend((login, clip) for clip in response.get('data', []))
+            cursor = response.get('pagination', {}).get('cursor')
+            if not cursor:
+                break
+        return result
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
+        for batch in pool.map(clips_for_user, logins.items()):
+            found.extend(batch)
+    print('TWITCH HELIX DISCOVERY', range_code, 'approved', len(channels),
+          'resolved', len(logins), 'clips', len(found), flush=True)
+    return found
+
+
+def helix_verified(phase, now, used, used_urls, failed, channels):
+    """Helix is authoritative for source views, timestamps, duration and broadcaster."""
+    results = []
+    for channel, info in twitch_api_candidates(phase, channels):
+        try:
+            clip_id = str(info['id'])
+            url = str(info['url'])
+            clip_slug = twitch_slug(url)
+            if not clip_slug or clip_id in used or clip_slug in used or url in used_urls or clip_slug in failed:
+                continue
+            created = dt.datetime.fromisoformat(info['created_at'].replace('Z', '+00:00'))
+            age = (now - created).total_seconds() / 3600
+            views = info['view_count']
+            duration = info['duration']
+            title = str(info.get('title') or '').strip()
+            if (not isinstance(views, int) or isinstance(views, bool)
+                    or not isinstance(duration, (int, float))
+                    or isinstance(duration, bool) or not 0 <= age <= 72
+                    or not 15 <= duration <= 60 or views < int(os.getenv('MIN_VIEWS', '800'))
+                    or len(title) < 5 or channel not in RANK):
+                continue
+            clip = {'id': clip_id, 'clip_slug': clip_slug, 'url': url,
+                    'channel_login': channel, 'rank': RANK[channel],
+                    'title': title, 'view_count': views, 'duration': float(duration),
+                    'original_created_at': iso(created), 'age_hours': age}
+            if (age <= 48 or very_strong(clip)) and worth_testing(clip):
+                results.append(clip)
+        except (KeyError, ValueError, TypeError) as exc:
+            print('WARN invalid Helix clip metadata', repr(exc)[:100], file=sys.stderr)
+    results.sort(key=selection_rank)
+    print('HELIX VERIFIED', phase, len(results), flush=True)
+    return results
+
+
 def channel_urls(channel, range_code='24hr'):
     """Discover fresh URLs first; failed listings do not abort other channels."""
     source = f'https://www.twitch.tv/{channel}/clips?filter=clips&range={range_code}'
@@ -580,6 +667,12 @@ def release(clip, video, cover, now):
 
 def fresh_candidates(now, used, used_urls, failed, channels):
     """Two-stage discovery; the seven-day page is only a fallback source."""
+    # When credentials exist, use authoritative Helix data exclusively.
+    # Fail closed on API errors: do not silently downgrade to unverified listings.
+    if os.getenv('TWITCH_CLIENT_ID') or os.getenv('TWITCH_CLIENT_SECRET'):
+        for phase in ('24hr', '7d'):
+            yield phase, helix_verified(phase, now, used, used_urls, failed, channels)
+        return
     inspected = set()
     for phase in ('24hr', '7d'):
         links = [(channel, url) for channel, url in fetch_candidates(phase, channels)
@@ -718,6 +811,7 @@ def main():
 
 def self_test():
     assert len(STREAMERS) == 50 and len(set(STREAMERS)) == 50
+    assert callable(twitch_api_candidates) and callable(helix_verified)
     assert twitch_slug('https://www.twitch.tv/trymacs/clip/Example-123') == 'Example-123'
     assert twitch_slug('https://evil.com/a/clip/nope') is None
     example = {'channel_login': 'papaplatte', 'title': 'Das war verrückt!', 'duration': 27,
