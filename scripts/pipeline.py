@@ -192,33 +192,55 @@ def twitch_api_candidates(range_code='24hr', channels=None):
 def helix_verified(phase, now, used, used_urls, failed, channels):
     """Helix is authoritative for source views, timestamps, duration and broadcaster."""
     results = []
+    reject_counts = {}
+    def rejected(reason):
+        reject_counts[reason] = reject_counts.get(reason, 0) + 1
     for channel, info in twitch_api_candidates(phase, channels):
         try:
             clip_id = str(info['id'])
             url = str(info['url'])
             clip_slug = twitch_slug(url)
             if not clip_slug or clip_id in used or clip_slug in used or url in used_urls or clip_slug in failed:
+                rejected('invalid_url_or_duplicate')
                 continue
             created = dt.datetime.fromisoformat(info['created_at'].replace('Z', '+00:00'))
             age = (now - created).total_seconds() / 3600
             views = info['view_count']
             duration = info['duration']
             title = str(info.get('title') or '').strip()
-            if (not isinstance(views, int) or isinstance(views, bool)
-                    or not isinstance(duration, (int, float))
-                    or isinstance(duration, bool) or not 0 <= age <= 72
-                    or not 15 <= duration <= 60 or views < int(os.getenv('MIN_VIEWS', '800'))
-                    or len(title) < 5 or channel not in RANK):
+            if not isinstance(views, int) or isinstance(views, bool):
+                rejected('missing_views')
+                continue
+            if not isinstance(duration, (int, float)) or isinstance(duration, bool):
+                rejected('missing_duration')
+                continue
+            if not 0 <= age <= 72:
+                rejected('age_outside_72h')
+                continue
+            if not 15 <= duration <= 60:
+                rejected('duration_outside_15_60s')
+                continue
+            if views < int(os.getenv('MIN_VIEWS', '800')):
+                rejected('views_below_minimum')
+                continue
+            if len(title) < 5 or channel not in RANK:
+                rejected('title_or_channel')
                 continue
             clip = {'id': clip_id, 'clip_slug': clip_slug, 'url': url,
                     'channel_login': channel, 'rank': RANK[channel],
                     'title': title, 'view_count': views, 'duration': float(duration),
                     'original_created_at': iso(created), 'age_hours': age}
-            if (age <= 48 or very_strong(clip)) and worth_testing(clip):
+            if not (age <= 48 or very_strong(clip)):
+                rejected('older_without_strong_metrics')
+            elif not worth_testing(clip):
+                rejected('velocity_or_sponsor_filter')
+            else:
                 results.append(clip)
         except (KeyError, ValueError, TypeError) as exc:
+            rejected('invalid_metadata')
             print('WARN invalid Helix clip metadata', repr(exc)[:100], file=sys.stderr)
     results.sort(key=selection_rank)
+    print('HELIX FILTER COUNTS', json.dumps(reject_counts, sort_keys=True), flush=True)
     print('HELIX VERIFIED', phase, len(results), flush=True)
     return results
 
