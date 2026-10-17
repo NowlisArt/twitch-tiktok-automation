@@ -70,6 +70,9 @@ jobs:
       - name: yt-dlp installieren
         run: python -m pip install --upgrade yt-dlp
       - name: Original-Links und Metadaten pruefen
+        env:
+          TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+          TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
         run: python scripts/pipeline.py --diagnose
 
   render_test:
@@ -94,6 +97,8 @@ jobs:
       - name: Clip suchen, Ersatz versuchen und schneiden
         env:
           MIN_VIEWS: '800'
+          TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+          TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
           QA_SAMPLE_COUNT: '3'
           ASR_MODEL: 'medium'
           PYTHONUNBUFFERED: '1'
@@ -121,6 +126,8 @@ jobs:
       contents: write
     env:
       MIN_VIEWS: '800'
+      TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+      TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
       ASR_MODEL: 'medium'
       PYTHONUNBUFFERED: '1'
     steps:
