@@ -683,7 +683,7 @@ def render(clip, source):
                'drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:'
                'textfile=rendered/headline.txt:fontsize=55:fontcolor=white:borderw=3:'
                'bordercolor=black:x=(w-text_w)/2:y=142,'
-               ('ass=rendered/subs.ass,' if has_subs else '') + 'format=yuv420p[v];'
+               + ('ass=rendered/subs.ass,' if has_subs else '') + 'format=yuv420p[v];'
                '[0:a:0]loudnorm=I=-16:LRA=9:TP=-1.5[a]')
     movie = OUT / 'tiktok.mp4'
     run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', str(start),
