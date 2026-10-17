@@ -837,6 +837,7 @@ def main():
             movie, cover, has_subs = render(clip, source)
             # Silent gameplay commentary is not a failure if real audio passes QA.
             # Never invent subtitles for clips without reliable speech.
+            # Trigger the release preparation smoke test on this commit.
             video_url, cover_url = release(clip, movie, cover, now)
             state['created'].append({
                 'clip_id': clip['id'], 'clip_slug': clip['clip_slug'],
