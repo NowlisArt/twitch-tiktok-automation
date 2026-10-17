@@ -636,6 +636,7 @@ def render(clip, source):
     if not 15 <= duration <= 65:
         raise ValueError('Originalvideo outside supported range')
     # Gameplay highlights can be compelling without continuous dialogue.
+    # QA rerun uses the verified no-fabricated-subtitles fallback.
     # Only speech-specific failures use the no-subtitle fallback; unsafe content
     # and genuinely broken media still fail closed.
     try:
