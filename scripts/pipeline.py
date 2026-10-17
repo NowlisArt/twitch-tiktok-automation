@@ -87,7 +87,7 @@ def scheduled_slot(now):
 
 
 def can_prepare(state, now, event='schedule'):
-    """Production buffer: max 60 prepared / month, max 3 / day.
+    """Production buffer: max 60 prepared / month, max 5 / day.
 
     GitHub production is NOT the separate Metricool 20-post monthly limit.
     More production candidates allow genuine replacement when clips fail review.
@@ -97,8 +97,8 @@ def can_prepare(state, now, event='schedule'):
     if len(monthly) >= 60:
         return False, 'GitHub-Pufferlimit von 60 Produktionen in diesem Monat erreicht'
     if sum(rec.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))
-           for rec in monthly) >= 3:
-        return False, 'Heute bereits drei Clip-Kandidaten erstellt'
+           for rec in monthly)  >= 5:
+        return False, 'Heute bereits fünf Clip-Kandidaten erstellt'
     # Continuous hourly discovery/production. Keep the per-day and per-month caps.
     return True, 'OK'
 
@@ -807,7 +807,7 @@ def main():
     failed = current_failed_ids(state, now)
     monthly = [r for r in state['created'] if r.get('created_at', '').startswith(now.strftime('%Y-%m'))]
     daily = [r for r in monthly if r.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))]
-    daily_limit = 3
+    daily_limit = 5
     remaining = min(max(0, daily_limit-len(daily)), max(0, 60-len(monthly)))
     if remaining <= 0:
         print('SKIP: production buffer already filled')
@@ -890,7 +890,7 @@ def self_test():
                        dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
     assert can_prepare({'created': [example_record, example_record], 'processed_ids': []},
                        dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
-    assert not can_prepare({'created': [example_record]*3, 'processed_ids': []},
+    assert not can_prepare({'created': [example_record]*5, 'processed_ids': []},
                            dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
     assert 'Quelle:' not in caption(dict(example, title='Quelle: https://example.org Mega fail'))
     sample_words = [(i*1.1, i*1.1+0.6, ('word.' if i in (9, 19, 29, 39) else 'word'))
