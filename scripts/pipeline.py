@@ -951,7 +951,10 @@ def render_test():
             subtitle_file = sample_dir / 'subs.ass'
             video_file.write_bytes(movie.read_bytes())
             cover_file.write_bytes(cover.read_bytes())
-            subtitle_file.write_bytes((OUT / 'subs.ass').read_bytes())
+            if has_subs and (OUT / 'subs.ass').exists():
+                subtitle_file.write_bytes((OUT / 'subs.ass').read_bytes())
+            elif subtitle_file.exists():
+                subtitle_file.unlink()
             manifest = {
                 'sample_only': True, 'posted_to_tiktok': False,
                 'no_public_release': True,
@@ -964,7 +967,7 @@ def render_test():
                 'original_duration': clip['duration'],
                 'rendered_duration': probe(video_file),
                 'video_file': str(video_file), 'cover_file': str(cover_file),
-                'subtitle_status': 'auto_generated_needs_review',
+                'subtitle_status': ('auto_generated_needs_review' if has_subs else 'no_subtitles_no_reliable_speech'),
                 'quality_review': 'not_performed',
                 'editing_version': 'v3_popularity_ranked'
             }
