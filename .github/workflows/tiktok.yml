@@ -27,9 +27,9 @@ on:
           - render-test
           - prepare
   schedule:
-    # Like the original template: evaluate new clips every hour.
+    # Avoid the top-of-hour GitHub Actions scheduler congestion.\n    # Scheduled runs are best-effort; external watchdog monitors missed runs.
     # The Python script additionally enforces a UTC production window.
-    - cron: '19 * * * *'
+    - cron: '43 * * * *'
 
 permissions:
   contents: read
