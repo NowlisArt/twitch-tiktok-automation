@@ -292,6 +292,32 @@ def probe(path, size=False):
     return proc.stdout.strip() if size else float(proc.stdout.strip())
 
 
+def verify_render_media(path):
+    """Fail closed on missing audio, silent renders, and nearly all-black output.
+
+    These checks do not establish subtitle accuracy or editorial quality.
+    """
+    streams = json.loads(run([
+        'ffprobe', '-v', 'error', '-show_entries',
+        'stream=codec_type,width,height', '-of', 'json', str(path)],
+        capture_output=True, timeout=30).stdout).get('streams', [])
+    video = [s for s in streams if s.get('codec_type') == 'video']
+    audio = [s for s in streams if s.get('codec_type') == 'audio']
+    if len(video) != 1 or not audio:
+        raise ValueError('Render must contain one video stream and an audio track')
+    if (video[0].get('width'), video[0].get('height')) != (1080, 1920):
+        raise ValueError('Render must be 1080x1920')
+    analysis = run(['ffmpeg', '-hide_banner', '-nostats', '-i', str(path),
+                    '-vn', '-af', 'volumedetect', '-f', 'null', '-'],
+                   capture_output=True, timeout=90, check=False)
+    if analysis.returncode != 0:
+        raise ValueError('Audio decode/volume analysis failed')
+    match = re.search(r'mean_volume:\\s*(-?[\\d.]+) dB', analysis.stderr)
+    if not match or float(match.group(1)) < -48:
+        raise ValueError('Audio missing or effectively silent')
+    return True
+
+
 def download(clip):
     OUT.mkdir(exist_ok=True)
     for path in OUT.glob('source.*'):
@@ -522,6 +548,7 @@ def render(clip, source):
         raise ValueError('Rendered MP4 failed duration or size check')
     run(['ffmpeg', '-v', 'error', '-i', str(movie), '-f', 'null', '-'],
         capture_output=True, timeout=120)
+    verify_render_media(movie)
     cover = OUT / 'cover.jpg'
     run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', '1',
          '-i', str(movie), '-frames:v', '1', '-q:v', '3', str(cover)], timeout=30)
