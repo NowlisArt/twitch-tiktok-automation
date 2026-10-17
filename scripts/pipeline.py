@@ -117,6 +117,7 @@ def twitch_api_candidates(range_code='24hr', channels=None):
     """Official Helix discovery; metadata must come from Twitch, not guessed."""
     import urllib.request
     import urllib.parse
+    import urllib.error
     channels = channels if channels is not None else authorized_channels()
     client_id = os.getenv('TWITCH_CLIENT_ID', '').strip()
     client_secret = os.getenv('TWITCH_CLIENT_SECRET', '').strip()
@@ -127,8 +128,30 @@ def twitch_api_candidates(range_code='24hr', channels=None):
         'grant_type': 'client_credentials'}).encode()
     request = urllib.request.Request(
         'https://id.twitch.tv/oauth2/token', data=form, method='POST')
-    with urllib.request.urlopen(request, timeout=20) as response:
-        token = json.load(response)['access_token']
+    try:
+        with urllib.request.urlopen(request, timeout=20) as response:
+            token = json.load(response)['access_token']
+    except urllib.error.HTTPError as exc:
+        # Report only Twitch's documented error classification, never raw
+        # response bodies or request parameters containing credentials.
+        safe_reason = 'unknown'
+        try:
+            body = json.loads(exc.read(4096))
+            reason = str(body.get('message', '')).lower()
+            if 'invalid client' in reason or 'client id' in reason:
+                safe_reason = 'invalid_client_id'
+            elif 'secret' in reason:
+                safe_reason = 'invalid_client_secret'
+            elif 'grant' in reason:
+                safe_reason = 'invalid_grant'
+            elif 'missing' in reason:
+                safe_reason = 'missing_parameter'
+        except (ValueError, UnicodeDecodeError):
+            pass
+        raise RuntimeError(
+            f'Twitch OAuth rejected app credentials (HTTP {exc.code}; reason={safe_reason}). '
+            'Verify GitHub secret values match the same Twitch developer app.'
+        ) from None
     headers = {'Client-Id': client_id, 'Authorization': 'Bearer ' + token}
     def get(path, params):
         url = 'https://api.twitch.tv/helix/' + path + '?' + urllib.parse.urlencode(params, doseq=True)
