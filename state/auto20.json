@@ -173,6 +173,29 @@
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
       "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "TenaciousSavageSoymilkHeyGuys-0K3bhwXJXd2A1oGQ",
+      "clip_slug": "TenaciousSavageSoymilkHeyGuys-0K3bhwXJXd2A1oGQ",
+      "streamer": "eliasn97",
+      "source_url": "https://www.twitch.tv/eliasn97/clip/TenaciousSavageSoymilkHeyGuys-0K3bhwXJXd2A1oGQ",
+      "original_title": "hahahaha",
+      "hook": "HAHAHAHA",
+      "caption": "hahahaha 😂\n#eliasn97 #twitchde #streamclips",
+      "views_at_selection": 966,
+      "original_duration": 30.0,
+      "rendered_duration": 23.233333,
+      "original_created_at": "2026-10-16T17:55:20Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/eliasn97-tenacioussavagesoymilkheyguys-0k3bhwxjxd2a1ogq.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/eliasn97-tenacioussavagesoymilkheyguys-0k3bhwxjxd2a1ogq-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-17T14:25:22Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
     }
   ],
   "processed_ids": [
@@ -187,7 +210,9 @@
     "MistyAgitatedPicklesKAPOW-_IMwx3P0gVRlJBWy",
     "MistyAgitatedPicklesKAPOW-_IMwx3P0gVRlJBWy",
     "OnerousTsundereLyrebirdBrokeBack-lGOTR5NDF7209jG0",
-    "OnerousTsundereLyrebirdBrokeBack-lGOTR5NDF7209jG0"
+    "OnerousTsundereLyrebirdBrokeBack-lGOTR5NDF7209jG0",
+    "TenaciousSavageSoymilkHeyGuys-0K3bhwXJXd2A1oGQ",
+    "TenaciousSavageSoymilkHeyGuys-0K3bhwXJXd2A1oGQ"
   ],
   "failed_attempts": {
     "RudeTrappedBisonNononoCat-w-J7zDOmDSV3vA3o": {
