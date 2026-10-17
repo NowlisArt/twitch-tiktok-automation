@@ -139,5 +139,21 @@
     "269250108",
     "SincereCrowdedWolfResidentSleeper-bkHSrBt_OtrUvoRj"
   ],
-  "failed_attempts": {}
+  "failed_attempts": {
+    "RudeTrappedBisonNononoCat-w-J7zDOmDSV3vA3o": {
+      "at": "2026-10-17T03:40:14Z",
+      "streamer": "krokoboss",
+      "reason": "CalledProcessError(1, ['gh', 'release', 'upload', 'tiktok-2026-10', 'rendered/krokoboss-rudetrappedbisonnononocat-w-j7zdomdsv3va3o.mp4', 'rendered/krokoboss-rudetrappedbisonnononocat-w-j7zdomdsv3va3o-"
+    },
+    "TameTacitAlligatorSoonerLater-4t57oOHCjEP2vLwI": {
+      "at": "2026-10-17T03:40:14Z",
+      "streamer": "noway4u_sir",
+      "reason": "CalledProcessError(1, ['gh', 'release', 'upload', 'tiktok-2026-10', 'rendered/noway4u-sir-tametacitalligatorsoonerlater-4t57oohcjep2vlwi.mp4', 'rendered/noway4u-sir-tametacitalligatorsoonerlater-4t57o"
+    },
+    "SingleCrazyAxePunchTrees-g0vRZb947cnoFhWf": {
+      "at": "2026-10-17T03:40:14Z",
+      "streamer": "eliasn97",
+      "reason": "CalledProcessError(1, ['gh', 'release', 'upload', 'tiktok-2026-10', 'rendered/eliasn97-singlecrazyaxepunchtrees-g0vrzb947cnofhwf.mp4', 'rendered/eliasn97-singlecrazyaxepunchtrees-g0vrzb947cnofhwf-cove"
+    }
+  }
 }
