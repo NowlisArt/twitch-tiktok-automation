@@ -127,6 +127,52 @@
       "metricool_scheduled_at": "2026-10-18T10:00:00+02:00",
       "metricool_provider_status": "PENDING",
       "posted_to_tiktok": false
+    },
+    {
+      "clip_id": "MistyAgitatedPicklesKAPOW-_IMwx3P0gVRlJBWy",
+      "clip_slug": "MistyAgitatedPicklesKAPOW-_IMwx3P0gVRlJBWy",
+      "streamer": "gronkh",
+      "source_url": "https://www.twitch.tv/gronkh/clip/MistyAgitatedPicklesKAPOW-_IMwx3P0gVRlJBWy",
+      "original_title": "Maurice auf dich",
+      "hook": "MAURICE AUF DICH",
+      "caption": "Maurice auf dich 😂\n#gronkh #twitchde #streamclips",
+      "views_at_selection": 972,
+      "original_duration": 30.0,
+      "rendered_duration": 28.166667,
+      "original_created_at": "2026-10-16T22:33:00Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/gronkh-mistyagitatedpickleskapow-imwx3p0gvrljbwy.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/gronkh-mistyagitatedpickleskapow-imwx3p0gvrljbwy-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-17T11:10:43Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "OnerousTsundereLyrebirdBrokeBack-lGOTR5NDF7209jG0",
+      "clip_slug": "OnerousTsundereLyrebirdBrokeBack-lGOTR5NDF7209jG0",
+      "streamer": "zarbex",
+      "source_url": "https://www.twitch.tv/zarbex/clip/OnerousTsundereLyrebirdBrokeBack-lGOTR5NDF7209jG0",
+      "original_title": "warden angriff",
+      "hook": "WARDEN ANGRIFF",
+      "caption": "warden angriff 😂\n#zarbex #twitchde #streamclips",
+      "views_at_selection": 806,
+      "original_duration": 30.0,
+      "rendered_duration": 20.033333,
+      "original_created_at": "2026-10-15T14:39:00Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/zarbex-oneroustsunderelyrebirdbrokeback-lgotr5ndf7209jg0.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/zarbex-oneroustsunderelyrebirdbrokeback-lgotr5ndf7209jg0-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-17T11:10:43Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
     }
   ],
   "processed_ids": [
@@ -137,21 +183,25 @@
     "2577797595",
     "RepleteAcceptableAyeayeHassaanChop-CTbY9ka8OMrmy6nY",
     "269250108",
-    "SincereCrowdedWolfResidentSleeper-bkHSrBt_OtrUvoRj"
+    "SincereCrowdedWolfResidentSleeper-bkHSrBt_OtrUvoRj",
+    "MistyAgitatedPicklesKAPOW-_IMwx3P0gVRlJBWy",
+    "MistyAgitatedPicklesKAPOW-_IMwx3P0gVRlJBWy",
+    "OnerousTsundereLyrebirdBrokeBack-lGOTR5NDF7209jG0",
+    "OnerousTsundereLyrebirdBrokeBack-lGOTR5NDF7209jG0"
   ],
   "failed_attempts": {
     "RudeTrappedBisonNononoCat-w-J7zDOmDSV3vA3o": {
-      "at": "2026-10-17T03:40:14Z",
+      "at": "2026-10-17T11:10:43Z",
       "streamer": "krokoboss",
       "reason": "CalledProcessError(1, ['gh', 'release', 'upload', 'tiktok-2026-10', 'rendered/krokoboss-rudetrappedbisonnononocat-w-j7zdomdsv3va3o.mp4', 'rendered/krokoboss-rudetrappedbisonnononocat-w-j7zdomdsv3va3o-"
     },
     "TameTacitAlligatorSoonerLater-4t57oOHCjEP2vLwI": {
-      "at": "2026-10-17T03:40:14Z",
+      "at": "2026-10-17T11:10:43Z",
       "streamer": "noway4u_sir",
       "reason": "CalledProcessError(1, ['gh', 'release', 'upload', 'tiktok-2026-10', 'rendered/noway4u-sir-tametacitalligatorsoonerlater-4t57oohcjep2vlwi.mp4', 'rendered/noway4u-sir-tametacitalligatorsoonerlater-4t57o"
     },
     "SingleCrazyAxePunchTrees-g0vRZb947cnoFhWf": {
-      "at": "2026-10-17T03:40:14Z",
+      "at": "2026-10-17T11:10:43Z",
       "streamer": "eliasn97",
       "reason": "CalledProcessError(1, ['gh', 'release', 'upload', 'tiktok-2026-10', 'rendered/eliasn97-singlecrazyaxepunchtrees-g0vrzb947cnofhwf.mp4', 'rendered/eliasn97-singlecrazyaxepunchtrees-g0vrzb947cnofhwf-cove"
     }
