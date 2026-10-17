@@ -137,7 +137,7 @@
       "hook": "MAURICE AUF DICH",
       "caption": "Maurice auf dich 😂\n#gronkh #twitchde #streamclips",
       "views_at_selection": 972,
-      "original_duration": 30.0,
+      "original_duration": 30,
       "rendered_duration": 28.166667,
       "original_created_at": "2026-10-16T22:33:00Z",
       "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/gronkh-mistyagitatedpickleskapow-imwx3p0gvrljbwy.mp4",
@@ -160,7 +160,7 @@
       "hook": "WARDEN ANGRIFF",
       "caption": "warden angriff 😂\n#zarbex #twitchde #streamclips",
       "views_at_selection": 806,
-      "original_duration": 30.0,
+      "original_duration": 30,
       "rendered_duration": 20.033333,
       "original_created_at": "2026-10-15T14:39:00Z",
       "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/zarbex-oneroustsunderelyrebirdbrokeback-lgotr5ndf7209jg0.mp4",
@@ -183,7 +183,7 @@
       "hook": "HAHAHAHA",
       "caption": "hahahaha 😂\n#eliasn97 #twitchde #streamclips",
       "views_at_selection": 966,
-      "original_duration": 30.0,
+      "original_duration": 30,
       "rendered_duration": 23.233333,
       "original_created_at": "2026-10-16T17:55:20Z",
       "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/eliasn97-tenacioussavagesoymilkheyguys-0k3bhwxjxd2a1ogq.mp4",
@@ -196,6 +196,48 @@
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
       "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "RudeTrappedBisonNononoCat-w-J7zDOmDSV3vA3o",
+      "clip_slug": "RudeTrappedBisonNononoCat-w-J7zDOmDSV3vA3o",
+      "streamer": "krokoboss",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/krokoboss-rudetrappedbisonnononocat-w-j7zdomdsv3va3o.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/krokoboss-rudetrappedbisonnononocat-w-j7zdomdsv3va3o-cover.jpg",
+      "created_at": "2026-10-17T03:36:38Z",
+      "status": "orphaned_release_requires_manual_review_not_posted",
+      "rights_status": "unverified",
+      "video_review_status": "not_reviewed",
+      "subtitle_verified": false,
+      "metadata_status": "original_twitch_metadata_not_recovered",
+      "recovery_note": "Existing GitHub release asset recovered to block duplicate uploads. No claim of original views, age, quality, rights or publication."
+    },
+    {
+      "clip_id": "TameTacitAlligatorSoonerLater-4t57oOHCjEP2vLwI",
+      "clip_slug": "TameTacitAlligatorSoonerLater-4t57oOHCjEP2vLwI",
+      "streamer": "noway4u_sir",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/noway4u-sir-tametacitalligatorsoonerlater-4t57oohcjep2vlwi.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/noway4u-sir-tametacitalligatorsoonerlater-4t57oohcjep2vlwi-cover.jpg",
+      "created_at": "2026-10-17T03:38:02Z",
+      "status": "orphaned_release_requires_manual_review_not_posted",
+      "rights_status": "unverified",
+      "video_review_status": "not_reviewed",
+      "subtitle_verified": false,
+      "metadata_status": "original_twitch_metadata_not_recovered",
+      "recovery_note": "Existing GitHub release asset recovered to block duplicate uploads. No claim of original views, age, quality, rights or publication."
+    },
+    {
+      "clip_id": "SingleCrazyAxePunchTrees-g0vRZb947cnoFhWf",
+      "clip_slug": "SingleCrazyAxePunchTrees-g0vRZb947cnoFhWf",
+      "streamer": "eliasn97",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/eliasn97-singlecrazyaxepunchtrees-g0vrzb947cnofhwf.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/eliasn97-singlecrazyaxepunchtrees-g0vrzb947cnofhwf-cover.jpg",
+      "created_at": "2026-10-17T03:39:24Z",
+      "status": "orphaned_release_requires_manual_review_not_posted",
+      "rights_status": "unverified",
+      "video_review_status": "not_reviewed",
+      "subtitle_verified": false,
+      "metadata_status": "original_twitch_metadata_not_recovered",
+      "recovery_note": "Existing GitHub release asset recovered to block duplicate uploads. No claim of original views, age, quality, rights or publication."
     }
   ],
   "processed_ids": [
@@ -212,23 +254,10 @@
     "OnerousTsundereLyrebirdBrokeBack-lGOTR5NDF7209jG0",
     "OnerousTsundereLyrebirdBrokeBack-lGOTR5NDF7209jG0",
     "TenaciousSavageSoymilkHeyGuys-0K3bhwXJXd2A1oGQ",
-    "TenaciousSavageSoymilkHeyGuys-0K3bhwXJXd2A1oGQ"
+    "TenaciousSavageSoymilkHeyGuys-0K3bhwXJXd2A1oGQ",
+    "RudeTrappedBisonNononoCat-w-J7zDOmDSV3vA3o",
+    "TameTacitAlligatorSoonerLater-4t57oOHCjEP2vLwI",
+    "SingleCrazyAxePunchTrees-g0vRZb947cnoFhWf"
   ],
-  "failed_attempts": {
-    "RudeTrappedBisonNononoCat-w-J7zDOmDSV3vA3o": {
-      "at": "2026-10-17T11:10:43Z",
-      "streamer": "krokoboss",
-      "reason": "CalledProcessError(1, ['gh', 'release', 'upload', 'tiktok-2026-10', 'rendered/krokoboss-rudetrappedbisonnononocat-w-j7zdomdsv3va3o.mp4', 'rendered/krokoboss-rudetrappedbisonnononocat-w-j7zdomdsv3va3o-"
-    },
-    "TameTacitAlligatorSoonerLater-4t57oOHCjEP2vLwI": {
-      "at": "2026-10-17T11:10:43Z",
-      "streamer": "noway4u_sir",
-      "reason": "CalledProcessError(1, ['gh', 'release', 'upload', 'tiktok-2026-10', 'rendered/noway4u-sir-tametacitalligatorsoonerlater-4t57oohcjep2vlwi.mp4', 'rendered/noway4u-sir-tametacitalligatorsoonerlater-4t57o"
-    },
-    "SingleCrazyAxePunchTrees-g0vRZb947cnoFhWf": {
-      "at": "2026-10-17T11:10:43Z",
-      "streamer": "eliasn97",
-      "reason": "CalledProcessError(1, ['gh', 'release', 'upload', 'tiktok-2026-10', 'rendered/eliasn97-singlecrazyaxepunchtrees-g0vrzb947cnofhwf.mp4', 'rendered/eliasn97-singlecrazyaxepunchtrees-g0vrzb947cnofhwf-cove"
-    }
-  }
+  "failed_attempts": {}
 }
