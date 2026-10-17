@@ -927,6 +927,20 @@ def render_test():
 
 def source_diagnostic():
     """Read-only test of public Twitch clip listing and source metadata."""
+    if os.getenv('TWITCH_CLIENT_ID') and os.getenv('TWITCH_CLIENT_SECRET'):
+        channels = authorized_channels()
+        if len(channels) != 50:
+            raise SystemExit('FAILED: expected 50 approved channels')
+        now = now_utc()
+        candidates = helix_verified('24hr', now, set(), set(), set(), channels)
+        print('HELIX DIAGNOSTIC SUMMARY', json.dumps({
+            'approved_channels': len(channels),
+            'eligible_clips_last_24h': len(candidates),
+            'sample': [{'channel': c['channel_login'], 'views': c['view_count'],
+                        'age_hours': round(c['age_hours'], 1)}
+                       for c in candidates[:5]],
+            'no_download_or_upload': True}), flush=True)
+        return
     channels = ('papaplatte', 'eliasn97', 'trymacs', 'krokoboss')
     found = 0
     confirmed = 0
