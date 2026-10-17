@@ -637,6 +637,7 @@ def render(clip, source):
         raise ValueError('Originalvideo outside supported range')
     # Gameplay highlights can be compelling without continuous dialogue.
     # QA rerun uses the verified no-fabricated-subtitles fallback.
+    # Recheck the corrected FFmpeg volume parser with real Twitch samples.
     # Only speech-specific failures use the no-subtitle fallback; unsafe content
     # and genuinely broken media still fail closed.
     try:
