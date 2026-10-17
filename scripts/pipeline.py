@@ -444,7 +444,7 @@ def verify_render_media(path):
                    capture_output=True, timeout=90, check=False)
     if analysis.returncode != 0:
         raise ValueError('Audio decode/volume analysis failed')
-    match = re.search(r'mean_volume:\\s*(-?[\\d.]+) dB', analysis.stderr)
+    match = re.search(r'mean_volume:\s*(-?[\d.]+) dB', analysis.stderr)
     if not match or float(match.group(1)) < -48:
         raise ValueError('Audio missing or effectively silent')
     return True
