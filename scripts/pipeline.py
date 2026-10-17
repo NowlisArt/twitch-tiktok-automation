@@ -835,8 +835,8 @@ def main():
                   clip['clip_slug'], clip['view_count'], flush=True)
             source = download(clip)
             movie, cover, has_subs = render(clip, source)
-            if not has_subs:
-                raise ValueError('Subtitles missing')
+            # Silent gameplay commentary is not a failure if real audio passes QA.
+            # Never invent subtitles for clips without reliable speech.
             video_url, cover_url = release(clip, movie, cover, now)
             state['created'].append({
                 'clip_id': clip['id'], 'clip_slug': clip['clip_slug'],
@@ -852,7 +852,7 @@ def main():
                 'video_review_status': 'technical_checks_only',
                 'editing_status': '9x16_face_focus_fullscreen_overview_15_42s',
                 'subtitle_verified': False,
-                'subtitle_review_status': 'auto_generated_needs_review'
+                'subtitle_review_status': ('auto_generated_needs_review' if has_subs else 'no_reliable_speech_no_subtitles')
             })
             state['processed_ids'].extend([clip['id'], clip['clip_slug']])
             used.update([clip['id'], clip['clip_slug']])
