@@ -635,16 +635,31 @@ def render(clip, source):
     duration = probe(source)
     if not 15 <= duration <= 65:
         raise ValueError('Originalvideo outside supported range')
-    words = transcribe(source)
-    start, length = pick_window(duration, words)
+    # Gameplay highlights can be compelling without continuous dialogue.
+    # Only speech-specific failures use the no-subtitle fallback; unsafe content
+    # and genuinely broken media still fail closed.
+    try:
+        words = transcribe(source)
+        start, length = pick_window(duration, words)
+    except ValueError as exc:
+        if not any(marker in str(exc) for marker in (
+                'No reliable spoken content', 'Insufficient reliable speech',
+                'No coherent 15-42s speech window')):
+            raise
+        print('QA GAMEPLAY FALLBACK: no trustworthy subtitles', repr(exc), flush=True)
+        words = []
+        start, length = 0.0, min(35.0, duration)
+
     if length < 15 or length > 45:
         raise ValueError('Cut must be between 15 and 45 seconds')
     OUT.mkdir(exist_ok=True)
     (OUT / 'headline.txt').write_text(
         '\n'.join(textwrap.wrap(headline(clip), 21, break_long_words=False)[:3]),
         encoding='utf-8')
-    if not write_subs(words, start, length, OUT / 'subs.ass'):
-        raise ValueError('Subtitles are too sparse; move to next candidate')
+    has_subs = write_subs(words, start, length, OUT / 'subs.ass') if words else False
+    if words and not has_subs:
+        print('QA GAMEPLAY FALLBACK: sparse captions omitted', flush=True)
+    # No speech: use the real gameplay and headline, never fabricate captions.
     # Focus on a reaction face if detected, otherwise central gameplay; keep wide view below.
     focus_roi = find_face_focus(source, duration)
     if focus_roi:
@@ -668,7 +683,7 @@ def render(clip, source):
                'drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:'
                'textfile=rendered/headline.txt:fontsize=55:fontcolor=white:borderw=3:'
                'bordercolor=black:x=(w-text_w)/2:y=142,'
-               'ass=rendered/subs.ass,format=yuv420p[v];'
+               ('ass=rendered/subs.ass,' if has_subs else '') + 'format=yuv420p[v];'
                '[0:a:0]loudnorm=I=-16:LRA=9:TP=-1.5[a]')
     movie = OUT / 'tiktok.mp4'
     run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', str(start),
@@ -684,7 +699,7 @@ def render(clip, source):
     cover = OUT / 'cover.jpg'
     run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', '1',
          '-i', str(movie), '-frames:v', '1', '-q:v', '3', str(cover)], timeout=30)
-    return movie, cover, True
+    return movie, cover, has_subs
 
 def release(clip, video, cover, now):
     repo = os.getenv('GITHUB_REPOSITORY', '')
@@ -924,8 +939,7 @@ def render_test():
             print('SAFE RENDER ATTEMPT', phase, clip['channel_login'], clip['id'], flush=True)
             source = download(clip)
             movie, cover, has_subs = render(clip, source)
-            if not has_subs:
-                raise ValueError('No subtitles')
+            # No reliable speech is acceptable for a gameplay-only QA sample.
             sample_dir = OUT / 'qa_samples' / slug(
                 clip['channel_login'] + '-' + clip['clip_slug'], 90)
             sample_dir.mkdir(parents=True, exist_ok=True)
