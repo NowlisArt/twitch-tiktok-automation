@@ -977,13 +977,20 @@ def source_diagnostic():
         if len(channels) != 50:
             raise SystemExit('FAILED: expected 50 approved channels')
         now = now_utc()
-        candidates = helix_verified('24hr', now, set(), set(), set(), channels)
+        results = {}
+        for window in ('24hr', '7d'):
+            candidates = helix_verified(window, now, set(), set(), set(), channels)
+            results[window] = {
+                'eligible': len(candidates),
+                'sample': [{'channel': c['channel_login'], 'views': c['view_count'],
+                            'age_hours': round(c['age_hours'], 1)}
+                           for c in candidates[:5]]
+            }
         print('HELIX DIAGNOSTIC SUMMARY', json.dumps({
             'approved_channels': len(channels),
-            'eligible_clips_last_24h': len(candidates),
-            'sample': [{'channel': c['channel_login'], 'views': c['view_count'],
-                        'age_hours': round(c['age_hours'], 1)}
-                       for c in candidates[:5]],
+            'eligible_clips_last_24h': results['24hr']['eligible'],
+            'eligible_clips_last_72h': results['7d']['eligible'],
+            'sample': results['7d']['sample'],
             'no_download_or_upload': True}), flush=True)
         return
     channels = ('papaplatte', 'eliasn97', 'trymacs', 'krokoboss')
