@@ -119,7 +119,7 @@
       "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/metashi12-269250108-cover.jpg",
       "transcript_subtitles": true,
       "created_at": "2026-10-16T00:01:28Z",
-      "status": "metricool_scheduled",
+      "status": "metricool_published",
       "rights_status": "user_confirmed_permission_not_independently_verified",
       "video_review_status": "technical_checks_only",
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
@@ -128,8 +128,10 @@
       "metricool_post_id": 398287316,
       "metricool_uuid": "-1111156841089645509",
       "metricool_scheduled_at": "2026-10-18T10:00:00+02:00",
-      "metricool_provider_status": "PENDING",
-      "posted_to_tiktok": false
+      "metricool_provider_status": "PUBLISHED",
+      "posted_to_tiktok": false,
+      "metricool_public_url": "https://www.tiktok.com/@novel.novel601/video/7697915581147761942",
+      "publication_verification": "metricool_published_not_independently_confirmed"
     },
     {
       "clip_id": "MistyAgitatedPicklesKAPOW-_IMwx3P0gVRlJBWy",
@@ -302,7 +304,7 @@
       "hook": "PAPA MINECRAFT STIRBT AN LAVA (KECK)",
       "caption": "Papa Minecraft stirbt an Lava (keck) 😂\n#papaplatte #twitchde #streamclips",
       "views_at_selection": 839,
-      "original_duration": 30.0,
+      "original_duration": 30,
       "rendered_duration": 15.933333,
       "original_created_at": "2026-10-17T18:16:43Z",
       "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/papaplatte-cleanpreciouslardwholewheat-2vbb0rrt-ov-bapa.mp4",
