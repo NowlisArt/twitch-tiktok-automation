@@ -292,6 +292,29 @@
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
       "subtitle_review_status": "no_reliable_speech_no_subtitles"
+    },
+    {
+      "clip_id": "CleanPreciousLardWholeWheat-2vbb0Rrt-oV_BApa",
+      "clip_slug": "CleanPreciousLardWholeWheat-2vbb0Rrt-oV_BApa",
+      "streamer": "papaplatte",
+      "source_url": "https://www.twitch.tv/papaplatte/clip/CleanPreciousLardWholeWheat-2vbb0Rrt-oV_BApa",
+      "original_title": "Papa Minecraft stirbt an Lava (keck)",
+      "hook": "PAPA MINECRAFT STIRBT AN LAVA (KECK)",
+      "caption": "Papa Minecraft stirbt an Lava (keck) 😂\n#papaplatte #twitchde #streamclips",
+      "views_at_selection": 839,
+      "original_duration": 30.0,
+      "rendered_duration": 15.933333,
+      "original_created_at": "2026-10-17T18:16:43Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/papaplatte-cleanpreciouslardwholewheat-2vbb0rrt-ov-bapa.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/papaplatte-cleanpreciouslardwholewheat-2vbb0rrt-ov-bapa-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-18T17:33:44Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
     }
   ],
   "processed_ids": [
@@ -315,7 +338,9 @@
     "SilkyTenuousWormTwitchRaid-DMvxDa1fde6oLFwi",
     "SilkyTenuousWormTwitchRaid-DMvxDa1fde6oLFwi",
     "LittlePoliteOilSpicyBoy-bAfGYNLwocwoccC5",
-    "LittlePoliteOilSpicyBoy-bAfGYNLwocwoccC5"
+    "LittlePoliteOilSpicyBoy-bAfGYNLwocwoccC5",
+    "CleanPreciousLardWholeWheat-2vbb0Rrt-oV_BApa",
+    "CleanPreciousLardWholeWheat-2vbb0Rrt-oV_BApa"
   ],
   "failed_attempts": {}
 }
