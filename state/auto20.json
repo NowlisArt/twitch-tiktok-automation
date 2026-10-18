@@ -246,6 +246,52 @@
       "subtitle_verified": false,
       "metadata_status": "original_twitch_metadata_not_recovered",
       "recovery_note": "Existing GitHub release asset recovered to block duplicate uploads. No claim of original views, age, quality, rights or publication."
+    },
+    {
+      "clip_id": "SilkyTenuousWormTwitchRaid-DMvxDa1fde6oLFwi",
+      "clip_slug": "SilkyTenuousWormTwitchRaid-DMvxDa1fde6oLFwi",
+      "streamer": "xrohat",
+      "source_url": "https://www.twitch.tv/xrohat/clip/SilkyTenuousWormTwitchRaid-DMvxDa1fde6oLFwi",
+      "original_title": "Rohat bummst SpaceX",
+      "hook": "ROHAT BUMMST SPACEX",
+      "caption": "Rohat bummst SpaceX 😂\n#xrohat #twitchde #streamclips",
+      "views_at_selection": 829,
+      "original_duration": 37.1,
+      "rendered_duration": 19.2,
+      "original_created_at": "2026-10-17T22:01:18Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/xrohat-silkytenuouswormtwitchraid-dmvxda1fde6olfwi.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/xrohat-silkytenuouswormtwitchraid-dmvxda1fde6olfwi-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-18T00:17:14Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "LittlePoliteOilSpicyBoy-bAfGYNLwocwoccC5",
+      "clip_slug": "LittlePoliteOilSpicyBoy-bAfGYNLwocwoccC5",
+      "streamer": "krokoboss",
+      "source_url": "https://www.twitch.tv/krokoboss/clip/LittlePoliteOilSpicyBoy-bAfGYNLwocwoccC5",
+      "original_title": "Psychosentitan",
+      "hook": "PSYCHOSENTITAN",
+      "caption": "Psychosentitan 😂\n#krokoboss #twitchde #streamclips",
+      "views_at_selection": 858,
+      "original_duration": 26.9,
+      "rendered_duration": 27.033333,
+      "original_created_at": "2026-10-16T23:20:43Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/krokoboss-littlepoliteoilspicyboy-bafgynlwocwoccc5.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/krokoboss-littlepoliteoilspicyboy-bafgynlwocwoccc5-cover.jpg",
+      "transcript_subtitles": false,
+      "created_at": "2026-10-18T00:17:14Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "no_reliable_speech_no_subtitles"
     }
   ],
   "processed_ids": [
@@ -265,7 +311,11 @@
     "TenaciousSavageSoymilkHeyGuys-0K3bhwXJXd2A1oGQ",
     "RudeTrappedBisonNononoCat-w-J7zDOmDSV3vA3o",
     "TameTacitAlligatorSoonerLater-4t57oOHCjEP2vLwI",
-    "SingleCrazyAxePunchTrees-g0vRZb947cnoFhWf"
+    "SingleCrazyAxePunchTrees-g0vRZb947cnoFhWf",
+    "SilkyTenuousWormTwitchRaid-DMvxDa1fde6oLFwi",
+    "SilkyTenuousWormTwitchRaid-DMvxDa1fde6oLFwi",
+    "LittlePoliteOilSpicyBoy-bAfGYNLwocwoccC5",
+    "LittlePoliteOilSpicyBoy-bAfGYNLwocwoccC5"
   ],
   "failed_attempts": {}
 }
