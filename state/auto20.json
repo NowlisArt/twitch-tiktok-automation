@@ -317,6 +317,29 @@
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
       "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "StylishAbnegateBunnyPMSTwin-1J9YPAZgZQXaEzTv",
+      "clip_slug": "StylishAbnegateBunnyPMSTwin-1J9YPAZgZQXaEzTv",
+      "streamer": "eliasn97",
+      "source_url": "https://www.twitch.tv/eliasn97/clip/StylishAbnegateBunnyPMSTwin-1J9YPAZgZQXaEzTv",
+      "original_title": "Danny fährt Firma direkt an die Wand",
+      "hook": "DANNY FÄHRT FIRMA DIREKT AN DIE WAND",
+      "caption": "Danny fährt Firma direkt an die Wand 😂\n#eliasn97 #twitchde #streamclips",
+      "views_at_selection": 852,
+      "original_duration": 22.5,
+      "rendered_duration": 22.6,
+      "original_created_at": "2026-10-18T16:58:06Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/eliasn97-stylishabnegatebunnypmstwin-1j9ypazgzqxaeztv.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/eliasn97-stylishabnegatebunnypmstwin-1j9ypazgzqxaeztv-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-19T05:18:32Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
     }
   ],
   "processed_ids": [
@@ -342,7 +365,9 @@
     "LittlePoliteOilSpicyBoy-bAfGYNLwocwoccC5",
     "LittlePoliteOilSpicyBoy-bAfGYNLwocwoccC5",
     "CleanPreciousLardWholeWheat-2vbb0Rrt-oV_BApa",
-    "CleanPreciousLardWholeWheat-2vbb0Rrt-oV_BApa"
+    "CleanPreciousLardWholeWheat-2vbb0Rrt-oV_BApa",
+    "StylishAbnegateBunnyPMSTwin-1J9YPAZgZQXaEzTv",
+    "StylishAbnegateBunnyPMSTwin-1J9YPAZgZQXaEzTv"
   ],
   "failed_attempts": {}
 }
