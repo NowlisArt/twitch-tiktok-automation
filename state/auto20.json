@@ -343,6 +343,29 @@
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
       "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "SpoopyCarelessHerdDxAbomb-TVsj9HbikhtzbYuz",
+      "clip_slug": "SpoopyCarelessHerdDxAbomb-TVsj9HbikhtzbYuz",
+      "streamer": "marli",
+      "source_url": "https://www.twitch.tv/marli/clip/SpoopyCarelessHerdDxAbomb-TVsj9HbikhtzbYuz",
+      "original_title": "thank you daddy",
+      "hook": "THANK YOU DADDY",
+      "caption": "thank you daddy 😂\n#marli #twitchde #streamclips",
+      "views_at_selection": 879,
+      "original_duration": 44.5,
+      "rendered_duration": 20.0,
+      "original_created_at": "2026-10-18T17:35:30Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/marli-spoopycarelessherddxabomb-tvsj9hbikhtzbyuz.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/marli-spoopycarelessherddxabomb-tvsj9hbikhtzbyuz-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-19T17:46:41Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
     }
   ],
   "processed_ids": [
@@ -370,7 +393,9 @@
     "CleanPreciousLardWholeWheat-2vbb0Rrt-oV_BApa",
     "CleanPreciousLardWholeWheat-2vbb0Rrt-oV_BApa",
     "StylishAbnegateBunnyPMSTwin-1J9YPAZgZQXaEzTv",
-    "StylishAbnegateBunnyPMSTwin-1J9YPAZgZQXaEzTv"
+    "StylishAbnegateBunnyPMSTwin-1J9YPAZgZQXaEzTv",
+    "SpoopyCarelessHerdDxAbomb-TVsj9HbikhtzbYuz",
+    "SpoopyCarelessHerdDxAbomb-TVsj9HbikhtzbYuz"
   ],
   "failed_attempts": {}
 }
