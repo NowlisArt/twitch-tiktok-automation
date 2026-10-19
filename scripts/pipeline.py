@@ -797,8 +797,7 @@ def main():
     now, state = now_utc(), read_state()
     allowed, reason = can_prepare(state, now, os.getenv('GITHUB_EVENT_NAME', 'schedule'))
     if not allowed:
-        print('SKIP:', reason)
-        return
+        print('PRODUCTION PAUSED:', reason, '- continuing Twitch discovery')
     channels = authorized_channels()
     if not channels:
         print('SKIP: no approved channels. No videos prepared.')
@@ -810,8 +809,7 @@ def main():
     daily_limit = 5
     remaining = min(max(0, daily_limit-len(daily)), max(0, 60-len(monthly)))
     if remaining <= 0:
-        print('SKIP: production buffer already filled')
-        return
+        print('PRODUCTION PAUSED: buffer filled; still scanning approved channels')
     all_candidates = []
     for phase, verified in fresh_candidates(now, used, used_urls, failed, channels):
         all_candidates.extend((phase, clip) for clip in verified)
