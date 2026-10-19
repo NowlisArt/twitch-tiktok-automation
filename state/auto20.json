@@ -337,12 +337,17 @@
       "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/eliasn97-stylishabnegatebunnypmstwin-1j9ypazgzqxaeztv-cover.jpg",
       "transcript_subtitles": true,
       "created_at": "2026-10-19T05:18:32Z",
-      "status": "awaiting_review_not_posted",
-      "rights_status": "user_asserted_not_independently_verified",
+      "status": "metricool_scheduled",
+      "rights_status": "user_confirmed_permission_not_independently_verified",
       "video_review_status": "technical_checks_only",
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
-      "subtitle_review_status": "auto_generated_needs_review"
+      "subtitle_review_status": "auto_generated_needs_review",
+      "metricool_post_id": 400389523,
+      "metricool_uuid": "8680144751831697044",
+      "metricool_scheduled_at": "2026-10-20T10:00:00+02:00",
+      "metricool_provider_status": "PENDING",
+      "posted_to_tiktok": false
     },
     {
       "clip_id": "SpoopyCarelessHerdDxAbomb-TVsj9HbikhtzbYuz",
@@ -354,18 +359,23 @@
       "caption": "thank you daddy 😂\n#marli #twitchde #streamclips",
       "views_at_selection": 879,
       "original_duration": 44.5,
-      "rendered_duration": 20.0,
+      "rendered_duration": 20,
       "original_created_at": "2026-10-18T17:35:30Z",
       "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/marli-spoopycarelessherddxabomb-tvsj9hbikhtzbyuz.mp4",
       "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/marli-spoopycarelessherddxabomb-tvsj9hbikhtzbyuz-cover.jpg",
       "transcript_subtitles": true,
       "created_at": "2026-10-19T17:46:41Z",
-      "status": "awaiting_review_not_posted",
-      "rights_status": "user_asserted_not_independently_verified",
+      "status": "metricool_scheduled",
+      "rights_status": "user_confirmed_permission_not_independently_verified",
       "video_review_status": "technical_checks_only",
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
-      "subtitle_review_status": "auto_generated_needs_review"
+      "subtitle_review_status": "auto_generated_needs_review",
+      "metricool_post_id": 400389570,
+      "metricool_uuid": "-3241122075792618922",
+      "metricool_scheduled_at": "2026-10-21T10:00:00+02:00",
+      "metricool_provider_status": "PENDING",
+      "posted_to_tiktok": false
     }
   ],
   "processed_ids": [
