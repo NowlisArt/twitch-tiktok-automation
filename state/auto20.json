@@ -129,9 +129,10 @@
       "metricool_uuid": "-1111156841089645509",
       "metricool_scheduled_at": "2026-10-18T10:00:00+02:00",
       "metricool_provider_status": "PUBLISHED",
-      "posted_to_tiktok": false,
+      "posted_to_tiktok": true,
       "metricool_public_url": "https://www.tiktok.com/@novel.novel601/video/7697915581147761942",
-      "publication_verification": "metricool_published_not_independently_confirmed"
+      "publication_verification": "metricool_published_not_independently_confirmed",
+      "metricool_detailed_status": "Published"
     },
     {
       "clip_id": "MistyAgitatedPicklesKAPOW-_IMwx3P0gVRlJBWy",
