@@ -149,7 +149,7 @@
       "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/gronkh-mistyagitatedpickleskapow-imwx3p0gvrljbwy-cover.jpg",
       "transcript_subtitles": true,
       "created_at": "2026-10-17T11:10:43Z",
-      "status": "metricool_scheduled",
+      "status": "metricool_published",
       "rights_status": "user_asserted_not_independently_verified",
       "video_review_status": "technical_checks_only",
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
@@ -158,8 +158,11 @@
       "metricool_post_id": 398557985,
       "metricool_uuid": "7364467261141435275",
       "metricool_scheduled_at": "2026-10-19T10:00:00+02:00",
-      "metricool_provider_status": "PENDING",
-      "posted_to_tiktok": false
+      "metricool_provider_status": "PUBLISHED",
+      "posted_to_tiktok": true,
+      "metricool_detailed_status": "Published",
+      "metricool_tiktok_video_id": "7698287044388310294",
+      "metricool_public_url": "https://www.tiktok.com/@novel.novel601/video/7698287044388310294"
     },
     {
       "clip_id": "OnerousTsundereLyrebirdBrokeBack-lGOTR5NDF7209jG0",
