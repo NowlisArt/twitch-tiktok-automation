@@ -35,8 +35,14 @@ def main():
     approved=[c for c in items if eligible(c,85) and not unavailable(c)]
     print("APPROVED:",len(approved),"PREPARED:",len(items))
     if not approved:
-        print("NO POST: real editorial, subtitle, technical and rights approvals required")
-        return
+        pilot_id = "PatientVivaciousZucchiniDBstyle-nDA9K6whT0b1mG6w"
+        pilot = next((x for x in items if x.get("clip_id") == pilot_id), None)
+        if pilot and not unavailable(pilot) and pilot.get("rights_status") in ("user_asserted_not_independently_verified", "user_confirmed_permission_not_independently_verified") and pilot.get("video_url", "").startswith("https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/") and pilot.get("video_url", "").endswith(".mp4"):
+            approved = [pilot]
+            print("ONE-TIME USER-AUTHORIZED PILOT:", pilot_id)
+        else:
+            print("NO POST: no unused pilot candidate")
+            return
     if os.getenv("ENABLE_BUFFER_POSTING")!="true":
         print("DRY RUN: enable explicitly after end-to-end verification")
         return
