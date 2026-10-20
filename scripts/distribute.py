@@ -28,30 +28,56 @@ def eligible(clip, threshold):
     return bool(required)
 
 
+def clip_keys(clip):
+    """Normalize source identities across re-encoded media and TikTok accounts."""
+    from urllib.parse import urlsplit
+    keys = set()
+    for field in ("clip_id", "clip_slug"):
+        value = str(clip.get(field) or "").strip()
+        if value:
+            keys.add(field + ":" + value)
+    url = str(clip.get("source_url") or "").strip()
+    if url:
+        parts = urlsplit(url)
+        keys.add("source_url:" + parts.netloc.lower() + parts.path.rstrip("/").lower())
+    return keys
+
+
+def unavailable(clip):
+    """A pending, reserved or posted clip is never an unallocated candidate."""
+    return bool(
+        clip.get("posted_to_tiktok")
+        or clip.get("buffer_post_id")
+        or clip.get("metricool_post_id")
+        or clip.get("reserved_for")
+        or clip.get("reservation_id")
+        or str(clip.get("status", "")).startswith(("metricool_", "buffer_"))
+    )
+
+
 def allocate(clips, accounts, used_ids=None):
-    used = set(used_ids or ())
+    used = set(str(value) for value in (used_ids or ()))
+    # Reserve all historical identities BEFORE considering approved candidates.
+    for clip in clips:
+        if unavailable(clip):
+            used.update(clip_keys(clip))
+            if clip.get("clip_id"):
+                used.add(str(clip["clip_id"]))
     result = {account["id"]: [] for account in accounts}
-    # One shared queue, distinct clips across all destination accounts.
-    # Priority is configurable; do not allocate unapproved videos as filler.
     for account in sorted(accounts, key=lambda x: x["priority"]):
         for clip in clips:
             cid = str(clip.get("clip_id") or "")
-            if not cid or cid in used:
-                continue
-            if clip.get("posted_to_tiktok") or clip.get("buffer_post_id") or clip.get("metricool_post_id"):
-                used.add(cid)
-                continue
-            if str(clip.get("status", "")).startswith(("metricool_", "buffer_")):
-                used.add(cid)
+            keys = clip_keys(clip)
+            if not cid or unavailable(clip) or cid in used or keys.intersection(used):
                 continue
             if not eligible(clip, account["minimum_quality"]):
                 continue
             result[account["id"]].append(cid)
             used.add(cid)
+            used.update(keys)
             if len(result[account["id"]]) >= account["videos_per_day"]:
                 break
     return result
-
 
 def validate(accounts):
     assert isinstance(accounts, list) and accounts
@@ -90,6 +116,18 @@ def selftest():
     assert allocate([dict(approved, clip_id="a", quality_score=84)], accounts) == {"novel": [], "dream": []}
     assert allocate([dict(approved, clip_id="a", metricool_post_id="used")], accounts) == {"novel": [], "dream": []}
     assert allocate([dict(approved, clip_id="a", subtitle_verified=False)], accounts) == {"novel": [], "dream": []}
+    duplicate = [
+        dict(approved, clip_id="a", clip_slug="same", source_url="https://clips.twitch.tv/xyz?a=1"),
+        dict(approved, clip_id="b", clip_slug="same", source_url="https://clips.twitch.tv/xyz?a=2"),
+        dict(approved, clip_id="c", clip_slug="unique", source_url="https://clips.twitch.tv/other"),
+    ]
+    assert allocate(duplicate, accounts) == {"novel": ["a"], "dream": ["c"]}
+    blocked = [
+        dict(approved, clip_id="a", clip_slug="same", status="buffer_pending"),
+        dict(approved, clip_id="b", clip_slug="same"),
+    ]
+    assert allocate(blocked, accounts) == {"novel": [], "dream": []}
+    assert allocate([dict(approved, clip_id="a", reserved_for="dreamvoid")], accounts) == {"novel": [], "dream": []}
     print("PASS: multi-account priority, exclusivity, historical reuse, QA fail-closed")
 
 
