@@ -195,6 +195,41 @@ jobs:
               print('Buffer schema discovery unavailable:', type(exc).__name__, str(exc)[:200])
           PY
 
+      - name: Verify Buffer posting API contract without creating a post
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request
+          key=os.environ.get('BUFFER_API_KEY')
+          if not key:
+              raise SystemExit('FAIL: missing BUFFER_API_KEY')
+          def gql(query):
+              req=urllib.request.Request('https://api.buffer.com',
+                  data=json.dumps({'query':query}).encode(),
+                  headers={'Authorization':'Bearer '+key,'Content-Type':'application/json'},method='POST')
+              with urllib.request.urlopen(req,timeout=30) as resp:
+                  result=json.load(resp)
+              if result.get('errors'):
+                  raise RuntimeError('GraphQL introspection rejected: '+str(result['errors']))
+              return result['data']
+          data=gql('query { __schema { mutationType { fields { name args { name type { kind name ofType { kind name } } } } } } }')
+          mutations=((data.get('__schema') or {}).get('mutationType') or {}).get('fields') or []
+          create=next((m for m in mutations if m['name']=='createPost'),None)
+          if not create:
+              raise SystemExit('FAIL: Buffer createPost mutation unavailable')
+          print('PASS: createPost mutation exists; argument names:',[a['name'] for a in create['args']])
+          details=gql('query { __type(name:"CreatePostInput") { name inputFields { name type { kind name ofType { kind name } } } } }')
+          fields=((details.get('__type') or {}).get('inputFields') or [])
+          if not fields:
+              raise SystemExit('FAIL: CreatePostInput not available; publisher input must be adapted')
+          names={f['name'] for f in fields}
+          print('CreatePostInput fields:',sorted(names))
+          required={'channelId','text'}
+          if not required.issubset(names):
+              raise SystemExit('FAIL: publisher expected fields not supported: '+str(required-names))
+          print('PASS: Buffer publishing API schema inspected; no post created')
+          PY
       - name: Buffer scheduler preflight (no unapproved posts)
         env:
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
