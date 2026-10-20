@@ -1,0 +1,83 @@
+name: Buffer | Quality Gate (safe dry run)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/buffer.yml
+
+permissions:
+  contents: read
+
+jobs:
+  quality-dry-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate candidate metadata without publishing
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from urllib.parse import urlparse
+
+          THRESHOLD = 85
+          state = json.loads(Path("state/auto20.json").read_text(encoding="utf-8"))
+          candidates = state.get("created", [])
+          assert isinstance(candidates, list), "Invalid clip queue"
+          print(f"SAFE DRY RUN: {len(candidates)} existing clips; threshold {THRESHOLD}/100")
+          print("NO Buffer API calls. NO scheduling. NO publishing.")
+
+          def audit(clip):
+              reasons = []
+              def check(ok, reason):
+                  if not ok:
+                      reasons.append(reason)
+                  return bool(ok)
+
+              clip_id = str(clip.get("clip_id") or clip.get("clip_slug") or "")
+              url = str(clip.get("video_url") or "")
+              parsed = urlparse(url)
+              url_ok = check(parsed.scheme == "https" and parsed.hostname == "github.com" and parsed.path.endswith(".mp4"), "public HTTPS MP4 URL not verified")
+              id_ok = check(bool(clip_id), "missing clip ID")
+              age_ok = False
+              try:
+                  original = datetime.fromisoformat(clip["original_created_at"].replace("Z", "+00:00"))
+                  age = (datetime.now(timezone.utc) - original).total_seconds() / 3600
+                  age_ok = 0 <= age <= 72
+              except (KeyError, ValueError, TypeError):
+                  pass
+              check(age_ok, "original clip not verifiably recent")
+              views = clip.get("views_at_selection")
+              views_ok = isinstance(views, int) and not isinstance(views, bool) and views >= 800
+              check(views_ok, "insufficient/unverified original views")
+              subtitle_ok = clip.get("subtitle_verified") is True
+              check(subtitle_ok, "subtitles not independently verified")
+              technical_ok = clip.get("technical_qa_passed") is True
+              check(technical_ok, "video/audio/crop technical QA not recorded")
+              editorial_ok = clip.get("editorial_review_status") == "approved"
+              check(editorial_ok, "hook/story/editorial review not approved")
+              rights_ok = clip.get("rights_status") == "verified_permission"
+              check(rights_ok, "permission not independently verified")
+              score = (10 if id_ok else 0) + (10 if url_ok else 0) + (10 if age_ok else 0) + (10 if views_ok else 0) + (15 if subtitle_ok else 0) + (20 if technical_ok else 0)
+              # Editorial hook/story points (25) are NEVER guessed from view counts or title keywords.
+              # 100 points are possible only with recorded editorial assessment.
+              score += 25 if editorial_ok else 0
+              if score < THRESHOLD:
+                  reasons.append(f"verified score {score} below {THRESHOLD}")
+              return score, reasons
+
+          ready = 0
+          for clip in candidates[-20:]:
+              score, reasons = audit(clip)
+              if not reasons:
+                  ready += 1
+              print(json.dumps({"clip_id": clip.get("clip_id"), "verified_score": score, "eligible": not reasons, "reasons": reasons}, ensure_ascii=False))
+          assert THRESHOLD == 85
+          assert audit({})[1], "Empty candidate must be rejected"
+          print(f"PASS: quality gate evaluated {min(20,len(candidates))} candidates; {ready} meet all conditions.")
+          print("No candidate was queued or posted; missing evidence always blocks publication.")
+          PY
