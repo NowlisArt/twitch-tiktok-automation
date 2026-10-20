@@ -508,5 +508,11 @@
     "KnottyStylishAlbatrossFloof-enzG3AtN33f8or43",
     "KnottyStylishAlbatrossFloof-enzG3AtN33f8or43"
   ],
-  "failed_attempts": {}
+  "failed_attempts": {
+    "AdventurousEnticingRuffPRChase-eTmHnzpbtEFS0GZI": {
+      "at": "2026-10-20T01:52:47Z",
+      "streamer": "papaplatte",
+      "reason": "ValueError('Cut must be between 15 and 45 seconds')"
+    }
+  }
 }
