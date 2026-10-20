@@ -220,7 +220,7 @@ def helix_verified(phase, now, used, used_urls, failed, channels):
             if not 10 <= duration <= 60:
                 rejected('duration_outside_10_60s')
                 continue
-            if views < int(os.getenv('MIN_VIEWS', '200')):
+            if views < int(os.getenv('MIN_VIEWS', '800')):
                 rejected('views_below_minimum')
                 continue
             if len(title) < 5 or channel not in RANK:
@@ -374,8 +374,8 @@ def worth_testing(clip):
         'sponsored', 'advert'))
     velocity = clip['view_count'] / max(1.0, clip['age_hours'])
     return (
-        not risky_context and clip['view_count'] >= 200
-        and ((clip['age_hours'] <= 48 and velocity >= 8)
+        not risky_context and clip['view_count'] >= 800
+        and ((clip['age_hours'] <= 48 and velocity >= 15)
              or (48 < clip['age_hours'] <= 336 and very_strong(clip)))
     )
 
