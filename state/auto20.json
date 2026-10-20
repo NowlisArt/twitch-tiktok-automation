@@ -96,12 +96,15 @@
       "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/krokoboss-2577797595-cover.jpg",
       "transcript_subtitles": true,
       "created_at": "2026-10-16T00:01:28Z",
-      "status": "awaiting_review_not_posted",
+      "status": "buffer_scheduled",
       "rights_status": "user_asserted_not_independently_verified",
       "video_review_status": "technical_checks_only",
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
-      "subtitle_review_status": "auto_generated_needs_review"
+      "subtitle_review_status": "auto_generated_needs_review",
+      "reserved_for": "dreamvoid",
+      "buffer_post_id": "6ad7f31b8c20162e7ecb719c",
+      "buffer_due_at": "2026-10-21T16:00:00.000Z"
     },
     {
       "clip_id": "269250108",
