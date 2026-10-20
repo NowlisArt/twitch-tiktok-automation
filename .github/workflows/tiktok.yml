@@ -55,6 +55,25 @@ jobs:
         run: python -m py_compile scripts/pipeline.py
       - name: Pipeline-Selbsttest
         run: python scripts/pipeline.py --self-test
+      - name: Accountuebergreifende Freigabe und Duplikate testen
+        run: |
+          python -m py_compile scripts/distribute.py
+          python scripts/distribute.py --selftest
+          python scripts/distribute.py
+      - name: Betriebsbereitschaft kontrollieren
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from scripts.distribute import eligible
+          state=json.loads(Path('state/auto20.json').read_text(encoding='utf-8'))
+          clips=state.get('created', [])
+          approved=[c for c in clips if eligible(c,85)]
+          print(f'READINESS: {len(clips)} prepared, {len(approved)} editorially approved')
+          if not approved:
+              print('NOT READY TO POST: no independently approved clips; fail closed.')
+          print('Posting remains disabled until a verified Buffer publisher exists.')
+          PY
 
   diagnose:
     name: Twitch-Verbindung pruefen (keine Downloads)
