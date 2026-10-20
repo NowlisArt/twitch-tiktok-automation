@@ -112,6 +112,28 @@ jobs:
               eligible += not issues
               print(json.dumps({'clip_id': cid, 'eligible': not issues, 'reasons': issues}, ensure_ascii=False))
           assert audit({}), 'empty candidate must fail closed'
+          # Regression tests: popularity and metadata alone never imply editorial quality.
+          sample = {
+              'clip_id': 'unique-test-id',
+              'video_url': 'https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/test/example.mp4',
+              'original_created_at': datetime.now(timezone.utc).isoformat(),
+              'views_at_selection': 12000,
+              'subtitle_verified': True,
+              'technical_qa_passed': True,
+              'rights_status': 'verified_permission',
+              'editorial_review_status': 'approved',
+              'quality_score_verified': True,
+              'quality_score': 90,
+          }
+          assert not audit(sample), 'fully verified sample should pass'
+          assert 'quality score' in ' '.join(audit(dict(sample, quality_score=84)))
+          assert 'subtitle' in ' '.join(audit(dict(sample, subtitle_verified=False)))
+          assert 'Metricool' in ' '.join(audit(dict(sample, posted_to_tiktok=True)))
+          assert 'Buffer' in ' '.join(audit(dict(sample, buffer_post_id='post-1')))
+          assert 'permission' in ' '.join(audit(dict(sample, rights_status='user_asserted_not_independently_verified')))
+          assert 'editorial' in ' '.join(audit(dict(sample, editorial_review_status='not_reviewed')))
+          assert 'score' in ' '.join(audit(dict(sample, quality_score_verified=False)))
+          print('REGRESSION PASS: quality, subtitle, duplicate, permission, editorial checks')
           print(f'AUDIT PASS: {min(len(items),30)} candidates inspected; {eligible} eligible. No uploads.')
           PY
       - name: Read-only Buffer account and channel verification
