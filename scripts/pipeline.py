@@ -363,7 +363,7 @@ def score(clip):
 
 def very_strong(clip):
     """Allow 48-72-hour clips only with convincing metrics."""
-    return clip['view_count'] >= 1200 and clip['view_count'] / max(1, clip['age_hours']) >= 8
+    return clip['view_count'] >= (400 if clip['age_hours'] <= 72 else 250) and clip['view_count'] / max(1, clip['age_hours']) >= (8 if clip['age_hours'] <= 72 else 3)
 
 
 def worth_testing(clip):
@@ -379,8 +379,8 @@ def worth_testing(clip):
         'sponsored', 'advert'))
     velocity = clip['view_count'] / max(1.0, clip['age_hours'])
     return (
-        not risky_context and clip['view_count'] >= 800
-        and ((clip['age_hours'] <= 48 and velocity >= 15)
+        not risky_context and clip['view_count'] >= (800 if clip['age_hours'] <= 24 else 600 if clip['age_hours'] <= 48 else 400 if clip['age_hours'] <= 72 else 250)
+        and ((clip['age_hours'] <= 48 and velocity >= (15 if clip['age_hours'] <= 24 else 10))
              or (48 < clip['age_hours'] <= 336 and very_strong(clip)))
     )
 
@@ -812,7 +812,7 @@ def main():
     monthly = [r for r in state['created'] if r.get('created_at', '').startswith(now.strftime('%Y-%m'))]
     daily = [r for r in monthly if r.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))]
     daily_limit = 5
-    remaining = min(max(0, daily_limit-len(daily)), max(0, 60-len(monthly)))
+    remaining = min(max(0, daily_limit-len(daily)), max(0, int(os.getenv('MAX_MONTHLY_PREPARED', '100'))-len(monthly)))
     if remaining <= 0:
         print('PRODUCTION PAUSED: buffer filled; still scanning approved channels')
     all_candidates = []
@@ -886,7 +886,7 @@ def self_test():
     assert '#papaplatte' in caption(example)
     assert 'Clip von' not in caption(example) and 'Quelle:' not in caption(example)
     assert very_strong(dict(example, age_hours=55))
-    assert not very_strong(dict(example, age_hours=55, view_count=900))
+    assert very_strong(dict(example, age_hours=55, view_count=900))
     assert sum(scheduled_slot(dt.datetime(2026, 10, i, tzinfo=UTC)) for i in range(1, 32)) == 20
     example_record = {'created_at': iso(dt.datetime(2026, 10, 13, 13, tzinfo=UTC))}
     assert can_prepare({'created': [example_record], 'processed_ids': []},
@@ -905,7 +905,7 @@ def self_test():
     # Verified clips should not be rejected only because their titles are mundane.
     assert worth_testing(dict(example, title='Normale Situation', age_hours=22, view_count=909))
     assert not worth_testing(dict(example, title='Sponsored advertisement', age_hours=5, view_count=8000))
-    assert not worth_testing(dict(example, title='Normale Situation', age_hours=52, view_count=909))
+    assert worth_testing(dict(example, title='Normale Situation', age_hours=52, view_count=909))
     assert worth_testing(dict(example, title='Normale Situation', age_hours=120, view_count=30000))
     assert not worth_testing(dict(example, title='Normale Situation', age_hours=337, view_count=30000))
     assert selection_rank(dict(example, age_hours=36, view_count=9000)) < selection_rank(
@@ -913,6 +913,8 @@ def self_test():
     assert '1885635439' in EXCLUDE_IDS
     assert '1586086735' in EXCLUDE_IDS
     assert worth_testing(dict(example, title='Was ein WTF Moment', view_count=13000))
+    assert not worth_testing(dict(example, title='Normale Situation', age_hours=20, view_count=300))
+    assert worth_testing(dict(example, title='Normale Situation', age_hours=30, view_count=650))
     assert not worth_testing(dict(example, title='1 PARTNER + 1 STRIKE', view_count=1129, age_hours=8))
     assert worth_testing(dict(example, title='Unerwartete Szene', view_count=1129, age_hours=8))
     print('SELFTEST OK: age checks, fallback, 15-42s speech cuts, subtitles and limits')
