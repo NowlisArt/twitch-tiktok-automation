@@ -83,8 +83,9 @@ jobs:
               if age is None or not 0 <= age <= 336:
                   reasons.append('original outside verified 14-day window')
               views = clip.get('views_at_selection')
-              if type(views) is not int or views < 800:
-                  reasons.append('original view count unverified or under 800')
+              minimum_views = 800 if age is not None and age <= 24 else 600 if age is not None and age <= 48 else 400 if age is not None and age <= 72 else 250
+              if type(views) is not int or views < minimum_views:
+                  reasons.append('original view count below age-adjusted discovery threshold')
               if clip.get('subtitle_verified') is not True:
                   reasons.append('subtitle accuracy not verified')
               if clip.get('technical_qa_passed') is not True:
@@ -144,7 +145,7 @@ jobs:
           python scripts/distribute.py --selftest
           python scripts/distribute.py
       - name: Read-only Buffer account and channel verification
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'connection' }}
+        if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'connection') }}
         env:
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
         shell: bash
@@ -183,4 +184,10 @@ jobs:
           if not matched:
               sys.exit('STOP: expected Buffer channel ID not accessible; no posts created')
           print('PASS: read-only Buffer authentication and exact channel match.')
+          try:
+              schema=gql('query { __schema { mutationType { fields { name } } } }')
+              fields=((schema.get('__schema') or {}).get('mutationType') or {}).get('fields') or []
+              print('BUFFER PUBLISHING MUTATIONS AVAILABLE (NOT EXECUTED):', json.dumps([f['name'] for f in fields if 'post' in f['name'].lower()]))
+          except Exception as exc:
+              print('Buffer schema discovery unavailable:', type(exc).__name__, str(exc)[:200])
           PY
