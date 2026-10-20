@@ -47,7 +47,16 @@ def main():
         print("DRY RUN: enable explicitly after end-to-end verification")
         return
     # Reconcile the live channel queue BEFORE selecting a slot or creating a post.
-    posts=request('query($input:PostsInput!){ posts(input:$input){ edges { node { id dueAt text status } } } }',{"input":{"channelId":CHANNEL}})
+    account=request("query { account { organizations { id name } } }")
+    organizations=(account.get("account") or {}).get("organizations") or []
+    org_id=None
+    for org in organizations:
+        channels=request("query($input:ChannelsInput!){ channels(input:$input){ id name service } }",{"input":{"organizationId":org["id"]}}).get("channels") or []
+        if any(ch.get("id")==CHANNEL and str(ch.get("service","")).lower()=="tiktok" and str(ch.get("name","")).lower().lstrip("@")=="dreamvoid26" for ch in channels):
+            org_id=org["id"]
+            break
+    if not org_id: raise RuntimeError("STOP: target TikTok channel not verified")
+    posts=request('query($input:PostsInput!){ posts(input:$input){ edges { node { id dueAt text status } } } }',{"input":{"organizationId":org_id}})
     existing=[e["node"] for e in ((posts.get("posts") or {}).get("edges") or [])]
     occupied={p.get("dueAt","")[:16] for p in existing}
     used_ids={c.get("buffer_post_id") for c in items if c.get("buffer_post_id")}
