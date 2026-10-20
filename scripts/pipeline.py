@@ -162,7 +162,7 @@ def twitch_api_candidates(range_code='24hr', channels=None):
               if u.get('login', '').lower() in channels}
     now = now_utc()
     # '7d' is a fallback discovery source, but eligibility is always <=72 hours.
-    hours = 24 if range_code == '24hr' else 72
+    hours = 24 if range_code == '24hr' else (336 if range_code == '14d' else 72)
     start = iso(now - dt.timedelta(hours=hours))
     end = iso(now)
     found = []
@@ -214,11 +214,11 @@ def helix_verified(phase, now, used, used_urls, failed, channels):
             if not isinstance(duration, (int, float)) or isinstance(duration, bool):
                 rejected('missing_duration')
                 continue
-            if not 0 <= age <= 72:
-                rejected('age_outside_72h')
+            if not 0 <= age <= 336:
+                rejected('age_outside_14d')
                 continue
-            if not 15 <= duration <= 60:
-                rejected('duration_outside_15_60s')
+            if not 10 <= duration <= 60:
+                rejected('duration_outside_10_60s')
                 continue
             if views < int(os.getenv('MIN_VIEWS', '800')):
                 rejected('views_below_minimum')
@@ -335,7 +335,7 @@ def inspect_original(channel, link, now, min_views=800):
         if isinstance(duration, bool) or not isinstance(duration, (int, float)):
             return None
         age_hours = (now - dt.datetime.fromtimestamp(timestamp, UTC)).total_seconds() / 3600
-        if not 0 <= age_hours <= 72 or not 15 <= duration <= 60 or views < min_views:
+        if not 0 <= age_hours <= 336 or not 10 <= duration <= 60 or views < min_views:
             return None
         title = str(info.get('title') or '').strip()
         if len(title) < 5:
@@ -376,7 +376,7 @@ def worth_testing(clip):
     return (
         not risky_context and clip['view_count'] >= 800
         and ((clip['age_hours'] <= 48 and velocity >= 15)
-             or (48 < clip['age_hours'] <= 72 and very_strong(clip)))
+             or (48 < clip['age_hours'] <= 336 and very_strong(clip)))
     )
 
 
@@ -633,7 +633,7 @@ def find_face_focus(source, duration):
 
 def render(clip, source):
     duration = probe(source)
-    if not 15 <= duration <= 65:
+    if not 10 <= duration <= 65:
         raise ValueError('Originalvideo outside supported range')
     # Gameplay highlights can be compelling without continuous dialogue.
     # QA rerun uses the verified no-fabricated-subtitles fallback.
@@ -732,11 +732,11 @@ def fresh_candidates(now, used, used_urls, failed, channels):
     # When credentials exist, use authoritative Helix data exclusively.
     # Fail closed on API errors: do not silently downgrade to unverified listings.
     if os.getenv('TWITCH_CLIENT_ID') or os.getenv('TWITCH_CLIENT_SECRET'):
-        for phase in ('24hr', '7d'):
+        for phase in ('24hr', '7d', '14d')
             yield phase, helix_verified(phase, now, used, used_urls, failed, channels)
         return
     inspected = set()
-    for phase in ('24hr', '7d'):
+    for phase in ('24hr', '7d', '14d')
         links = [(channel, url) for channel, url in fetch_candidates(phase, channels)
                  if twitch_slug(url) not in inspected
                  and twitch_slug(url) not in used and url not in used_urls
@@ -751,7 +751,7 @@ def fresh_candidates(now, used, used_urls, failed, channels):
             for clip in results:
                 if clip and clip['id'] not in used and clip['clip_slug'] not in used:
                     metadata_passed += 1
-                    if (clip['age_hours'] <= 48 or very_strong(clip)) and worth_testing(clip):
+                    if worth_testing(clip):
                         verified.append(clip)
                     else:
                         selection_rejected += 1
@@ -820,12 +820,12 @@ def main():
         ensure_ascii=False), flush=True)
     prepared, attempted = 0, 0
     for phase, clip in all_candidates:
-        if prepared >= remaining or attempted >= 16:
+        if prepared >= remaining or attempted >= 25:
             break
         if clip['clip_slug'] in failed or clip['id'] in used:
             continue
         if (now_utc() - dt.datetime.fromisoformat(
-                clip['original_created_at'].replace('Z', '+00:00'))).total_seconds() > 72*3600:
+                clip['original_created_at'].replace('Z', '+00:00'))).total_seconds() > 336*3600:
             continue
         attempted += 1
         try:
@@ -901,6 +901,8 @@ def self_test():
     assert worth_testing(dict(example, title='Normale Situation', age_hours=22, view_count=909))
     assert not worth_testing(dict(example, title='Sponsored advertisement', age_hours=5, view_count=8000))
     assert not worth_testing(dict(example, title='Normale Situation', age_hours=52, view_count=909))
+    assert worth_testing(dict(example, title='Normale Situation', age_hours=120, view_count=30000))
+    assert not worth_testing(dict(example, title='Normale Situation', age_hours=337, view_count=30000))
     assert selection_rank(dict(example, age_hours=36, view_count=9000)) < selection_rank(
         dict(example, age_hours=8, view_count=800))
     assert '1885635439' in EXCLUDE_IDS
@@ -930,12 +932,12 @@ def render_test():
          'age': round(clip['age_hours'], 1), 'phase': phase}
         for phase, clip in discovered[:20]], ensure_ascii=False), flush=True)
     for phase, clip in discovered:
-        if attempts >= 16 or produced >= target:
+        if attempts >= 25 or produced >= target:
             break
         attempts += 1
         try:
             if (now_utc() - dt.datetime.fromisoformat(
-                    clip['original_created_at'].replace('Z', '+00:00'))).total_seconds() > 72*3600:
+                    clip['original_created_at'].replace('Z', '+00:00'))).total_seconds() > 336*3600:
                 print('SAFE RENDER SKIP: clip too old', clip['id'], flush=True)
                 continue
             print('SAFE RENDER ATTEMPT', phase, clip['channel_login'], clip['id'], flush=True)
