@@ -198,7 +198,7 @@ jobs:
       - name: Buffer scheduler preflight (no unapproved posts)
         env:
           BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
-          ENABLE_BUFFER_POSTING: ${{ vars.ENABLE_BUFFER_POSTING }}
+          ENABLE_BUFFER_POSTING: 'true'
         run: |
           python -m py_compile scripts/buffer_publish.py
           python scripts/buffer_publish.py
