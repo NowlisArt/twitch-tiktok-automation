@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "mode": "preview_only",
+  "accounts": [
+    {
+      "id": "novel_novel",
+      "handle": "novel.novel601",
+      "platform": "tiktok",
+      "provider": "metricool",
+      "priority": 1,
+      "videos_per_day": 1,
+      "posting_hours": [
+        18
+      ],
+      "timezone": "Europe/Berlin",
+      "minimum_quality": 85
+    },
+    {
+      "id": "dreamvoid",
+      "handle": "dreamvoid26",
+      "platform": "tiktok",
+      "provider": "buffer",
+      "priority": 2,
+      "videos_per_day": 2,
+      "posting_hours": [
+        14,
+        18
+      ],
+      "timezone": "Europe/Berlin",
+      "minimum_quality": 85
+    }
+  ]
+}
