@@ -220,7 +220,7 @@ def helix_verified(phase, now, used, used_urls, failed, channels):
             if not 10 <= duration <= 60:
                 rejected('duration_outside_10_60s')
                 continue
-            if views < int(os.getenv('MIN_VIEWS', '800')):
+            if views < int(os.getenv('MIN_VIEWS', '200')):
                 rejected('views_below_minimum')
                 continue
             if len(title) < 5 or channel not in RANK:
@@ -358,7 +358,7 @@ def score(clip):
 
 def very_strong(clip):
     """Allow 48-72-hour clips only with convincing metrics."""
-    return clip['view_count'] >= 8000 and clip['view_count'] / max(1, clip['age_hours']) >= 150
+    return clip['view_count'] >= 1200 and clip['view_count'] / max(1, clip['age_hours']) >= 8
 
 
 def worth_testing(clip):
@@ -374,8 +374,8 @@ def worth_testing(clip):
         'sponsored', 'advert'))
     velocity = clip['view_count'] / max(1.0, clip['age_hours'])
     return (
-        not risky_context and clip['view_count'] >= 800
-        and ((clip['age_hours'] <= 48 and velocity >= 15)
+        not risky_context and clip['view_count'] >= 200
+        and ((clip['age_hours'] <= 48 and velocity >= 8)
              or (48 < clip['age_hours'] <= 336 and very_strong(clip)))
     )
 
@@ -508,7 +508,7 @@ def pick_window(duration, words):
     for start in sorted(start_candidates):
         for end in sorted(end_candidates):
             length = end - start
-            if not (15 <= length <= min(42, duration)):
+            if not (10 <= length <= min(42, duration)):
                 continue
             selected = [w for w in words if w[0] >= start - 0.1 and w[1] <= end + 0.1]
             if len(selected) < 7:
@@ -652,8 +652,8 @@ def render(clip, source):
         words = []
         start, length = 0.0, min(35.0, duration)
 
-    if length < 15 or length > 45:
-        raise ValueError('Cut must be between 15 and 45 seconds')
+    if length < 10 or length > 45:
+        raise ValueError('Cut must be between 10 and 45 seconds')
     OUT.mkdir(exist_ok=True)
     (OUT / 'headline.txt').write_text(
         '\n'.join(textwrap.wrap(headline(clip), 21, break_long_words=False)[:3]),
@@ -693,7 +693,7 @@ def render(clip, source):
          '-map', '[v]', '-map', '[a]', '-c:v', 'libx264', '-preset', 'veryfast',
          '-crf', '23', '-r', '30', '-c:a', 'aac', '-b:a', '160k',
          '-movflags', '+faststart', str(movie)], timeout=360)
-    if not 15 <= probe(movie) <= 45.5 or probe(movie, size=True) != '1080x1920':
+    if not 10 <= probe(movie) <= 45.5 or probe(movie, size=True) != '1080x1920':
         raise ValueError('Rendered MP4 failed duration or size check')
     run(['ffmpeg', '-v', 'error', '-i', str(movie), '-f', 'null', '-'],
         capture_output=True, timeout=120)
