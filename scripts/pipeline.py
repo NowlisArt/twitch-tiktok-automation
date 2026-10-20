@@ -220,7 +220,12 @@ def helix_verified(phase, now, used, used_urls, failed, channels):
             if not 10 <= duration <= 60:
                 rejected('duration_outside_10_60s')
                 continue
-            if views < int(os.getenv('MIN_VIEWS', '800')):
+            # Relax discovery only, never editorial approval or publishing QA.
+            # Old clips require stronger public evidence than recent ones.
+            min_views = (800 if age <= 24 else
+                         600 if age <= 48 else
+                         400 if age <= 72 else 250)
+            if views < min_views:
                 rejected('views_below_minimum')
                 continue
             if len(title) < 5 or channel not in RANK:
