@@ -32,25 +32,20 @@ def request(query, variables=None):
 def main():
     state=json.loads(STATE.read_text(encoding="utf-8"))
     items=state.get("created",[])
-    pilot=next((c for c in items if c.get("buffer_post_id")=="6ad7dfb9a40664bdbaeb3d47"),None)
-    if pilot and pilot.get("status")=="buffer_scheduled":
-        schema=request('query { __schema { mutationType { fields { name args { name type { kind name ofType { kind name } } } } } } }')
-        edits=[x for x in schema["__schema"]["mutationType"]["fields"] if x["name"]=="editPost"]
-        print("EXPEDITE PREFLIGHT editPost:",json.dumps(edits))
-        for name in ("EditPostInput","EditPostPayload"):
-            detail=request('query($name:String!){ __type(name:$name){ name kind inputFields { name type {kind name ofType {kind name}} } fields {name type {kind name ofType {kind name}}} } }',{"name":name})
-            print("EXPEDITE PREFLIGHT TYPE",name,json.dumps(detail))
-        return
     approved=[c for c in items if eligible(c,85) and not unavailable(c)]
     print("APPROVED:",len(approved),"PREPARED:",len(items))
     if not approved:
-        pilot_id = "PatientVivaciousZucchiniDBstyle-nDA9K6whT0b1mG6w"
-        pilot = next((x for x in items if x.get("clip_id") == pilot_id), None)
-        if pilot and not unavailable(pilot) and pilot.get("rights_status") in ("user_asserted_not_independently_verified", "user_confirmed_permission_not_independently_verified") and pilot.get("video_url", "").startswith("https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/") and pilot.get("video_url", "").endswith(".mp4"):
-            approved = [pilot]
-            print("ONE-TIME USER-AUTHORIZED PILOT:", pilot_id)
+        # One additional user-authorized test from unused, permission-asserted clips.
+        candidates=[x for x in items if not unavailable(x)
+                    and x.get("rights_status") in ("user_asserted_not_independently_verified","user_confirmed_permission_not_independently_verified")
+                    and str(x.get("video_url","")).startswith("https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/")
+                    and str(x.get("video_url","")).endswith(".mp4")]
+        previous=sum(bool(x.get("buffer_post_id")) for x in items)
+        if previous == 1 and candidates:
+            approved=[candidates[0]]
+            print("USER-AUTHORIZED SECOND TEST:",approved[0].get("clip_id"))
         else:
-            print("NO POST: no unused pilot candidate")
+            print("NO POST: second test already used or no unused candidate")
             return
     if os.getenv("ENABLE_BUFFER_POSTING")!="true":
         print("DRY RUN: enable explicitly after end-to-end verification")
