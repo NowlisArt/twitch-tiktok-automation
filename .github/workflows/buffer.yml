@@ -16,6 +16,8 @@ on:
   push:
     paths:
       - .github/workflows/buffer.yml
+      - scripts/distribute.py
+      - config/distribution.json
 
 permissions:
   contents: read
@@ -136,6 +138,11 @@ jobs:
           print('REGRESSION PASS: quality, subtitle, duplicate, permission, editorial checks')
           print(f'AUDIT PASS: {min(len(items),30)} candidates inspected; {eligible} eligible. No uploads.')
           PY
+      - name: Test shared multi-account distribution and preview
+        shell: bash
+        run: |
+          python scripts/distribute.py --selftest
+          python scripts/distribute.py
       - name: Read-only Buffer account and channel verification
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'connection' }}
         env:
