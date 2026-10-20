@@ -32,6 +32,15 @@ def request(query, variables=None):
 def main():
     state=json.loads(STATE.read_text(encoding="utf-8"))
     items=state.get("created",[])
+    pilot=next((c for c in items if c.get("buffer_post_id")=="6ad7dfb9a40664bdbaeb3d47"),None)
+    if pilot and pilot.get("status")=="buffer_scheduled":
+        schema=request('query { __schema { mutationType { fields { name args { name type { kind name ofType { kind name } } } } } } }')
+        edits=[x for x in schema["__schema"]["mutationType"]["fields"] if x["name"]=="editPost"]
+        print("EXPEDITE PREFLIGHT editPost:",json.dumps(edits))
+        for name in ("EditPostInput","EditPostPayload"):
+            detail=request('query($name:String!){ __type(name:$name){ name kind inputFields { name type {kind name ofType {kind name}} } fields {name type {kind name ofType {kind name}}} } }',{"name":name})
+            print("EXPEDITE PREFLIGHT TYPE",name,json.dumps(detail))
+        return
     approved=[c for c in items if eligible(c,85) and not unavailable(c)]
     print("APPROVED:",len(approved),"PREPARED:",len(items))
     if not approved:
