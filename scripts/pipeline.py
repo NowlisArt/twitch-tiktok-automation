@@ -732,11 +732,11 @@ def fresh_candidates(now, used, used_urls, failed, channels):
     # When credentials exist, use authoritative Helix data exclusively.
     # Fail closed on API errors: do not silently downgrade to unverified listings.
     if os.getenv('TWITCH_CLIENT_ID') or os.getenv('TWITCH_CLIENT_SECRET'):
-        for phase in ('24hr', '7d', '14d')
+        for phase in ('24hr', '7d', '14d'):
             yield phase, helix_verified(phase, now, used, used_urls, failed, channels)
         return
     inspected = set()
-    for phase in ('24hr', '7d', '14d')
+    for phase in ('24hr', '7d', '14d'):
         links = [(channel, url) for channel, url in fetch_candidates(phase, channels)
                  if twitch_slug(url) not in inspected
                  and twitch_slug(url) not in used and url not in used_urls
