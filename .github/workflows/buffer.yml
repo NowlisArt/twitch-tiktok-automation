@@ -80,8 +80,8 @@ jobs:
                   reasons.append('video URL not a trusted GitHub MP4 path')
               original = iso_date(clip.get('original_created_at'))
               age = (datetime.now(timezone.utc) - original).total_seconds()/3600 if original else None
-              if age is None or not 0 <= age <= 72:
-                  reasons.append('original not verifiably fresh (0-72h)')
+              if age is None or not 0 <= age <= 336:
+                  reasons.append('original outside verified 14-day window')
               views = clip.get('views_at_selection')
               if type(views) is not int or views < 800:
                   reasons.append('original view count unverified or under 800')
