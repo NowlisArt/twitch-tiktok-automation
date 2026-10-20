@@ -96,7 +96,7 @@ jobs:
           sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
       - name: Clip suchen, Ersatz versuchen und schneiden
         env:
-          MIN_VIEWS: '800'
+          MIN_VIEWS: '200'
           TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
           TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
           QA_SAMPLE_COUNT: '3'
@@ -125,7 +125,7 @@ jobs:
     permissions:
       contents: write
     env:
-      MIN_VIEWS: '800'
+      MIN_VIEWS: '200'
       TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
       TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
       ASR_MODEL: 'medium'
