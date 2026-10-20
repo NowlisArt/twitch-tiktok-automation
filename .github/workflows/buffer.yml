@@ -13,14 +13,17 @@ on:
         options:
           - dry-run
           - connection
+  schedule:
+    - cron: '35 11,12,15,16 * * *'
   push:
     paths:
       - .github/workflows/buffer.yml
       - scripts/distribute.py
+      - scripts/buffer_publish.py
       - config/distribution.json
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: buffer-dreamvoid26-quality
@@ -191,3 +194,22 @@ jobs:
           except Exception as exc:
               print('Buffer schema discovery unavailable:', type(exc).__name__, str(exc)[:200])
           PY
+
+      - name: Buffer scheduler preflight (no unapproved posts)
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          ENABLE_BUFFER_POSTING: ${{ vars.ENABLE_BUFFER_POSTING }}
+        run: |
+          python -m py_compile scripts/buffer_publish.py
+          python scripts/buffer_publish.py
+      - name: Save scheduling reservation state
+        if: ${{ always() }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add state/auto20.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Buffer: persist scheduled clip reservation [skip ci]'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
