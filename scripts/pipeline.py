@@ -86,6 +86,16 @@ def scheduled_slot(now):
     return math.floor(20 * now.day / days) > math.floor(20 * (now.day - 1) / days)
 
 
+def counts_as_prepared(record):
+    """Failed/too-short renders must not consume the daily replacement quota.
+
+    Legacy records without a duration count conservatively, so unknown clips
+    cannot silently open extra production slots.
+    """
+    duration = record.get('rendered_duration')
+    return duration is None or (isinstance(duration, (int, float)) and 15 <= duration <= 60)
+
+
 def can_prepare(state, now, event='schedule'):
     """Production buffer: max 60 prepared / month, max 5 / day.
 
@@ -93,7 +103,8 @@ def can_prepare(state, now, event='schedule'):
     More production candidates allow genuine replacement when clips fail review.
     """
     monthly = [rec for rec in state['created']
-               if rec.get('created_at', '').startswith(now.strftime('%Y-%m'))]
+               if rec.get('created_at', '').startswith(now.strftime('%Y-%m'))
+               and counts_as_prepared(rec)]
     if len(monthly) >= 60:
         return False, 'GitHub-Pufferlimit von 60 Produktionen in diesem Monat erreicht'
     if sum(rec.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))
@@ -809,7 +820,8 @@ def main():
         return
     used, used_urls = used_ids(state)
     failed = current_failed_ids(state, now)
-    monthly = [r for r in state['created'] if r.get('created_at', '').startswith(now.strftime('%Y-%m'))]
+    monthly = [r for r in state['created'] if r.get('created_at', '').startswith(now.strftime('%Y-%m'))
+               and counts_as_prepared(r)]
     daily = [r for r in monthly if r.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))]
     daily_limit = 5
     remaining = min(max(0, daily_limit-len(daily)), max(0, int(os.getenv('MAX_MONTHLY_PREPARED', '100'))-len(monthly)))
@@ -895,6 +907,11 @@ def self_test():
                        dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
     assert not can_prepare({'created': [example_record]*5, 'processed_ids': []},
                            dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
+    invalid_record = dict(example_record, rendered_duration=11.97)
+    assert not counts_as_prepared(invalid_record)
+    assert counts_as_prepared(dict(example_record, rendered_duration=21.2))
+    assert can_prepare({'created': [example_record]*4 + [invalid_record]},
+                       dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
     assert 'Quelle:' not in caption(dict(example, title='Quelle: https://example.org Mega fail'))
     sample_words = [(i*1.1, i*1.1+0.6, ('word.' if i in (9, 19, 29, 39) else 'word'))
                     for i in range(40)]
