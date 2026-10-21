@@ -686,6 +686,29 @@
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
       "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "ThankfulPopularEagleCopyThis-BnefwZsrLo1ZrQq9",
+      "clip_slug": "ThankfulPopularEagleCopyThis-BnefwZsrLo1ZrQq9",
+      "streamer": "montanablack88",
+      "source_url": "https://www.twitch.tv/montanablack88/clip/ThankfulPopularEagleCopyThis-BnefwZsrLo1ZrQq9",
+      "original_title": "Random Kreuz",
+      "hook": "RANDOM KREUZ",
+      "caption": "Random Kreuz 😂\n#montanablack88 #twitchde #streamclips",
+      "views_at_selection": 3404,
+      "original_duration": 60.0,
+      "rendered_duration": 35.066667,
+      "original_created_at": "2026-10-21T07:57:00Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/montanablack88-thankfulpopulareaglecopythis-bnefwzsrlo1zrqq9.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/montanablack88-thankfulpopulareaglecopythis-bnefwzsrlo1zrqq9-cover.jpg",
+      "transcript_subtitles": false,
+      "created_at": "2026-10-21T22:40:08Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "no_reliable_speech_no_subtitles"
     }
   ],
   "processed_ids": [
@@ -741,7 +764,20 @@
     "BlushingTsundereSnoodArsonNoSexy-ERlJcpeSummjn399",
     "BlushingTsundereSnoodArsonNoSexy-ERlJcpeSummjn399",
     "BlazingAnnoyingYamCoolStoryBro-xHGWPx5zgSQx-WmJ",
-    "BlazingAnnoyingYamCoolStoryBro-xHGWPx5zgSQx-WmJ"
+    "BlazingAnnoyingYamCoolStoryBro-xHGWPx5zgSQx-WmJ",
+    "ThankfulPopularEagleCopyThis-BnefwZsrLo1ZrQq9",
+    "ThankfulPopularEagleCopyThis-BnefwZsrLo1ZrQq9"
   ],
-  "failed_attempts": {}
+  "failed_attempts": {
+    "TenuousFitLardSMOrc-jWJEE-h4Ko8xEb_e": {
+      "at": "2026-10-21T22:40:08Z",
+      "streamer": "handofblood",
+      "reason": "ValueError('Originalvideo outside supported range')"
+    },
+    "OutstandingObliviousHerbsSwiftRage-SV9rghdXwyz0jJVr": {
+      "at": "2026-10-21T22:40:08Z",
+      "streamer": "montanablack88",
+      "reason": "ValueError('Originalvideo outside supported range')"
+    }
+  }
 }
