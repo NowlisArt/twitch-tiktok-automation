@@ -217,7 +217,7 @@ def helix_verified(phase, now, used, used_urls, failed, channels):
             if not 0 <= age <= 336:
                 rejected('age_outside_14d')
                 continue
-            if not 10 <= duration <= 60:
+            if not 15 <= duration <= 60:
                 rejected('duration_outside_10_60s')
                 continue
             # Relax discovery only, never editorial approval or publishing QA.
@@ -340,7 +340,7 @@ def inspect_original(channel, link, now, min_views=800):
         if isinstance(duration, bool) or not isinstance(duration, (int, float)):
             return None
         age_hours = (now - dt.datetime.fromtimestamp(timestamp, UTC)).total_seconds() / 3600
-        if not 0 <= age_hours <= 336 or not 10 <= duration <= 60 or views < min_views:
+        if not 0 <= age_hours <= 336 or not 15 <= duration <= 60 or views < min_views:
             return None
         title = str(info.get('title') or '').strip()
         if len(title) < 5:
@@ -513,7 +513,7 @@ def pick_window(duration, words):
     for start in sorted(start_candidates):
         for end in sorted(end_candidates):
             length = end - start
-            if not (10 <= length <= min(42, duration)):
+            if not (15 <= length <= min(42, duration)):
                 continue
             selected = [w for w in words if w[0] >= start - 0.1 and w[1] <= end + 0.1]
             if len(selected) < 7:
@@ -638,7 +638,7 @@ def find_face_focus(source, duration):
 
 def render(clip, source):
     duration = probe(source)
-    if not 10 <= duration <= 65:
+    if not 15 <= duration <= 60:
         raise ValueError('Originalvideo outside supported range')
     # Gameplay highlights can be compelling without continuous dialogue.
     # QA rerun uses the verified no-fabricated-subtitles fallback.
@@ -657,8 +657,8 @@ def render(clip, source):
         words = []
         start, length = 0.0, min(35.0, duration)
 
-    if length < 10 or length > 45:
-        raise ValueError('Cut must be between 10 and 45 seconds')
+    if length < 15 or length > 45:
+        raise ValueError('Cut must be between 15 and 45 seconds')
     OUT.mkdir(exist_ok=True)
     (OUT / 'headline.txt').write_text(
         '\n'.join(textwrap.wrap(headline(clip), 21, break_long_words=False)[:3]),
@@ -703,6 +703,8 @@ def render(clip, source):
     run(['ffmpeg', '-v', 'error', '-i', str(movie), '-f', 'null', '-'],
         capture_output=True, timeout=120)
     verify_render_media(movie)
+    if not 15 <= probe(movie) <= 60:
+        raise ValueError('Rendered video must be at least 15 seconds long')
     cover = OUT / 'cover.jpg'
     run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', '1',
          '-i', str(movie), '-frames:v', '1', '-q:v', '3', str(cover)], timeout=30)
