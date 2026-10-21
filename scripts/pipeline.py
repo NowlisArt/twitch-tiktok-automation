@@ -214,17 +214,15 @@ def helix_verified(phase, now, used, used_urls, failed, channels):
             if not isinstance(duration, (int, float)) or isinstance(duration, bool):
                 rejected('missing_duration')
                 continue
-            if not 0 <= age <= 336:
-                rejected('age_outside_14d')
+            if not 0 <= age <= 72:
+                rejected('age_outside_72h')
                 continue
             if not 15 <= duration <= 60:
                 rejected('duration_outside_10_60s')
                 continue
             # Relax discovery only, never editorial approval or publishing QA.
             # Old clips require stronger public evidence than recent ones.
-            min_views = (800 if age <= 24 else
-                         600 if age <= 48 else
-                         400 if age <= 72 else 250)
+            min_views = 800
             if views < min_views:
                 rejected('views_below_minimum')
                 continue
@@ -340,7 +338,7 @@ def inspect_original(channel, link, now, min_views=800):
         if isinstance(duration, bool) or not isinstance(duration, (int, float)):
             return None
         age_hours = (now - dt.datetime.fromtimestamp(timestamp, UTC)).total_seconds() / 3600
-        if not 0 <= age_hours <= 336 or not 15 <= duration <= 60 or views < min_views:
+        if not 0 <= age_hours <= 72 or not 15 <= duration <= 60 or views < max(800, min_views):
             return None
         title = str(info.get('title') or '').strip()
         if len(title) < 5:
@@ -363,7 +361,7 @@ def score(clip):
 
 def very_strong(clip):
     """Allow 48-72-hour clips only with convincing metrics."""
-    return clip['view_count'] >= (400 if clip['age_hours'] <= 72 else 250) and clip['view_count'] / max(1, clip['age_hours']) >= (8 if clip['age_hours'] <= 72 else 3)
+    return 0 <= clip['age_hours'] <= 72 and clip['view_count'] >= 800 and clip['view_count'] / max(1, clip['age_hours']) >= 8
 
 
 def worth_testing(clip):
@@ -379,9 +377,9 @@ def worth_testing(clip):
         'sponsored', 'advert'))
     velocity = clip['view_count'] / max(1.0, clip['age_hours'])
     return (
-        not risky_context and clip['view_count'] >= (800 if clip['age_hours'] <= 24 else 600 if clip['age_hours'] <= 48 else 400 if clip['age_hours'] <= 72 else 250)
+        not risky_context and 0 <= clip['age_hours'] <= 72 and clip['view_count'] >= 800
         and ((clip['age_hours'] <= 48 and velocity >= (15 if clip['age_hours'] <= 24 else 10))
-             or (48 < clip['age_hours'] <= 336 and very_strong(clip)))
+             or (48 < clip['age_hours'] <= 72 and very_strong(clip)))
     )
 
 
@@ -739,11 +737,11 @@ def fresh_candidates(now, used, used_urls, failed, channels):
     # When credentials exist, use authoritative Helix data exclusively.
     # Fail closed on API errors: do not silently downgrade to unverified listings.
     if os.getenv('TWITCH_CLIENT_ID') or os.getenv('TWITCH_CLIENT_SECRET'):
-        for phase in ('24hr', '7d', '14d'):
+        for phase in ('24hr', '7d'):
             yield phase, helix_verified(phase, now, used, used_urls, failed, channels)
         return
     inspected = set()
-    for phase in ('24hr', '7d', '14d'):
+    for phase in ('24hr', '7d'):
         links = [(channel, url) for channel, url in fetch_candidates(phase, channels)
                  if twitch_slug(url) not in inspected
                  and twitch_slug(url) not in used and url not in used_urls
@@ -831,8 +829,8 @@ def main():
             break
         if clip['clip_slug'] in failed or clip['id'] in used:
             continue
-        if (now_utc() - dt.datetime.fromisoformat(
-                clip['original_created_at'].replace('Z', '+00:00'))).total_seconds() > 336*3600:
+        if not 0 <= (now_utc() - dt.datetime.fromisoformat(
+                clip['original_created_at'].replace('Z', '+00:00'))).total_seconds() <= 72*3600 or clip['view_count'] < 800:
             continue
         attempted += 1
         try:
@@ -908,7 +906,7 @@ def self_test():
     assert worth_testing(dict(example, title='Normale Situation', age_hours=22, view_count=909))
     assert not worth_testing(dict(example, title='Sponsored advertisement', age_hours=5, view_count=8000))
     assert worth_testing(dict(example, title='Normale Situation', age_hours=52, view_count=909))
-    assert worth_testing(dict(example, title='Normale Situation', age_hours=120, view_count=30000))
+    assert not worth_testing(dict(example, title='Normale Situation', age_hours=120, view_count=30000))
     assert not worth_testing(dict(example, title='Normale Situation', age_hours=337, view_count=30000))
     assert selection_rank(dict(example, age_hours=36, view_count=9000)) < selection_rank(
         dict(example, age_hours=8, view_count=800))
@@ -916,7 +914,7 @@ def self_test():
     assert '1586086735' in EXCLUDE_IDS
     assert worth_testing(dict(example, title='Was ein WTF Moment', view_count=13000))
     assert not worth_testing(dict(example, title='Normale Situation', age_hours=20, view_count=300))
-    assert worth_testing(dict(example, title='Normale Situation', age_hours=30, view_count=650))
+    assert not worth_testing(dict(example, title='Normale Situation', age_hours=30, view_count=650))
     assert not worth_testing(dict(example, title='1 PARTNER + 1 STRIKE', view_count=1129, age_hours=8))
     assert worth_testing(dict(example, title='Unerwartete Szene', view_count=1129, age_hours=8))
     print('SELFTEST OK: age checks, fallback, 15-42s speech cuts, subtitles and limits')
