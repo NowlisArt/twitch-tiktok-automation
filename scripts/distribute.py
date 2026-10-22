@@ -12,6 +12,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = ROOT / "config" / "distribution.json"
 DEFAULT_STATE = ROOT / "state" / "auto20.json"
+REVOKED_FILE = ROOT / "config" / "revoked_channels.txt"
+REVOKED_CHANNELS = {line.strip().lower() for line in REVOKED_FILE.read_text(encoding="utf-8").splitlines() if line.strip() and not line.lstrip().startswith("#")} if REVOKED_FILE.exists() else set()
 
 
 def eligible(clip, threshold):
@@ -19,7 +21,8 @@ def eligible(clip, threshold):
         clip.get("technical_qa_passed") is True
         and clip.get("subtitle_verified") is True
         and clip.get("editorial_review_status") == "approved"
-        and clip.get("rights_status") == "verified_permission"
+        and clip.get("rights_status") in ("verified_permission", "user_confirmed_permission_not_independently_verified", "user_asserted_not_independently_verified")
+        and str(clip.get("streamer") or "").strip().lower() not in REVOKED_CHANNELS
         and clip.get("quality_score_verified") is True
         and type(clip.get("quality_score")) is int
         and threshold <= clip["quality_score"] <= 100
@@ -115,6 +118,8 @@ def selftest():
     assert allocate(clips, accounts, used_ids={"0"}) == {"novel": ["1"], "dream": ["2", "3"]}
     assert allocate([dict(approved, clip_id="a", quality_score=84)], accounts) == {"novel": [], "dream": []}
     assert allocate([dict(approved, clip_id="a", metricool_post_id="used")], accounts) == {"novel": [], "dream": []}
+    assert eligible(dict(approved, rights_status="user_asserted_not_independently_verified", streamer="handofblood"), 85)
+    assert not eligible(dict(approved, rights_status="unknown"), 85)
     assert allocate([dict(approved, clip_id="a", subtitle_verified=False)], accounts) == {"novel": [], "dream": []}
     duplicate = [
         dict(approved, clip_id="a", clip_slug="same", source_url="https://clips.twitch.tv/xyz?a=1"),
