@@ -35,17 +35,8 @@ def main():
     approved=[c for c in items if eligible(c,85) and not unavailable(c)]
     print("APPROVED:",len(approved),"PREPARED:",len(items))
     if not approved:
-        # Continue scheduling unused candidates with user-asserted permissions; do not duplicate posts.
-        candidates=[x for x in items if not unavailable(x)
-                    and x.get("rights_status") in ("user_asserted_not_independently_verified","user_confirmed_permission_not_independently_verified")
-                    and str(x.get("video_url","")).startswith("https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/")
-                    and str(x.get("video_url","")).endswith(".mp4")]
-        if candidates:
-            approved=[max(candidates,key=lambda x: int(x.get("views_at_selection") or 0))]
-            print("CONTINUOUS BUFFER CANDIDATE:",approved[0].get("clip_id"))
-        else:
-            print("NO POST: no unused candidate")
-            return
+        print("NO POST: no independently quality-approved unused candidate")
+        return
     if os.getenv("ENABLE_BUFFER_POSTING")!="true":
         print("DRY RUN: enable explicitly after end-to-end verification")
         return
@@ -65,7 +56,8 @@ def main():
     used_ids={c.get("buffer_post_id") for c in items if c.get("buffer_post_id")}
     if used_ids.intersection({p.get("id") for p in existing}): print("Previously scheduled posts verified")
     now=dt.datetime.now(dt.timezone.utc)
-    # One-time user-requested immediate catch-up after the four existing reservations.\n    # Once this fifth post is reserved, normal 14:00/18:00 scheduling resumes.\n    catchup = (now + dt.timedelta(minutes=6)).astimezone(ZONE) if len(used_ids) == 4 else None\n    for when in ([catchup] if catchup else slot(now)):
+    # Use regular scheduled slots; never create an unreviewed catch-up post.
+    for when in slot(now):
         if when.astimezone(dt.timezone.utc).isoformat(timespec="minutes")[:16] in occupied:
             continue
         if not approved: break
