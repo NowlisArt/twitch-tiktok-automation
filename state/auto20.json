@@ -568,12 +568,15 @@
       "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/trymacs-obesestrongchowderkappa-nxm-pak5y3umccsy-cover.jpg",
       "transcript_subtitles": true,
       "created_at": "2026-10-20T06:35:43Z",
-      "status": "awaiting_review_not_posted",
+      "status": "buffer_scheduled",
       "rights_status": "user_asserted_not_independently_verified",
       "video_review_status": "technical_checks_only",
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
-      "subtitle_review_status": "auto_generated_needs_review"
+      "subtitle_review_status": "auto_generated_needs_review",
+      "reserved_for": "dreamvoid",
+      "buffer_post_id": "6ada3cf8399af6f1f7271b5b",
+      "buffer_due_at": "2026-10-23T12:00:00.000Z"
     },
     {
       "clip_id": "BoredFurryPassionfruitEagleEye-WlPbjknynP_MsaDA",
