@@ -35,17 +35,16 @@ def main():
     approved=[c for c in items if eligible(c,85) and not unavailable(c)]
     print("APPROVED:",len(approved),"PREPARED:",len(items))
     if not approved:
-        # One additional user-authorized test from unused, permission-asserted clips.
+        # Continue scheduling unused candidates with user-asserted permissions; do not duplicate posts.
         candidates=[x for x in items if not unavailable(x)
                     and x.get("rights_status") in ("user_asserted_not_independently_verified","user_confirmed_permission_not_independently_verified")
                     and str(x.get("video_url","")).startswith("https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/")
                     and str(x.get("video_url","")).endswith(".mp4")]
-        previous=sum(bool(x.get("buffer_post_id")) for x in items)
-        if previous == 2 and candidates:
+        if candidates:
             approved=[max(candidates,key=lambda x: int(x.get("views_at_selection") or 0))]
-            print("USER-AUTHORIZED ONE-TIME CATCHUP:",approved[0].get("clip_id"))
+            print("CONTINUOUS BUFFER CANDIDATE:",approved[0].get("clip_id"))
         else:
-            print("NO POST: catchup already used or no unused candidate")
+            print("NO POST: no unused candidate")
             return
     if os.getenv("ENABLE_BUFFER_POSTING")!="true":
         print("DRY RUN: enable explicitly after end-to-end verification")
@@ -66,8 +65,7 @@ def main():
     used_ids={c.get("buffer_post_id") for c in items if c.get("buffer_post_id")}
     if used_ids.intersection({p.get("id") for p in existing}): print("Previously scheduled posts verified")
     now=dt.datetime.now(dt.timezone.utc)
-    catchup=(now+dt.timedelta(minutes=8)).astimezone(ZONE) if sum(bool(x.get("buffer_post_id")) for x in items)==2 else None
-    for when in ([catchup] if catchup else slot(now)):
+    for when in slot(now):
         if when.astimezone(dt.timezone.utc).isoformat(timespec="minutes")[:16] in occupied:
             continue
         if not approved: break
