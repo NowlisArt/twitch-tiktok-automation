@@ -65,7 +65,7 @@ def main():
     used_ids={c.get("buffer_post_id") for c in items if c.get("buffer_post_id")}
     if used_ids.intersection({p.get("id") for p in existing}): print("Previously scheduled posts verified")
     now=dt.datetime.now(dt.timezone.utc)
-    for when in slot(now):
+    # One-time user-requested immediate catch-up after the four existing reservations.\n    # Once this fifth post is reserved, normal 14:00/18:00 scheduling resumes.\n    catchup = (now + dt.timedelta(minutes=6)).astimezone(ZONE) if len(used_ids) == 4 else None\n    for when in ([catchup] if catchup else slot(now)):
         if when.astimezone(dt.timezone.utc).isoformat(timespec="minutes")[:16] in occupied:
             continue
         if not approved: break
