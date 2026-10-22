@@ -41,11 +41,11 @@ def main():
                     and str(x.get("video_url","")).startswith("https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/")
                     and str(x.get("video_url","")).endswith(".mp4")]
         previous=sum(bool(x.get("buffer_post_id")) for x in items)
-        if previous == 1 and candidates:
-            approved=[candidates[0]]
-            print("USER-AUTHORIZED SECOND TEST:",approved[0].get("clip_id"))
+        if previous == 2 and candidates:
+            approved=[max(candidates,key=lambda x: int(x.get("views_at_selection") or 0))]
+            print("USER-AUTHORIZED ONE-TIME CATCHUP:",approved[0].get("clip_id"))
         else:
-            print("NO POST: second test already used or no unused candidate")
+            print("NO POST: catchup already used or no unused candidate")
             return
     if os.getenv("ENABLE_BUFFER_POSTING")!="true":
         print("DRY RUN: enable explicitly after end-to-end verification")
@@ -66,7 +66,8 @@ def main():
     used_ids={c.get("buffer_post_id") for c in items if c.get("buffer_post_id")}
     if used_ids.intersection({p.get("id") for p in existing}): print("Previously scheduled posts verified")
     now=dt.datetime.now(dt.timezone.utc)
-    for when in slot(now):
+    catchup=(now+dt.timedelta(minutes=8)).astimezone(ZONE) if sum(bool(x.get("buffer_post_id")) for x in items)==2 else None
+    for when in ([catchup] if catchup else slot(now)):
         if when.astimezone(dt.timezone.utc).isoformat(timespec="minutes")[:16] in occupied:
             continue
         if not approved: break
