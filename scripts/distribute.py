@@ -21,7 +21,8 @@ def eligible(clip, threshold):
         clip.get("technical_qa_passed") is True
         and clip.get("subtitle_verified") is True
         and clip.get("editorial_review_status") == "approved"
-        and clip.get("rights_status") in ("verified_permission", "user_confirmed_permission_not_independently_verified", "user_asserted_not_independently_verified")
+        and clip.get("rights_status") == "verified_permission"
+        and clip.get("publication_blocked_until_verified") is not True
         and str(clip.get("streamer") or "").strip().lower() not in REVOKED_CHANNELS
         and clip.get("quality_score_verified") is True
         and type(clip.get("quality_score")) is int
@@ -118,7 +119,8 @@ def selftest():
     assert allocate(clips, accounts, used_ids={"0"}) == {"novel": ["1"], "dream": ["2", "3"]}
     assert allocate([dict(approved, clip_id="a", quality_score=84)], accounts) == {"novel": [], "dream": []}
     assert allocate([dict(approved, clip_id="a", metricool_post_id="used")], accounts) == {"novel": [], "dream": []}
-    assert eligible(dict(approved, rights_status="user_asserted_not_independently_verified", streamer="handofblood"), 85)
+    assert not eligible(dict(approved, rights_status="user_asserted_not_independently_verified", streamer="handofblood"), 85)
+    assert not eligible(dict(approved, publication_blocked_until_verified=True), 85)
     assert not eligible(dict(approved, rights_status="unknown"), 85)
     assert allocate([dict(approved, clip_id="a", subtitle_verified=False)], accounts) == {"novel": [], "dream": []}
     duplicate = [
