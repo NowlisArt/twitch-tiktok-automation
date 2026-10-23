@@ -961,6 +961,8 @@ def self_test():
     # Verified clips should not be rejected only because their titles are mundane.
     assert worth_testing(dict(example, title='Normale Situation', age_hours=22, view_count=909))
     assert not worth_testing(dict(example, title='Sponsored advertisement', age_hours=5, view_count=8000))
+    assert not worth_testing(dict(example, title='RIP Adam', age_hours=5, view_count=15000))
+    assert not worth_testing(dict(example, title='in gedenken an skylinetv', age_hours=5, view_count=15000))
     assert worth_testing(dict(example, title='Normale Situation', age_hours=52, view_count=909))
     assert not worth_testing(dict(example, title='Normale Situation', age_hours=120, view_count=30000))
     assert not worth_testing(dict(example, title='Normale Situation', age_hours=337, view_count=30000))
