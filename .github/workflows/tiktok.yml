@@ -32,6 +32,10 @@ on:
     - cron: '43 * * * *'
     # Backup trigger for GitHub schedule delays/dropped events; concurrency and caps remain enforced.
     - cron: '17 * * * *'
+    # Additional staggered safety nets for GitHub's best-effort scheduler.
+    # Existing concurrency and state-based caps prevent parallel preparation.
+    - cron: '7 * * * *'
+    - cron: '31 * * * *'
 
 permissions:
   contents: read
