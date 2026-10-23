@@ -985,7 +985,7 @@
       "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/handofblood-tenuousfitlardsmorc-jwjee-h4ko8xeb-e-cover.jpg",
       "transcript_subtitles": true,
       "created_at": "2026-10-23T12:27:57Z",
-      "status": "metricool_scheduled",
+      "status": "metricool_draft_qa_blocked",
       "rights_status": "user_asserted_not_independently_verified",
       "video_review_status": "technical_checks_only",
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
@@ -999,17 +999,21 @@
         "release_asset_public": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/handofblood-tenuousfitlardsmorc-jwjee-h4ko8xeb-e.mp4",
         "confirmed_at": "2026-10-23T12:52:00Z",
         "confirmed_by": "Metricool getScheduledPosts",
-        "result": "PENDING"
+        "result": "DRAFT_QA_HOLD",
+        "held_at": "2026-10-23T14:11:00Z",
+        "hold_reason": "No independent rights confirmation, subtitle review or editorial QA; Metricool draft=true and autoPublish=false. Previous 18:00 slot is not an active public auto-post.",
+        "metricool_post_id": 404214420,
+        "metricool_uuid": "-6330690294220372545"
       },
       "posted_to_tiktok": false,
-      "metricool_post_id": 404143040,
+      "metricool_post_id": 404214420,
       "metricool_uuid": "-6330690294220372545",
-      "metricool_scheduled_at": "2026-10-23T18:00:00+02:00",
       "metricool_provider_status": "PENDING",
-      "metricool_detailed_status": "Pending",
-      "metricool_auto_publish": true,
+      "metricool_detailed_status": "Pending (draft, autoPublish false)",
+      "metricool_auto_publish": false,
       "metricool_media_url": "https://static.metricool.com/planner/202610/7451945-file-12617013021144830091.mp4",
-      "publication_verification": "metricool_pending_not_published"
+      "publication_verification": "metricool_draft_not_published",
+      "metricool_previous_scheduled_at": "2026-10-23T18:00:00+02:00"
     }
   ],
   "processed_ids": [
