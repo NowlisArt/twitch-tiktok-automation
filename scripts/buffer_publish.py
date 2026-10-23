@@ -130,4 +130,8 @@ def reconcile_published():
     if changed:
         STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
 
-if __name__=="__main__":\n    if "--reconcile" in sys.argv:\n        reconcile_published()\n    else:\n        main()
+if __name__=="__main__":
+    if "--reconcile" in sys.argv:
+        reconcile_published()
+    else:
+        main()
