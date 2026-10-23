@@ -945,6 +945,29 @@
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
       "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "KathishSavoryKoalaBudBlast-h5UOXQcUv-QbTGM8",
+      "clip_slug": "KathishSavoryKoalaBudBlast-h5UOXQcUv-QbTGM8",
+      "streamer": "eliasn97",
+      "source_url": "https://www.twitch.tv/eliasn97/clip/KathishSavoryKoalaBudBlast-h5UOXQcUv-QbTGM8",
+      "original_title": "Ich Trage kein Hass mehr in Mir",
+      "hook": "ICH TRAGE KEIN HASS MEHR IN MIR",
+      "caption": "Ich Trage kein Hass mehr in Mir 😂\n#eliasn97 #twitchde #streamclips",
+      "views_at_selection": 848,
+      "original_duration": 41.3,
+      "rendered_duration": 25.366667,
+      "original_created_at": "2026-10-22T17:47:23Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/eliasn97-kathishsavorykoalabudblast-h5uoxqcuv-qbtgm8.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/eliasn97-kathishsavorykoalabudblast-h5uoxqcuv-qbtgm8-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-23T07:39:27Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
     }
   ],
   "processed_ids": [
@@ -1022,7 +1045,9 @@
     "CarelessChillyMilkUnSane-M3aBIrMCr02rByRY",
     "CarelessChillyMilkUnSane-M3aBIrMCr02rByRY",
     "TacitFairWerewolfPJSugar-t3_OONwP5Mi0SpOC",
-    "TacitFairWerewolfPJSugar-t3_OONwP5Mi0SpOC"
+    "TacitFairWerewolfPJSugar-t3_OONwP5Mi0SpOC",
+    "KathishSavoryKoalaBudBlast-h5UOXQcUv-QbTGM8",
+    "KathishSavoryKoalaBudBlast-h5UOXQcUv-QbTGM8"
   ],
   "failed_attempts": {
     "TenuousFitLardSMOrc-jWJEE-h4Ko8xEb_e": {
