@@ -87,4 +87,47 @@ def main():
             STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
         break
 
-if __name__=="__main__": main()
+
+def reconcile_published():
+    """Read-only Buffer status reconciliation. Never equate scheduled with published."""
+    state=json.loads(STATE.read_text(encoding="utf-8"))
+    tracked=[c for c in state.get("created",[]) if c.get("buffer_post_id")]
+    if not tracked:
+        print("BUFFER STATUS: no tracked posts")
+        return
+    account=request("query { account { organizations { id name } } }")
+    organizations=(account.get("account") or {}).get("organizations") or []
+    org_id=None
+    for org in organizations:
+        channels=request("query($input:ChannelsInput!){ channels(input:$input){ id name service } }",{"input":{"organizationId":org["id"]}}).get("channels") or []
+        if any(ch.get("id")==CHANNEL and str(ch.get("service","")).lower()=="tiktok" and str(ch.get("name","")).lower().lstrip("@")=="dreamvoid26" for ch in channels):
+            org_id=org["id"]
+            break
+    if not org_id:
+        raise RuntimeError("Buffer status check: target channel not verified")
+    data=request('query($input:PostsInput!){ posts(input:$input){ edges { node { id dueAt text status } } } }',{"input":{"organizationId":org_id}})
+    found={e["node"]["id"]:e["node"] for e in ((data.get("posts") or {}).get("edges") or [])}
+    now=dt.datetime.now(dt.timezone.utc)
+    changed=False
+    for clip in tracked:
+        pid=clip["buffer_post_id"]
+        post=found.get(pid)
+        if post is None:
+            print("BUFFER STATUS UNKNOWN (not in returned page; do not retry):",pid)
+            continue
+        raw=str(post.get("status") or "").lower()
+        clip["buffer_last_reported_status"]=raw
+        clip["buffer_last_checked_at"]=now.isoformat()
+        if raw in ("published","sent","posted"):
+            clip["status"]="buffer_reported_published"
+            print("BUFFER REPORTS PUBLISHED (TikTok URL not independently verified):",pid)
+        elif raw in ("failed","error","rejected"):
+            clip["status"]="buffer_reported_failed"
+            print("BUFFER REPORTS FAILED (no automatic repost):",pid)
+        else:
+            print("BUFFER NOT CONFIRMED PUBLISHED:",pid,raw)
+        changed=True
+    if changed:
+        STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
+
+if __name__=="__main__":\n    if "--reconcile" in sys.argv:\n        reconcile_published()\n    else:\n        main()
