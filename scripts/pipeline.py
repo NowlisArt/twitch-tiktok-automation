@@ -86,6 +86,20 @@ def scheduled_slot(now):
     return math.floor(20 * now.day / days) > math.floor(20 * (now.day - 1) / days)
 
 
+def unsuitable_for_gaming(title):
+    """Conservative metadata block for memorials and real-life tragedies.
+
+    This is a discovery safeguard, not proof that other videos are suitable.
+    """
+    value = str(title or '').casefold()
+    memorial = re.search(
+        r'\\b(rip|gedenken|trauer|trauern|verstorben|beerdigung|suizid|selbstmord)\\b',
+        value)
+    adam_memorial = ('adam' in value and
+                     any(word in value for word in ('letzten stream', 'schock', '🖤', '🕊', '♥')))
+    return bool(memorial or adam_memorial or '🕊' in value or '🖤' in value)
+
+
 def counts_as_prepared(record):
     """Failed/too-short renders must not consume the daily replacement quota.
 
@@ -93,7 +107,20 @@ def counts_as_prepared(record):
     cannot silently open extra production slots.
     """
     duration = record.get('rendered_duration')
-    return duration is None or (isinstance(duration, (int, float)) and 15 <= duration <= 60)
+    valid_duration = duration is None or (
+        isinstance(duration, (int, float)) and 15 <= duration <= 60)
+    if not valid_duration:
+        return False
+    # Already scheduled/published items must always consume their slots.
+    if record.get('metricool_post_id') or record.get('status') in (
+            'metricool_published', 'metricool_scheduled'):
+        return True
+    # Unusable QA candidates cannot prevent production of replacements.
+    if unsuitable_for_gaming(record.get('original_title') or record.get('hook')):
+        return False
+    if record.get('transcript_subtitles') is False:
+        return False
+    return True
 
 
 def can_prepare(state, now, event='schedule'):
@@ -383,9 +410,10 @@ def worth_testing(clip):
     Quality must be checked from the video, not guessed from its title.
     """
     title = clip['title'].lower()
-    risky_context = any(keyword in title for keyword in (
-        'partner +', 'sponsor', 'vertrags', 'werbung',
-        'sponsored', 'advert'))
+    risky_context = unsuitable_for_gaming(title) or any(
+        keyword in title for keyword in (
+            'partner +', 'sponsor', 'vertrags', 'werbung',
+            'sponsored', 'advert'))
     velocity = clip['view_count'] / max(1.0, clip['age_hours'])
     return (
         not risky_context and 0 <= clip['age_hours'] <= 72 and clip['view_count'] >= 800
@@ -824,7 +852,8 @@ def main():
                and counts_as_prepared(r)]
     daily = [r for r in monthly if r.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))]
     daily_limit = 5
-    remaining = min(max(0, daily_limit-len(daily)), max(0, int(os.getenv('MAX_MONTHLY_PREPARED', '100'))-len(monthly)))
+    remaining = min(max(0, daily_limit-len(daily)),
+                    max(0, min(60, int(os.getenv('MAX_MONTHLY_PREPARED', '60')))-len(monthly)))
     if remaining <= 0:
         print('PRODUCTION PAUSED: buffer filled; still scanning approved channels')
     all_candidates = []
@@ -850,10 +879,10 @@ def main():
                   clip['clip_slug'], clip['view_count'], flush=True)
             source = download(clip)
             movie, cover, has_subs = render(clip, source)
-            # Silent gameplay commentary is not a failure if real audio passes QA.
-            # Never invent subtitles for clips without reliable speech.
-            # Trigger the release preparation smoke test on this commit.
-            # Re-run after fixing optional subtitle QA artifacts.
+            # This account requires visible German subtitles. No speech
+            # recognition means no release, even if the audio is otherwise valid.
+            if not has_subs:
+                raise ValueError('No reliable subtitle transcription; try next clip')
             video_url, cover_url = release(clip, movie, cover, now)
             state['created'].append({
                 'clip_id': clip['id'], 'clip_slug': clip['clip_slug'],
@@ -910,6 +939,16 @@ def self_test():
     invalid_record = dict(example_record, rendered_duration=11.97)
     assert not counts_as_prepared(invalid_record)
     assert counts_as_prepared(dict(example_record, rendered_duration=21.2))
+    assert unsuitable_for_gaming('RIP Adam ♥️')
+    assert unsuitable_for_gaming('in gedenken an skylinetv')
+    assert unsuitable_for_gaming('Adam 🖤🕊')
+    assert not unsuitable_for_gaming('Sonic aber in CURSED')
+    assert not counts_as_prepared(dict(example_record, rendered_duration=21.2,
+                                       original_title='RIP Adam'))
+    assert not counts_as_prepared(dict(example_record, rendered_duration=21.2,
+                                       transcript_subtitles=False))
+    assert counts_as_prepared(dict(example_record, rendered_duration=21.2,
+                                   transcript_subtitles=False, metricool_post_id=123))
     assert can_prepare({'created': [example_record]*4 + [invalid_record]},
                        dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
     assert 'Quelle:' not in caption(dict(example, title='Quelle: https://example.org Mega fail'))
@@ -961,7 +1000,7 @@ def render_test():
         attempts += 1
         try:
             if (now_utc() - dt.datetime.fromisoformat(
-                    clip['original_created_at'].replace('Z', '+00:00'))).total_seconds() > 336*3600:
+                    clip['original_created_at'].replace('Z', '+00:00'))).total_seconds() > 72*3600:
                 print('SAFE RENDER SKIP: clip too old', clip['id'], flush=True)
                 continue
             print('SAFE RENDER ATTEMPT', phase, clip['channel_login'], clip['id'], flush=True)
