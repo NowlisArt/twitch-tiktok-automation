@@ -93,7 +93,7 @@ def unsuitable_for_gaming(title):
     """
     value = str(title or '').casefold()
     memorial = re.search(
-        r'\\b(rip|gedenken|trauer|trauern|verstorben|beerdigung|suizid|selbstmord)\\b',
+        r'\b(rip|gedenken|trauer|trauern|verstorben|beerdigung|suizid|selbstmord)\b',
         value)
     adam_memorial = ('adam' in value and
                      any(word in value for word in ('letzten stream', 'schock', '🖤', '🕊', '♥')))
