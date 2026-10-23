@@ -676,10 +676,20 @@ def find_face_focus(source, duration):
         return None
 
 
+def source_duration_ok(helix_duration, downloaded_duration):
+    """Allow up to 2s container padding, never accept a mismatched source."""
+    return (15 <= helix_duration <= 60 and 15 <= downloaded_duration <= 62
+            and abs(downloaded_duration - helix_duration) <= 2.0)
+
+
 def render(clip, source):
     duration = probe(source)
-    if not 15 <= duration <= 60:
-        raise ValueError('Originalvideo outside supported range')
+    print('SOURCE DURATION CHECK', clip['channel_login'],
+          'helix_seconds', clip['duration'], 'downloaded_seconds', round(duration, 3),
+          flush=True)
+    if not source_duration_ok(float(clip['duration']), duration):
+        raise ValueError(
+            f'Originalvideo mismatch: Helix={clip["duration"]}s downloaded={duration:.3f}s')
     # Gameplay highlights can be compelling without continuous dialogue.
     # QA rerun uses the verified no-fabricated-subtitles fallback.
     # Recheck the corrected FFmpeg volume parser with real Twitch samples.
@@ -959,6 +969,10 @@ def self_test():
     assert unsuitable_for_gaming('in gedenken an skylinetv')
     assert unsuitable_for_gaming('Adam 🖤🕊')
     assert not unsuitable_for_gaming('Sonic aber in CURSED')
+    assert source_duration_ok(60, 60.08)
+    assert source_duration_ok(20, 19.95)
+    assert not source_duration_ok(60, 70)
+    assert not source_duration_ok(15, 14.8)
     assert not counts_as_prepared(dict(example_record, rendered_duration=21.2,
                                        original_title='RIP Adam'))
     assert not counts_as_prepared(dict(example_record, rendered_duration=21.2,
