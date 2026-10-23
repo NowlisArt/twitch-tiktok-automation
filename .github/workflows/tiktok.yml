@@ -30,6 +30,8 @@ on:
     # Avoid top-of-hour congestion. Scheduled runs are best-effort.
     # The Python script additionally enforces a UTC production window.
     - cron: '43 * * * *'
+    # Backup trigger for GitHub schedule delays/dropped events; concurrency and caps remain enforced.
+    - cron: '17 * * * *'
 
 permissions:
   contents: read
