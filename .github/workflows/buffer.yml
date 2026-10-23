@@ -237,7 +237,7 @@ jobs:
         run: |
           python -m py_compile scripts/buffer_publish.py
           python scripts/buffer_publish.py
-      - name: Save scheduling reservation state
+      - name: Reconcile Buffer publication statuses (read only)\n        if: ${{ always() }}\n        env:\n          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}\n        run: |\n          python scripts/buffer_publish.py --reconcile\n      - name: Save scheduling reservation state
         if: ${{ always() }}
         run: |
           git config user.name 'github-actions[bot]'
