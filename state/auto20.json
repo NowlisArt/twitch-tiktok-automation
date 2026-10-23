@@ -702,7 +702,7 @@
       "hook": "RANDOM KREUZ",
       "caption": "Random Kreuz 😂\n#montanablack88 #twitchde #streamclips",
       "views_at_selection": 3404,
-      "original_duration": 60.0,
+      "original_duration": 60,
       "rendered_duration": 35.066667,
       "original_created_at": "2026-10-21T07:57:00Z",
       "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/montanablack88-thankfulpopulareaglecopythis-bnefwzsrlo1zrqq9.mp4",
@@ -748,7 +748,7 @@
       "hook": "EIN GROSSER SCHOCK - RIP ADAM",
       "caption": "Ein großer Schock - RIP Adam 😂\n#montanablack88 #twitchde #streamclips",
       "views_at_selection": 2995,
-      "original_duration": 60.0,
+      "original_duration": 60,
       "rendered_duration": 16.3,
       "original_created_at": "2026-10-21T07:10:09Z",
       "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/montanablack88-flaccidbillowingpiesoonerlater-9xhq-iduc-hgmgyu.mp4",
@@ -794,7 +794,7 @@
       "hook": "DIE LETZTEN STREAMS VON ADAM",
       "caption": "Die letzten Streams von Adam 😂\n#montanablack88 #twitchde #streamclips",
       "views_at_selection": 1530,
-      "original_duration": 60.0,
+      "original_duration": 60,
       "rendered_duration": 18.366667,
       "original_created_at": "2026-10-21T07:18:27Z",
       "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/montanablack88-cleansneakybarracudamau5-apsqigtg2p3d0lsd.mp4",
@@ -886,7 +886,7 @@
       "hook": "🟡 SONIC ABER IN CURSED | !HKV 🟡",
       "caption": "🟡 Sonic aber in CURSED | !hkv 🟡 😂\n#handofblood #twitchde #streamclips",
       "views_at_selection": 1177,
-      "original_duration": 30.0,
+      "original_duration": 30,
       "rendered_duration": 24.2,
       "original_created_at": "2026-10-21T13:59:55Z",
       "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/handofblood-adorableawkwardmosquitopartytime-w68-muf0stjndtwd.mp4",
@@ -932,7 +932,7 @@
       "hook": "IN GEDENKEN AN SKYLINETV",
       "caption": "in gedenken an skylinetv 😂\n#zarbex #twitchde #streamclips",
       "views_at_selection": 963,
-      "original_duration": 30.0,
+      "original_duration": 30,
       "rendered_duration": 16.433333,
       "original_created_at": "2026-10-21T15:03:14Z",
       "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/zarbex-tacitfairwerewolfpjsugar-t3-oonwp5mi0spoc.mp4",
@@ -1049,16 +1049,5 @@
     "KathishSavoryKoalaBudBlast-h5UOXQcUv-QbTGM8",
     "KathishSavoryKoalaBudBlast-h5UOXQcUv-QbTGM8"
   ],
-  "failed_attempts": {
-    "TenuousFitLardSMOrc-jWJEE-h4Ko8xEb_e": {
-      "at": "2026-10-23T12:26:09Z",
-      "streamer": "handofblood",
-      "reason": "ValueError('Originalvideo outside supported range')"
-    },
-    "OutstandingObliviousHerbsSwiftRage-SV9rghdXwyz0jJVr": {
-      "at": "2026-10-23T12:26:09Z",
-      "streamer": "montanablack88",
-      "reason": "ValueError('Originalvideo outside supported range')"
-    }
-  }
+  "failed_attempts": {}
 }
