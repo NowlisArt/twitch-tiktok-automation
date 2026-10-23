@@ -976,7 +976,7 @@
       "source_url": "https://www.twitch.tv/handofblood/clip/TenuousFitLardSMOrc-jWJEE-h4Ko8xEb_e",
       "original_title": "Hännos Tod in DLDU 7",
       "hook": "HÄNNOS TOD IN DLDU 7",
-      "caption": "Hännos Tod in DLDU 7 😂\n#handofblood #twitchde #streamclips",
+      "caption": "Hännos DLDU-Run endet SO? 😱💀 Dark Souls kennt keine Gnade! #HandOfBlood #DLDU7 #DarkSouls #TwitchDE #GamingClips",
       "views_at_selection": 16457,
       "original_duration": 60,
       "rendered_duration": 29.3,
@@ -985,7 +985,7 @@
       "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/handofblood-tenuousfitlardsmorc-jwjee-h4ko8xeb-e-cover.jpg",
       "transcript_subtitles": true,
       "created_at": "2026-10-23T12:27:57Z",
-      "status": "metricool_submission_reserved",
+      "status": "metricool_scheduled",
       "rights_status": "user_asserted_not_independently_verified",
       "video_review_status": "technical_checks_only",
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
@@ -996,8 +996,20 @@
         "created_at": "2026-10-23T12:50:25Z",
         "reason": "One-post-per-day and monthly limit checked; strong verified Helix clip, GitHub technical checks passed; no independent subtitle word-by-word or editorial review.",
         "qa_basis": "GitHub job 120413294868: 1080x1920 output, ffmpeg decode and audio volume checks, 29.3s, Whisper confidence -0.428 with 38 words, face region found; subtitle content not independently listened to.",
-        "release_asset_public": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/handofblood-tenuousfitlardsmorc-jwjee-h4ko8xeb-e.mp4"
-      }
+        "release_asset_public": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/handofblood-tenuousfitlardsmorc-jwjee-h4ko8xeb-e.mp4",
+        "confirmed_at": "2026-10-23T12:52:00Z",
+        "confirmed_by": "Metricool getScheduledPosts",
+        "result": "PENDING"
+      },
+      "posted_to_tiktok": false,
+      "metricool_post_id": 404143040,
+      "metricool_uuid": "-6330690294220372545",
+      "metricool_scheduled_at": "2026-10-23T18:00:00+02:00",
+      "metricool_provider_status": "PENDING",
+      "metricool_detailed_status": "Pending",
+      "metricool_auto_publish": true,
+      "metricool_media_url": "https://static.metricool.com/planner/202610/7451945-file-12617013021144830091.mp4",
+      "publication_verification": "metricool_pending_not_published"
     }
   ],
   "processed_ids": [
