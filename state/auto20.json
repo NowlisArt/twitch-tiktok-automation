@@ -968,6 +968,29 @@
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
       "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "TenuousFitLardSMOrc-jWJEE-h4Ko8xEb_e",
+      "clip_slug": "TenuousFitLardSMOrc-jWJEE-h4Ko8xEb_e",
+      "streamer": "handofblood",
+      "source_url": "https://www.twitch.tv/handofblood/clip/TenuousFitLardSMOrc-jWJEE-h4Ko8xEb_e",
+      "original_title": "Hännos Tod in DLDU 7",
+      "hook": "HÄNNOS TOD IN DLDU 7",
+      "caption": "Hännos Tod in DLDU 7 😂\n#handofblood #twitchde #streamclips",
+      "views_at_selection": 16457,
+      "original_duration": 60.0,
+      "rendered_duration": 29.3,
+      "original_created_at": "2026-10-21T15:36:29Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/handofblood-tenuousfitlardsmorc-jwjee-h4ko8xeb-e.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/handofblood-tenuousfitlardsmorc-jwjee-h4ko8xeb-e-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-23T12:27:57Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
     }
   ],
   "processed_ids": [
@@ -1047,7 +1070,9 @@
     "TacitFairWerewolfPJSugar-t3_OONwP5Mi0SpOC",
     "TacitFairWerewolfPJSugar-t3_OONwP5Mi0SpOC",
     "KathishSavoryKoalaBudBlast-h5UOXQcUv-QbTGM8",
-    "KathishSavoryKoalaBudBlast-h5UOXQcUv-QbTGM8"
+    "KathishSavoryKoalaBudBlast-h5UOXQcUv-QbTGM8",
+    "TenuousFitLardSMOrc-jWJEE-h4Ko8xEb_e",
+    "TenuousFitLardSMOrc-jWJEE-h4Ko8xEb_e"
   ],
   "failed_attempts": {}
 }
