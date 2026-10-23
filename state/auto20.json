@@ -985,7 +985,7 @@
       "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/handofblood-tenuousfitlardsmorc-jwjee-h4ko8xeb-e-cover.jpg",
       "transcript_subtitles": true,
       "created_at": "2026-10-23T12:27:57Z",
-      "status": "metricool_draft_pending_hold",
+      "status": "metricool_scheduled",
       "rights_status": "user_asserted_not_independently_verified",
       "video_review_status": "technical_checks_only",
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
@@ -1007,19 +1007,21 @@
         "rights_basis": "User declares rights for the 50 approved German channels; independently unverified."
       },
       "posted_to_tiktok": false,
-      "metricool_post_id": 404522749,
+      "metricool_post_id": 404546609,
       "metricool_uuid": "-6330690294220372545",
       "metricool_provider_status": "PENDING",
       "metricool_detailed_status": "Pending",
-      "metricool_auto_publish": false,
+      "metricool_auto_publish": true,
       "metricool_media_url": "https://static.metricool.com/planner/202610/7451945-file-12617013021144830091.mp4",
       "publication_verification": "metricool_pending_draft_not_publicly_published",
       "metricool_previous_scheduled_at": "2026-10-23T18:00:00+02:00",
       "metricool_scheduled_at": "2026-10-24T10:00:00+02:00",
-      "metricool_draft": true,
+      "metricool_draft": false,
       "publication_blocked_until_verified": true,
       "hold_reason": "Independent permission and subtitle/editorial QA missing. Do not enable AutoPublish based solely on channel allowlist or user assertion.",
-      "held_at": "2026-10-23T20:08:00Z"
+      "held_at": "2026-10-23T20:08:00Z",
+      "metricool_last_verified_at": "2026-10-23T22:39:00+02:00",
+      "review_notes": " Metricool getScheduledPosts 2026-10-23 22:39 Europe/Berlin: id=404546609, autoPublish=true, draft=false, PENDING; no public TikTok verification."
     }
   ],
   "processed_ids": [
