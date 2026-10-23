@@ -134,10 +134,13 @@ def can_prepare(state, now, event='schedule'):
                and counts_as_prepared(rec)]
     if len(monthly) >= 60:
         return False, 'GitHub-Pufferlimit von 60 Produktionen in diesem Monat erreicht'
-    if sum(rec.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))
-           for rec in monthly)  >= 5:
-        return False, 'Heute bereits fünf Clip-Kandidaten erstellt'
-    # Continuous hourly discovery/production. Keep the per-day and per-month caps.
+    daily = [rec for rec in monthly
+             if rec.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))]
+    # One exceptional fallback: a genuinely popular fresh clip must not be
+    # crowded out by five weak QA renders. This is preparation, NOT posting.
+    strong_already = any(rec.get('views_at_selection', 0) >= 5000 for rec in daily)
+    if len(daily) >= 5 and (len(daily) >= 6 or strong_already):
+        return False, 'Tagespuffer belegt (inklusive starker Ersatzkandidat)'
     return True, 'OK'
 
 
@@ -851,8 +854,13 @@ def main():
     monthly = [r for r in state['created'] if r.get('created_at', '').startswith(now.strftime('%Y-%m'))
                and counts_as_prepared(r)]
     daily = [r for r in monthly if r.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))]
-    daily_limit = 5
-    remaining = min(max(0, daily_limit-len(daily)),
+    # Normal daily cap: five QA renders. If none reaches 5k genuine Twitch
+    # views, allow exactly one extra high-view fallback (up to six per day).
+    # A low-view clip can never occupy this exceptional sixth slot.
+    strong_already = any(rec.get('views_at_selection', 0) >= 5000 for rec in daily)
+    exceptional_fallback = len(daily) == 5 and not strong_already
+    daily_remaining = 1 if exceptional_fallback else max(0, 5-len(daily))
+    remaining = min(daily_remaining,
                     max(0, min(60, int(os.getenv('MAX_MONTHLY_PREPARED', '60')))-len(monthly)))
     if remaining <= 0:
         print('PRODUCTION PAUSED: buffer filled; still scanning approved channels')
@@ -868,6 +876,8 @@ def main():
     for phase, clip in all_candidates:
         if prepared >= remaining or attempted >= 25:
             break
+        if exceptional_fallback and clip['view_count'] < 5000:
+            continue
         if clip['clip_slug'] in failed or clip['id'] in used:
             continue
         if not 0 <= (now_utc() - dt.datetime.fromisoformat(
@@ -914,7 +924,7 @@ def main():
         'attempted': attempted, 'produced': prepared,
         'target_this_run': remaining, 'tiktok_posts': 0}, ensure_ascii=False), flush=True)
     if not prepared:
-        print('No suitable clip this run. Retry all eligible 50 sources next scheduled hour.')
+        print('No new clip prepared (daily buffer, QA or source constraints); discovery will retry all 50 channels.')
 
 
 def self_test():
@@ -934,7 +944,13 @@ def self_test():
                        dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
     assert can_prepare({'created': [example_record, example_record], 'processed_ids': []},
                        dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
-    assert not can_prepare({'created': [example_record]*5, 'processed_ids': []},
+    assert can_prepare({'created': [example_record]*5, 'processed_ids': []},
+                       dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
+    assert not can_prepare({'created': [example_record]*6, 'processed_ids': []},
+                           dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
+    assert not can_prepare({'created': [example_record]*4 +
+                            [dict(example_record, views_at_selection=9000)],
+                            'processed_ids': []},
                            dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
     invalid_record = dict(example_record, rendered_duration=11.97)
     assert not counts_as_prepared(invalid_record)
