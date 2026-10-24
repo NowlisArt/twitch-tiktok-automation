@@ -1144,6 +1144,52 @@
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
       "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "SassyArtisticSproutPogChamp-8-KXFAn_zZ4FDqHC",
+      "clip_slug": "SassyArtisticSproutPogChamp-8-KXFAn_zZ4FDqHC",
+      "streamer": "niklaswilson",
+      "source_url": "https://www.twitch.tv/niklaswilson/clip/SassyArtisticSproutPogChamp-8-KXFAn_zZ4FDqHC",
+      "original_title": "Firma an die Wand",
+      "hook": "FIRMA AN DIE WAND",
+      "caption": "Firma an die Wand 😂\n#niklaswilson #twitchde #streamclips",
+      "views_at_selection": 2110,
+      "original_duration": 30.0,
+      "rendered_duration": 29.833333,
+      "original_created_at": "2026-10-21T10:07:31Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/niklaswilson-sassyartisticsproutpogchamp-8-kxfan-zz4fdqhc.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/niklaswilson-sassyartisticsproutpogchamp-8-kxfan-zz4fdqhc-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-24T09:29:15Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "SweetAntediluvianBadgerTinyFace-boonxKbY9wqYMdqf",
+      "clip_slug": "SweetAntediluvianBadgerTinyFace-boonxKbY9wqYMdqf",
+      "streamer": "handofblood",
+      "source_url": "https://www.twitch.tv/handofblood/clip/SweetAntediluvianBadgerTinyFace-boonxKbY9wqYMdqf",
+      "original_title": "Die Kaulitz bros",
+      "hook": "DIE KAULITZ BROS",
+      "caption": "Die Kaulitz bros 😂\n#handofblood #twitchde #streamclips",
+      "views_at_selection": 1287,
+      "original_duration": 16.2,
+      "rendered_duration": 16.333333,
+      "original_created_at": "2026-10-21T12:50:28Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/handofblood-sweetantediluvianbadgertinyface-boonxkby9wqymdqf.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/handofblood-sweetantediluvianbadgertinyface-boonxkby9wqymdqf-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-24T09:29:15Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
     }
   ],
   "processed_ids": [
@@ -1235,7 +1281,11 @@
     "AthleticRepleteLegSquadGoals--w9DrsjFPZJwaKhS",
     "AthleticRepleteLegSquadGoals--w9DrsjFPZJwaKhS",
     "ViscousTacitOrangeWOOP-jTlFnt8yjmI161e6",
-    "ViscousTacitOrangeWOOP-jTlFnt8yjmI161e6"
+    "ViscousTacitOrangeWOOP-jTlFnt8yjmI161e6",
+    "SassyArtisticSproutPogChamp-8-KXFAn_zZ4FDqHC",
+    "SassyArtisticSproutPogChamp-8-KXFAn_zZ4FDqHC",
+    "SweetAntediluvianBadgerTinyFace-boonxKbY9wqYMdqf",
+    "SweetAntediluvianBadgerTinyFace-boonxKbY9wqYMdqf"
   ],
   "failed_attempts": {}
 }
