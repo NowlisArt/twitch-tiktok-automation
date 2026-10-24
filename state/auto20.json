@@ -1028,7 +1028,8 @@
         404713529
       ],
       "metricool_autopublish": false,
-      "metricool_status": "PENDING"
+      "metricool_status": "PENDING",
+      "metricool_post_uuid": "-6330690294220372545"
     },
     {
       "clip_id": "AdorableDaintySoybeanKappaWealth-difeGcbmDd-IEbrS",
@@ -1154,7 +1155,7 @@
       "hook": "FIRMA AN DIE WAND",
       "caption": "Firma an die Wand 😂\n#niklaswilson #twitchde #streamclips",
       "views_at_selection": 2110,
-      "original_duration": 30.0,
+      "original_duration": 30,
       "rendered_duration": 29.833333,
       "original_created_at": "2026-10-21T10:07:31Z",
       "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/niklaswilson-sassyartisticsproutpogchamp-8-kxfan-zz4fdqhc.mp4",
@@ -1368,5 +1369,6 @@
       "streamer": "handofblood",
       "reason": "ValueError('No reliable subtitle transcription; try next clip')"
     }
-  }
+  },
+  "publication_blocked_until_verified": true
 }
