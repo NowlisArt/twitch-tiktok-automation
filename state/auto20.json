@@ -985,7 +985,7 @@
       "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/handofblood-tenuousfitlardsmorc-jwjee-h4ko8xeb-e-cover.jpg",
       "transcript_subtitles": true,
       "created_at": "2026-10-23T12:27:57Z",
-      "status": "metricool_draft",
+      "status": "metricool_scheduled",
       "rights_status": "user_asserted_not_independently_verified",
       "video_review_status": "technical_checks_only",
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
@@ -1007,7 +1007,7 @@
         "rights_basis": "User declares rights for the 50 approved German channels; independently unverified."
       },
       "posted_to_tiktok": false,
-      "metricool_post_id": 404699953,
+      "metricool_post_id": 404713529,
       "metricool_uuid": "-6330690294220372545",
       "metricool_provider_status": "PENDING",
       "metricool_detailed_status": "Pending",
@@ -1025,7 +1025,8 @@
       "metricool_previous_post_ids": [
         404571364,
         404694308
-      ]
+      ],
+      "metricool_autopublish": true
     },
     {
       "clip_id": "AdorableDaintySoybeanKappaWealth-difeGcbmDd-IEbrS",
