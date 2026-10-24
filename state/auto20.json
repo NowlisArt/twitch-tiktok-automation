@@ -998,16 +998,16 @@
         "qa_basis": "1080x1920, 29.3s, audio and auto-generated subtitles in production logs; not independently watched or transcribed.",
         "release_asset_public": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/handofblood-tenuousfitlardsmorc-jwjee-h4ko8xeb-e.mp4",
         "confirmed_at": "2026-10-23T23:15:00+02:00",
-        "confirmed_by": "Metricool updateScheduledPost and getScheduledPosts readback",
+        "confirmed_by": "Metricool getScheduledPosts readback",
         "result": "HELD_DRAFT_AUTOPUBLISH_FALSE_PENDING",
-        "held_at": "2026-10-23T20:08:00Z",
-        "hold_reason": "No independent rights permission and no verified subtitles/editorial QA; autoPublish disabled.",
-        "metricool_post_id": 404571364,
+        "held_at": "2026-10-24T02:38:00Z",
+        "hold_reason": "No independently verified subtitle accuracy/editorial QA; live Metricool was autoPublish=true draft=false at 2026-10-24 04:37 Europe/Berlin despite previous hold; restored draft=true autoPublish=false and read back.",
+        "metricool_post_id": 404723478,
         "metricool_uuid": "-6330690294220372545",
         "rights_basis": "User declares rights for the 50 approved German channels; independently unverified."
       },
       "posted_to_tiktok": false,
-      "metricool_post_id": 404713529,
+      "metricool_post_id": 404723478,
       "metricool_uuid": "-6330690294220372545",
       "metricool_provider_status": "PENDING",
       "metricool_detailed_status": "Pending",
@@ -1018,15 +1018,16 @@
       "metricool_scheduled_at": "2026-10-24T10:00:00+02:00",
       "metricool_draft": true,
       "publication_blocked_until_verified": true,
-      "hold_reason": "Unverified subtitles/editorial QA; public 2026-10-24 post had autoPublish=true and was changed to draft=true, autoPublish=false to prevent unverified upload",
+      "hold_reason": "No independently verified subtitle accuracy/editorial QA; live Metricool was autoPublish=true draft=false at 2026-10-24 04:37 Europe/Berlin despite previous hold; restored draft=true autoPublish=false and read back.",
       "held_at": "2026-10-23T20:08:00Z",
-      "metricool_last_verified_at": "2026-10-24T03:26:00+02:00",
+      "metricool_last_verified_at": "2026-10-24T04:38:00+02:00",
       "review_notes": " Metricool getScheduledPosts 2026-10-23 22:39 Europe/Berlin: id=404546609, autoPublish=true, draft=false, PENDING; no public TikTok verification. Metricool 2026-10-23 23:15 Europe/Berlin: id=404571364, draft=true, autoPublish=false, PENDING; no independent public TikTok verification.",
       "metricool_previous_post_ids": [
         404571364,
-        404694308
+        404694308,
+        404713529
       ],
-      "metricool_autopublish": true
+      "metricool_autopublish": false
     },
     {
       "clip_id": "AdorableDaintySoybeanKappaWealth-difeGcbmDd-IEbrS",
