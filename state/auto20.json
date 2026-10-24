@@ -1007,7 +1007,7 @@
         "rights_basis": "User declares rights for the 50 approved German channels; independently unverified."
       },
       "posted_to_tiktok": false,
-      "metricool_post_id": 404571364,
+      "metricool_post_id": 404699953,
       "metricool_uuid": "-6330690294220372545",
       "metricool_provider_status": "PENDING",
       "metricool_detailed_status": "Pending",
@@ -1018,10 +1018,14 @@
       "metricool_scheduled_at": "2026-10-24T10:00:00+02:00",
       "metricool_draft": true,
       "publication_blocked_until_verified": true,
-      "hold_reason": "Independent permission and subtitle/editorial QA missing. Do not enable AutoPublish based solely on channel allowlist or user assertion.",
+      "hold_reason": "Unverified subtitles/editorial QA; public 2026-10-24 post had autoPublish=true and was changed to draft=true, autoPublish=false to prevent unverified upload",
       "held_at": "2026-10-23T20:08:00Z",
-      "metricool_last_verified_at": "2026-10-23T23:15:00+02:00",
-      "review_notes": " Metricool getScheduledPosts 2026-10-23 22:39 Europe/Berlin: id=404546609, autoPublish=true, draft=false, PENDING; no public TikTok verification. Metricool 2026-10-23 23:15 Europe/Berlin: id=404571364, draft=true, autoPublish=false, PENDING; no independent public TikTok verification."
+      "metricool_last_verified_at": "2026-10-24T03:26:00+02:00",
+      "review_notes": " Metricool getScheduledPosts 2026-10-23 22:39 Europe/Berlin: id=404546609, autoPublish=true, draft=false, PENDING; no public TikTok verification. Metricool 2026-10-23 23:15 Europe/Berlin: id=404571364, draft=true, autoPublish=false, PENDING; no independent public TikTok verification.",
+      "metricool_previous_post_ids": [
+        404571364,
+        404694308
+      ]
     },
     {
       "clip_id": "AdorableDaintySoybeanKappaWealth-difeGcbmDd-IEbrS",
@@ -1055,7 +1059,7 @@
       "hook": "⛏️ GEILER MANN ⛏️ CRAFTATTACK TAG 12 ⛏️…",
       "caption": "⛏️ GEILER MANN ⛏️ CRAFTATTACK TAG 12 ⛏️ REACTIONS ⛏️ TIKTOKS ⛏️ GEIL ⛏️ 😂\n#papaplatte #twitchde #streamclips",
       "views_at_selection": 1076,
-      "original_duration": 60.0,
+      "original_duration": 60,
       "rendered_duration": 19.033333,
       "original_created_at": "2026-10-22T17:48:23Z",
       "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/papaplatte-oilysaltypigeonleeroyjenkins-xkoga4ng6jz7bmkm.mp4",
@@ -1078,7 +1082,7 @@
       "hook": "WORTE AN LEA",
       "caption": "Worte an Lea 😂\n#montanablack88 #twitchde #streamclips",
       "views_at_selection": 5513,
-      "original_duration": 60.0,
+      "original_duration": 60,
       "rendered_duration": 22.5,
       "original_created_at": "2026-10-21T07:14:34Z",
       "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/montanablack88-outstandingobliviousherbsswiftrage-sv9rghdxwyz0jjvr.mp4",
@@ -1101,7 +1105,7 @@
       "hook": "KNOSSI IST EIN TOLLER MENSCH",
       "caption": "Knossi ist ein toller Mensch 😂\n#montanablack88 #twitchde #streamclips",
       "views_at_selection": 2723,
-      "original_duration": 60.0,
+      "original_duration": 60,
       "rendered_duration": 22.633333,
       "original_created_at": "2026-10-21T07:12:49Z",
       "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/montanablack88-athleticrepletelegsquadgoals-w9drsjfpzjwakhs.mp4",
@@ -1124,7 +1128,7 @@
       "hook": "DIE LETZTEN WORTE",
       "caption": "Die letzten Worte 😂\n#montanablack88 #twitchde #streamclips",
       "views_at_selection": 2026,
-      "original_duration": 60.0,
+      "original_duration": 60,
       "rendered_duration": 29.4,
       "original_created_at": "2026-10-21T11:15:49Z",
       "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/montanablack88-viscoustacitorangewoop-jtlfnt8yjmi161e6.mp4",
