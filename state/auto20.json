@@ -1213,6 +1213,52 @@
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
       "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "DarlingRepleteDuckFreakinStinkin-AaePE9WyrYfJ2bHi",
+      "clip_slug": "DarlingRepleteDuckFreakinStinkin-AaePE9WyrYfJ2bHi",
+      "streamer": "handofblood",
+      "source_url": "https://www.twitch.tv/handofblood/clip/DarlingRepleteDuckFreakinStinkin-AaePE9WyrYfJ2bHi",
+      "original_title": "hänno ist raus",
+      "hook": "HÄNNO IST RAUS",
+      "caption": "hänno ist raus 😂\n#handofblood #twitchde #streamclips",
+      "views_at_selection": 1038,
+      "original_duration": 19.2,
+      "rendered_duration": 19.266667,
+      "original_created_at": "2026-10-21T18:11:23Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/handofblood-darlingrepleteduckfreakinstinkin-aaepe9wyryfj2bhi.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/handofblood-darlingrepleteduckfreakinstinkin-aaepe9wyryfj2bhi-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-24T12:52:03Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "LovelyStrangeFrogTheTarFu-dAlioPzlTOIrBKaH",
+      "clip_slug": "LovelyStrangeFrogTheTarFu-dAlioPzlTOIrBKaH",
+      "streamer": "trymacs",
+      "source_url": "https://www.twitch.tv/trymacs/clip/LovelyStrangeFrogTheTarFu-dAlioPzlTOIrBKaH",
+      "original_title": "4 Millionen Follower!",
+      "hook": "4 MILLIONEN FOLLOWER",
+      "caption": "4 Millionen Follower! 😂\n#trymacs #twitchde #streamclips",
+      "views_at_selection": 1040,
+      "original_duration": 51.3,
+      "rendered_duration": 22.233333,
+      "original_created_at": "2026-10-21T18:19:34Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/trymacs-lovelystrangefrogthetarfu-daliopzltoirbkah.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/trymacs-lovelystrangefrogthetarfu-daliopzltoirbkah-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-24T12:52:03Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
     }
   ],
   "processed_ids": [
@@ -1310,7 +1356,17 @@
     "SweetAntediluvianBadgerTinyFace-boonxKbY9wqYMdqf",
     "SweetAntediluvianBadgerTinyFace-boonxKbY9wqYMdqf",
     "BenevolentUglyPoxDendiFace-UM4bOAf02HJ4mnSu",
-    "BenevolentUglyPoxDendiFace-UM4bOAf02HJ4mnSu"
+    "BenevolentUglyPoxDendiFace-UM4bOAf02HJ4mnSu",
+    "DarlingRepleteDuckFreakinStinkin-AaePE9WyrYfJ2bHi",
+    "DarlingRepleteDuckFreakinStinkin-AaePE9WyrYfJ2bHi",
+    "LovelyStrangeFrogTheTarFu-dAlioPzlTOIrBKaH",
+    "LovelyStrangeFrogTheTarFu-dAlioPzlTOIrBKaH"
   ],
-  "failed_attempts": {}
+  "failed_attempts": {
+    "EnergeticImpossibleMetalPoooound-WvsAo9mItSeGMR5h": {
+      "at": "2026-10-24T12:52:03Z",
+      "streamer": "handofblood",
+      "reason": "ValueError('No reliable subtitle transcription; try next clip')"
+    }
+  }
 }
