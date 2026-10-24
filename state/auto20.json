@@ -1306,6 +1306,29 @@
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
       "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "AggressiveCarelessClintmullinsDansGame-zOv-1AkY7p5rxMSW",
+      "clip_slug": "AggressiveCarelessClintmullinsDansGame-zOv-1AkY7p5rxMSW",
+      "streamer": "zarbex",
+      "source_url": "https://www.twitch.tv/zarbex/clip/AggressiveCarelessClintmullinsDansGame-zOv-1AkY7p5rxMSW",
+      "original_title": "erster tod",
+      "hook": "ERSTER TOD",
+      "caption": "erster tod 😂\n#zarbex #twitchde #streamclips",
+      "views_at_selection": 810,
+      "original_duration": 44.3,
+      "rendered_duration": 26.533333,
+      "original_created_at": "2026-10-23T20:22:54Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/zarbex-aggressivecarelessclintmullinsdansgame-zov-1aky7p5rxmsw.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/zarbex-aggressivecarelessclintmullinsdansgame-zov-1aky7p5rxmsw-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-24T19:41:17Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
     }
   ],
   "processed_ids": [
@@ -1411,14 +1434,10 @@
     "HealthyCourageousSpaghettiBudBlast-izwoj_GzzxO23mR9",
     "HealthyCourageousSpaghettiBudBlast-izwoj_GzzxO23mR9",
     "DrabFastTruffleDBstyle-hhtIaG3a1FYCm6d-",
-    "DrabFastTruffleDBstyle-hhtIaG3a1FYCm6d-"
+    "DrabFastTruffleDBstyle-hhtIaG3a1FYCm6d-",
+    "AggressiveCarelessClintmullinsDansGame-zOv-1AkY7p5rxMSW",
+    "AggressiveCarelessClintmullinsDansGame-zOv-1AkY7p5rxMSW"
   ],
-  "failed_attempts": {
-    "EnergeticImpossibleMetalPoooound-WvsAo9mItSeGMR5h": {
-      "at": "2026-10-24T12:52:03Z",
-      "streamer": "handofblood",
-      "reason": "ValueError('No reliable subtitle transcription; try next clip')"
-    }
-  },
+  "failed_attempts": {},
   "publication_blocked_until_verified": true
 }
