@@ -1260,6 +1260,52 @@
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
       "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "HealthyCourageousSpaghettiBudBlast-izwoj_GzzxO23mR9",
+      "clip_slug": "HealthyCourageousSpaghettiBudBlast-izwoj_GzzxO23mR9",
+      "streamer": "gronkh",
+      "source_url": "https://www.twitch.tv/gronkh/clip/HealthyCourageousSpaghettiBudBlast-izwoj_GzzxO23mR9",
+      "original_title": "1 Porsuk = 20 Frischfleisch",
+      "hook": "1 PORSUK = 20 FRISCHFLEISCH",
+      "caption": "1 Porsuk = 20 Frischfleisch 😂\n#gronkh #twitchde #streamclips",
+      "views_at_selection": 816,
+      "original_duration": 28.9,
+      "rendered_duration": 15.6,
+      "original_created_at": "2026-10-23T19:38:21Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/gronkh-healthycourageousspaghettibudblast-izwoj-gzzxo23mr9.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/gronkh-healthycourageousspaghettibudblast-izwoj-gzzxo23mr9-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-24T18:12:05Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "DrabFastTruffleDBstyle-hhtIaG3a1FYCm6d-",
+      "clip_slug": "DrabFastTruffleDBstyle-hhtIaG3a1FYCm6d-",
+      "streamer": "fregepaul",
+      "source_url": "https://www.twitch.tv/fregepaul/clip/DrabFastTruffleDBstyle-hhtIaG3a1FYCm6d-",
+      "original_title": "Drohne gerettet!",
+      "hook": "DROHNE GERETTET",
+      "caption": "Drohne gerettet! 😂\n#fregepaul #twitchde #streamclips",
+      "views_at_selection": 832,
+      "original_duration": 40.4,
+      "rendered_duration": 27.6,
+      "original_created_at": "2026-10-22T20:51:13Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/fregepaul-drabfasttruffledbstyle-hhtiag3a1fycm6d.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/fregepaul-drabfasttruffledbstyle-hhtiag3a1fycm6d-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-24T18:12:05Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
     }
   ],
   "processed_ids": [
@@ -1361,7 +1407,11 @@
     "DarlingRepleteDuckFreakinStinkin-AaePE9WyrYfJ2bHi",
     "DarlingRepleteDuckFreakinStinkin-AaePE9WyrYfJ2bHi",
     "LovelyStrangeFrogTheTarFu-dAlioPzlTOIrBKaH",
-    "LovelyStrangeFrogTheTarFu-dAlioPzlTOIrBKaH"
+    "LovelyStrangeFrogTheTarFu-dAlioPzlTOIrBKaH",
+    "HealthyCourageousSpaghettiBudBlast-izwoj_GzzxO23mR9",
+    "HealthyCourageousSpaghettiBudBlast-izwoj_GzzxO23mR9",
+    "DrabFastTruffleDBstyle-hhtIaG3a1FYCm6d-",
+    "DrabFastTruffleDBstyle-hhtIaG3a1FYCm6d-"
   ],
   "failed_attempts": {
     "EnergeticImpossibleMetalPoooound-WvsAo9mItSeGMR5h": {
