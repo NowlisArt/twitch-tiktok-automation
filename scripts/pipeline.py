@@ -123,6 +123,24 @@ def counts_as_prepared(record):
     return True
 
 
+def still_fresh_for_posting(record, now):
+    """Expired original Twitch clips do not fill today's replacement buffer.
+
+    Unknown original timestamps count conservatively; only verified expiry
+    releases a daily production slot. The monthly cost cap still counts renders.
+    """
+    original = record.get('original_created_at')
+    if not original:
+        return True
+    try:
+        stamp = dt.datetime.fromisoformat(str(original).replace('Z', '+00:00'))
+        if stamp.tzinfo is None:
+            return True
+        return (now - stamp).total_seconds() <= 72 * 3600
+    except (ValueError, TypeError):
+        return True
+
+
 def can_prepare(state, now, event='schedule'):
     """Production buffer: max 60 prepared / month, max 5 / day.
 
@@ -135,7 +153,8 @@ def can_prepare(state, now, event='schedule'):
     if len(monthly) >= 60:
         return False, 'GitHub-Pufferlimit von 60 Produktionen in diesem Monat erreicht'
     daily = [rec for rec in monthly
-             if rec.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))]
+             if rec.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))
+              and still_fresh_for_posting(rec, now)]
     # One exceptional fallback: a genuinely popular fresh clip must not be
     # crowded out by five weak QA renders. This is preparation, NOT posting.
     strong_already = any(rec.get('views_at_selection', 0) >= 5000 for rec in daily)
@@ -863,7 +882,8 @@ def main():
     failed = current_failed_ids(state, now)
     monthly = [r for r in state['created'] if r.get('created_at', '').startswith(now.strftime('%Y-%m'))
                and counts_as_prepared(r)]
-    daily = [r for r in monthly if r.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))]
+    daily = [r for r in monthly if r.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))
+             and still_fresh_for_posting(r, now)]
     # Normal daily cap: five QA renders. If none reaches 5k genuine Twitch
     # views, allow exactly one extra high-view fallback (up to six per day).
     # A low-view clip can never occupy this exceptional sixth slot.
@@ -962,6 +982,12 @@ def self_test():
                             [dict(example_record, views_at_selection=9000)],
                             'processed_ids': []},
                            dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
+    expired_record = dict(example_record, original_created_at='2026-10-09T00:00:00Z')
+    assert not still_fresh_for_posting(expired_record, dt.datetime(2026, 10, 13, 14, tzinfo=UTC))
+    assert still_fresh_for_posting(dict(example_record, original_created_at='2026-10-13T12:00:00Z'),
+                                   dt.datetime(2026, 10, 13, 14, tzinfo=UTC))
+    assert can_prepare({'created': [expired_record]*6, 'processed_ids': []},
+                       dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
     invalid_record = dict(example_record, rendered_duration=11.97)
     assert not counts_as_prepared(invalid_record)
     assert counts_as_prepared(dict(example_record, rendered_duration=21.2))
