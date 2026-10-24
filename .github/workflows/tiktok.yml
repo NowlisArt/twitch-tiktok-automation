@@ -205,4 +205,4 @@ jobs:
           echo 'Watchlist: 50 static channels, not a live TwitchTracker ranking.' >> "$GITHUB_STEP_SUMMARY"
           echo 'Queue: state/auto20.json (if generated)' >> "$GITHUB_STEP_SUMMARY"
           echo 'Metricool/TikTok posting is deliberately separate.' >> "$GITHUB_STEP_SUMMARY"
-# Watchdog safe recovery: 2026-10-23 20:12 Europe/Berlin; preparation only, never publish.
+# Watchdog safe recovery: 2026-10-24 06:11 Europe/Berlin; GitHub schedule gap; preparation only, never publish.
