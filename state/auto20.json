@@ -106,7 +106,7 @@
       "buffer_post_id": "6ad7f31b8c20162e7ecb719c",
       "buffer_due_at": "2026-10-21T16:00:00.000Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-25T17:37:03.077817+00:00",
+      "buffer_last_checked_at": "2026-10-25T18:06:21.556910+00:00",
       "buffer_sent_at": "2026-10-21T16:06:26.167Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699152703720525088?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -532,7 +532,7 @@
       "buffer_post_id": "6ad7dfb9a40664bdbaeb3d47",
       "buffer_due_at": "2026-10-21T12:00:00.000Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-25T17:37:03.077817+00:00",
+      "buffer_last_checked_at": "2026-10-25T18:06:21.556910+00:00",
       "buffer_sent_at": "2026-10-21T12:05:00.193Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699090478490307872?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -564,7 +564,7 @@
       "buffer_post_id": "6ada3ccc9a8a68d3cd6e1ba2",
       "buffer_due_at": "2026-10-22T16:49:47.667Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-25T17:37:03.077817+00:00",
+      "buffer_last_checked_at": "2026-10-25T18:06:21.556910+00:00",
       "buffer_sent_at": "2026-10-22T16:51:48.326Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699535559319948576?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -596,7 +596,7 @@
       "buffer_post_id": "6ada3cf8399af6f1f7271b5b",
       "buffer_due_at": "2026-10-23T12:00:00.000Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-25T17:37:03.077817+00:00",
+      "buffer_last_checked_at": "2026-10-25T18:06:21.556910+00:00",
       "buffer_sent_at": "2026-10-23T12:04:44.997Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699832679440616737?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -1502,7 +1502,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-10-25T17:00:48Z",
-      "status": "buffer_scheduled",
+      "status": "buffer_reported_published",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
@@ -1518,8 +1518,10 @@
       "buffer_handle": "suhshine28",
       "buffer_due_at": "2026-10-25T18:00:00.000Z",
       "buffer_post_id": "6ade3e426887a2efc118408a",
-      "buffer_last_reported_status": "scheduled",
-      "buffer_last_checked_at": "2026-10-25T17:37:03.077817+00:00"
+      "buffer_last_reported_status": "sent",
+      "buffer_last_checked_at": "2026-10-25T18:06:21.556910+00:00",
+      "buffer_sent_at": "2026-10-25T18:02:37.087Z",
+      "buffer_public_url": "https://tiktok.com/@suhshine28/video/7700666931585568033"
     },
     {
       "clip_id": "AgileBlatantAardvarkThisIsSparta-0Fm7_19XMx8oftDQ",
@@ -1560,6 +1562,71 @@
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
       "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "RefinedSmoothEmuGrammarKing-HzvaC-rpzWNDCqNo",
+      "clip_slug": "RefinedSmoothEmuGrammarKing-HzvaC-rpzWNDCqNo",
+      "streamer": "nooreax",
+      "source_url": "https://www.twitch.tv/nooreax/clip/RefinedSmoothEmuGrammarKing-HzvaC-rpzWNDCqNo",
+      "original_title": "Pull no. 2 HAHAHAHAHA",
+      "hook": "PULL NO. 2 HAHAHAHAHA",
+      "caption": "Pull no. 2 HAHAHAHAHA 😂\n#nooreax #twitchde #streamclips",
+      "views_at_selection": 1336,
+      "original_duration": 18.8,
+      "rendered_duration": 18.9,
+      "original_metadata": {
+        "broadcaster_id": "172312401",
+        "creator_id": "95962349",
+        "creator_name": "Looping61",
+        "game_id": "27471",
+        "language": "de",
+        "vod_id": "2909302136",
+        "vod_offset": 36566
+      },
+      "original_created_at": "2026-10-24T18:49:01Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/nooreax-refinedsmoothemugrammarking-hzvac-rpzwndcqno.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/nooreax-refinedsmoothemugrammarking-hzvac-rpzwndcqno-cover.jpg",
+      "qa_run_id": "40219320751",
+      "qa_artifact_name": "twitch-video-qa",
+      "qa_sample_folder": "nooreax-refinedsmoothemugrammarking-hzvac-rpzwndcqno",
+      "video_sha256": "8e5e9472d01ec987ecace17367fd06fa02d6625ffa394cf35d7d69fe69d462e3",
+      "subtitle_sha256": "8543bcc62ffbd20ff619ab9bb7d0a66e405538e2d182cc435556861fe449ad8e",
+      "technical_qa_passed": true,
+      "watchlist_source": "https://twitchtracker.com/channels/ranking/german",
+      "watchlist_checked_at": "2026-10-25",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-25T18:03:21Z",
+      "status": "approved_for_distribution",
+      "rights_status": "user_attested_oral",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "single_scene_readable_caption_band_v1",
+      "subtitle_verified": false,
+      "subtitle_review_status": "machine_transcript_consistency_passed",
+      "automated_qa": {
+        "version": 1,
+        "status": "passed",
+        "checked_at": "2026-10-25T18:05:22.668757+00:00",
+        "video_sha256": "8e5e9472d01ec987ecace17367fd06fa02d6625ffa394cf35d7d69fe69d462e3",
+        "subtitle_sha256": "8543bcc62ffbd20ff619ab9bb7d0a66e405538e2d182cc435556861fe449ad8e",
+        "transcript_agreement": 0.9048,
+        "avg_logprob": -0.3424,
+        "checks": {
+          "media": true,
+          "subtitle_timing": true,
+          "speech_confidence": true,
+          "transcript_consistency": true,
+          "motion": true,
+          "source_metadata": true,
+          "content_filter": true
+        },
+        "method": "media decode/audio level, readable non-overlapping captions, gameplay motion, source metadata/filter and local ASR consistency on rendered audio",
+        "limitations": "Machine acceptance, not human editorial review, perfect word accuracy or viral quality."
+      },
+      "rights_evidence_id": "user-oral-top50-2026-10-25",
+      "editorial_review_status": "automatic_checks_passed",
+      "quality_score_verified": false,
+      "quality_score": null,
+      "approval_method": "automatic_machine_checks"
     }
   ],
   "processed_ids": [
@@ -1681,7 +1748,9 @@
     "BigUninterestedPieDoritosChip-118i0gTxNoJl4bJs",
     "BigUninterestedPieDoritosChip-118i0gTxNoJl4bJs",
     "AgileBlatantAardvarkThisIsSparta-0Fm7_19XMx8oftDQ",
-    "AgileBlatantAardvarkThisIsSparta-0Fm7_19XMx8oftDQ"
+    "AgileBlatantAardvarkThisIsSparta-0Fm7_19XMx8oftDQ",
+    "RefinedSmoothEmuGrammarKing-HzvaC-rpzWNDCqNo",
+    "RefinedSmoothEmuGrammarKing-HzvaC-rpzWNDCqNo"
   ],
   "failed_attempts": {
     "CarelessDarkPeafowlYouDontSay-j_cMA2HXDRzd5ivk": {
@@ -1698,6 +1767,21 @@
       "at": "2026-10-25T17:18:58Z",
       "streamer": "edopeh",
       "reason": "ValueError('No reliable subtitle transcription; try next clip')"
+    },
+    "AlluringHandsomeCiderMoreCowbell-7apabrRC8z7wrqoY": {
+      "at": "2026-10-25T18:03:21Z",
+      "streamer": "edopeh",
+      "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
+    },
+    "PrettyTangentialMilkMikeHogu-M_vDWEQV3zkSY6rw": {
+      "at": "2026-10-25T18:03:21Z",
+      "streamer": "papaplatte",
+      "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
+    },
+    "PiercingProtectiveDogePrimeMe-IMtggHbHBWnS3y8y": {
+      "at": "2026-10-25T18:03:21Z",
+      "streamer": "trymacs",
+      "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
     }
   },
   "publication_blocked_until_verified": true
