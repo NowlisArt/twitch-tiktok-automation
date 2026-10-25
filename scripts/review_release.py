@@ -37,7 +37,7 @@ def main():
         source = {'channel_login': clip['streamer'], 'id': clip['clip_id']}
         video_url, cover_url = release(source, video, cover, now)
         clip.update(video_url=video_url, cover_url=cover_url, status='approved_for_distribution',
-                    rights_status='verified_permission', rights_evidence_id=permission['id'],
+                    rights_status=permission['status'], rights_evidence_id=permission['id'],
                     subtitle_verified=True, editorial_review_status='approved',
                     quality_score_verified=True, quality_score=review['quality_score'])
         save_state(state)

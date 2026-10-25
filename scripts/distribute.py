@@ -21,7 +21,7 @@ def eligible(clip, threshold):
         clip.get("technical_qa_passed") is True
         and clip.get("subtitle_verified") is True
         and clip.get("editorial_review_status") == "approved"
-        and clip.get("rights_status") == "verified_permission"
+        and clip.get("rights_status") in ("verified_permission", "user_attested_oral")
         and clip.get("publication_blocked_until_verified") is not True
         and str(clip.get("streamer") or "").strip().lower() not in REVOKED_CHANNELS
         and clip.get("quality_score_verified") is True

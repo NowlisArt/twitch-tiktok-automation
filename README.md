@@ -26,9 +26,9 @@ Unreviewed new media is stored as the `twitch-video-qa` Actions artifact for sev
 
 ## Rights and exact-media review
 
-The user's blanket permission statement is recorded, but this migration verified no individual rights documents and grants no new clip approvals. Historical flags are preserved, not upgraded.
+The user explicitly confirmed oral permissions on 25 October 2026 and requested no written evidence. The bounded top-50 snapshot is recorded as `user_attested_oral`, never as independently verified permission. Future ranking additions require a new attestation. Historical clip flags are preserved; no content or subtitle approvals are inferred.
 
-To enable a source for release, add a real entry to `config/rights.json`:
+To enable a source for release, use the existing explicit oral attestation or add a documented entry to `config/rights.json`:
 
 ```json
 {

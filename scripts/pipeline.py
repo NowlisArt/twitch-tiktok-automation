@@ -14,7 +14,7 @@ import unicodedata
 from pathlib import Path
 from urllib.parse import urlparse
 from storage import write_json
-from quality import digest
+from quality import digest, rights_for
 
 SETTINGS = json.loads(Path('config/publishing.json').read_text(encoding='utf-8'))
 WATCHLIST = json.loads(Path('config/watchlist.json').read_text(encoding='utf-8'))
@@ -974,7 +974,8 @@ def main():
                 'watchlist_checked_at': WATCHLIST['checked_at'],
                 'transcript_subtitles': has_subs, 'created_at': iso(now),
                 'status': 'awaiting_review_not_posted',
-                'rights_status': 'user_asserted_not_independently_verified',
+                'rights_status': ((rights_for(clip['channel_login'], now) or {}).get('status')
+                                  or 'user_asserted_not_independently_verified'),
                 'video_review_status': 'technical_checks_only',
                 'editing_status': '9x16_face_focus_fullscreen_overview_15_42s',
                 'subtitle_verified': False,

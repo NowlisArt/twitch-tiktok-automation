@@ -138,9 +138,20 @@ class PublishingTests(unittest.TestCase):
 
 class EvidenceTests(unittest.TestCase):
     def test_claims_are_not_evidence(self):
-        reasons = quality.publication_reasons(candidate(), NOW)
+        with patch.object(quality, 'rights_for', return_value=None):
+            reasons = quality.publication_reasons(candidate(), NOW)
         self.assertTrue(any('permission' in r for r in reasons))
         self.assertTrue(any('review' in r for r in reasons))
+
+    def test_explicit_oral_attestation_is_not_independent_verification(self):
+        attestation = dict(id='oral', streamers=['papaplatte'], status='user_attested_oral',
+            evidence_reference='User statement in this chat', attested_by='repository owner',
+            attested_at='2026-10-25T07:00:00Z', scope=['edit','subtitles','tiktok','public_hosting'])
+        with patch.object(Path, 'read_text', return_value=json.dumps({'permissions': [attestation]})):
+            self.assertEqual('user_attested_oral', quality.rights_for('papaplatte', NOW)['status'])
+            self.assertIsNone(quality.rights_for('new_unknown_streamer', NOW))
+        self.assertTrue(distribute.eligible(candidate(rights_status='user_attested_oral'), 85))
+        self.assertFalse(distribute.eligible(candidate(rights_status='user_attested_oral', subtitle_verified=False), 85))
 
     def test_freshness_at_scheduled_time(self):
         with patch.object(quality, 'rights_for', return_value={'id': 'evidence'}), \

@@ -28,16 +28,19 @@ def rights_for(streamer, when):
             return None
     document = json.loads((ROOT / 'config/rights.json').read_text(encoding='utf-8'))
     for permission in document['permissions']:
-        if permission.get('streamer', '').lower() != str(streamer).lower():
+        sources = permission.get('streamers', [permission.get('streamer', '')])
+        if str(streamer).lower() not in [str(s).lower() for s in sources]:
             continue
-        if permission.get('status') != 'verified_permission' or permission.get('revoked') is True:
+        status = permission.get('status')
+        if status not in ('verified_permission', 'user_attested_oral') or permission.get('revoked') is True:
             continue
-        if not all(permission.get(k) for k in ('id', 'evidence_reference', 'verified_by', 'verified_at')):
+        actor, date = ('verified_by', 'verified_at') if status == 'verified_permission' else ('attested_by', 'attested_at')
+        if not all(permission.get(k) for k in ('id', 'evidence_reference', actor, date)):
             continue
         if not {'edit', 'subtitles', 'tiktok', 'public_hosting'}.issubset(permission.get('scope', [])):
             continue
         try:
-            if timestamp(permission['verified_at']) > when:
+            if timestamp(permission[date]) > when:
                 continue
             if permission.get('expires_at') and timestamp(permission['expires_at']) <= when:
                 continue
