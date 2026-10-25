@@ -1,4 +1,4 @@
-# Twitch → Dream Void via GitHub Actions
+# Twitch → Dream Void and Sunshine via GitHub Actions
 
 GitHub Actions starts the entire process. ChatGPT is no longer required as a scheduler or publisher.
 
@@ -9,12 +9,12 @@ Open [Run workflow](https://github.com/NowlisArt/twitch-tiktok-automation/action
 - `preflight` (default): read-only live Buffer authentication, exact TikTok channel, connection flags, GraphQL contract and complete queue checks. No new posts.
 - `diagnose`: official Twitch metadata only, no downloads or posting.
 - `prepare`: render private QA candidates, no Buffer posting.
-- `run`: reviewed artifact promotion, discovery/rendering, then eligible Buffer scheduling and receipt reconciliation.
+- `run`: reviewed artifact promotion, discovery/rendering, then eligible Buffer scheduling and receipt reconciliation for both accounts.
 - Scheduled at 07:17, 10:17, 13:17, 16:17, 19:17 and 22:17 **UTC**, best effort. Berlin posting slots remain 11:00, 14:00, 17:00, 19:00, 21:00 across DST.
 
-The target is **3–5 different suitable authorized TikToks daily**, with at most five reservations/posts per Berlin calendar day. A shortage remains a shortage; it never lowers rights, subtitles or content QA. The planner fills only the next 24 hours and checks original age at the planned posting time. Manual posts in the live target queue consume the daily cap too.
+The target is **3–5 different suitable authorized TikToks daily per account**, with at most five reservations/posts per account and Berlin calendar day (ten total). A shared planner balances scarce eligible clips between both accounts and never allocates one source to both. A shortage remains a shortage; it never lowers rights, subtitles or content QA. The planner fills only the next 24 hours and checks original age at the planned posting time. Manual posts in the live target queue consume the daily cap too.
 
-`config/publishing.json` controls the budget: two renders/run, four candidate attempts/run, up to six daily candidates and 186 monthly candidates. ASR runs locally on the runner with a cached medium Whisper model; no paid LLM calls. Model confidence is not evidence of subtitle accuracy. Actual Actions minutes depend on attempts and GitHub billing.
+`config/publishing.json` controls the budget: two renders/run, four candidate attempts/run, up to twelve shared daily candidates and 372 shared monthly candidates. ASR runs locally on the runner with a cached medium Whisper model; no paid LLM calls. Model confidence is not evidence of subtitle accuracy. Actual Actions minutes depend on attempts and GitHub billing.
 
 ## Discovery and editing
 
@@ -48,7 +48,12 @@ After watching/listening to the exact candidate and checking the subtitles again
 
 ## Buffer and credentials
 
-Target: TikTok **@dreamvoid26**, channel `6ad6c095778b240e2f624d3b`. **suhshine28/Sunshine is not a publishing target**. Its visible connection does not authorize this pipeline to use it. Historical Metricool records stay in duplicate history; no new Metricool posting is performed.
+Authorized targets, explicitly requested by the user on 25 October 2026:
+
+- **Dream Void @dreamvoid26**, channel `6ad6c095778b240e2f624d3b`.
+- **Sunshine @suhshine28**, channel `6ade2e8c2f1f5ed648cabd2c`.
+
+The same existing Buffer key is used. Both exact channel IDs, handles, TikTok service and connection/queue flags must pass live verification. Both complete queues are fetched before a new post is created. Daily limits and receipts are separate per account; source/URL duplicate protection stays global. Unknown pending submissions retain their original account reservation. Historical untagged Buffer receipts remain assigned to Dream Void; they are not copied to Sunshine. Historical Metricool records stay in duplicate history; no new Metricool posting is performed.
 
 GitHub repository secrets: `BUFFER_API_KEY`, `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET`. Buffer uses `https://api.buffer.com`, bearer authentication, `CreatePostInput`, `customScheduled`, `automatic` and public video asset URLs. The preflight validates the live contract without creating a test post. Keys, passwords and OAuth tokens never belong in chat, files, logs or commits.
 
@@ -58,7 +63,7 @@ The existing Buffer key UI on 25 October showed expiry **16 November 2026**. Its
 
 All production writers share `twitch-auto20-nowlisart-main`, `cancel-in-progress: false`, and check out current main. IDs/slugs/source URLs, reservations and historical Metricool/Buffer use prevent reuse across accounts. Before every Buffer mutation, a pending intent is atomically written, committed and pushed. A failed push prevents submission. A timeout/cancellation retains the remote reservation; never blindly retry. Reconciliation can recover one exact media URL match, otherwise manual queue inspection is required. State pushes never force or silently rebase over another writer.
 
-`state/auto20.json`, the run summary and `buffer-report.json` distinguish prepared, reviewed, scheduled, sent, error and uncertain. Only Buffer `sent` is provider-confirmed publication; record `sentAt` and `externalLink` where available. A green run and a GitHub Release are not proof of a TikTok upload. Failed posts retain duplicate protection and are not automatically reposted.
+`state/auto20.json`, the run summary and `buffer-report.json` (broken down by account) distinguish prepared, reviewed, scheduled, sent, error and uncertain. Only Buffer `sent` is provider-confirmed publication; record `sentAt` and `externalLink` where available. A green run and a GitHub Release are not proof of a TikTok upload. Failed posts retain duplicate protection and are not automatically reposted.
 
 Migration check on 25 October 2026: all four legacy ChatGPT tasks were paused and visibly verified in ChatGPT Tasks: Twitch TikTok Pipeline Watchdog, TikTok-Upload Ersatzprüfung, GitHub Videotest überwachen, and Twitch-Clips automatisch posten. GitHub is now the sole configured starter. A screenshot of the paused tasks was saved with the migration deliverables.
 
@@ -83,3 +88,7 @@ CI parses every workflow. Regression tests cover daily caps including pending/ma
 - [TwitchTracker German ranking](https://twitchtracker.com/channels/ranking/german)
 
 The old `buffer.yml` and promotion workflow have been replaced by the single starter; the obsolete manual `promote_approved.py` is retained only as history and is not invoked by Actions.
+
+## Two-account expansion, 25 October 2026
+
+Both existing connected accounts are now publishing targets, per the user's request. This expands routing and render capacity only; no quality approvals are invented. Five Berlin slots apply independently to each account. At low supply, accounts with fewer reservations that day take priority; historical service order breaks ties. Tests additionally cover ten unique allocations, fair shortage distribution, independent daily caps, Sunshine live identity checks, cross-account source/media reuse, and correct durable Sunshine intent and payload.

@@ -1,14 +1,15 @@
 {
-  "account": "dreamvoid",
-  "channel_id": "6ad6c095778b240e2f624d3b",
-  "expected_handle": "dreamvoid26",
+  "accounts": [
+    {"id": "dreamvoid", "channel_id": "6ad6c095778b240e2f624d3b", "expected_handle": "dreamvoid26"},
+    {"id": "sunshine", "channel_id": "6ade2e8c2f1f5ed648cabd2c", "expected_handle": "suhshine28"}
+  ],
   "timezone": "Europe/Berlin",
   "posting_hours": [11, 14, 17, 19, 21],
   "minimum_target": 3,
   "maximum_daily": 5,
   "max_source_age_hours": 72,
-  "max_daily_renders": 6,
-  "max_monthly_renders": 186,
+  "max_daily_renders": 12,
+  "max_monthly_renders": 372,
   "max_renders_per_run": 2,
   "max_attempts_per_run": 4,
   "minimum_quality": 85

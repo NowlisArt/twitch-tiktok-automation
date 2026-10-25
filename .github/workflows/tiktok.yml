@@ -1,4 +1,4 @@
-name: Twitch to Dream Void | GitHub starter
+name: Twitch to Dream Void and Sunshine | GitHub starter
 
 on:
   schedule:
@@ -77,7 +77,7 @@ jobs:
         env:
           ENABLE_PREPARATION: 'true'
         run: python scripts/pipeline.py
-      - name: Reconcile and schedule eligible Dream Void clips
+      - name: Reconcile and schedule eligible clips for Dream Void and Sunshine
         if: github.event_name == 'schedule' || github.event_name == 'push' || inputs.mode == 'run'
         env:
           ENABLE_BUFFER_POSTING: 'true'
