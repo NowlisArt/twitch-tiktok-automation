@@ -9,6 +9,17 @@ from quality import digest, publication_reasons, review_for, rights_for
 from distribute import unavailable
 
 
+def artifact_sample(destination, folder):
+    """Accept actual multi-path Actions archives and older flattened archives."""
+    if not re.fullmatch(r'[a-z0-9-]{8,90}', str(folder)):
+        raise ValueError('Invalid QA sample folder')
+    matches = [p for p in (destination / 'rendered/qa_samples' / folder,
+                            destination / 'qa_samples' / folder) if p.is_dir()]
+    if len(matches) != 1:
+        raise ValueError('Reviewed artifact folder missing or ambiguous')
+    return matches[0]
+
+
 def main():
     state = read_state()
     for clip in state['created']:
@@ -25,7 +36,7 @@ def main():
         if not destination.exists():
             subprocess.run(['gh', 'run', 'download', run_id, '--name', 'twitch-video-qa',
                             '--dir', str(destination)], check=True, timeout=180)
-        sample = destination / 'qa_samples' / folder
+        sample = artifact_sample(destination, folder)
         video, cover, subs = sample / 'tiktok.mp4', sample / 'cover.jpg', sample / 'subs.ass'
         if digest(video) != clip['video_sha256'] or digest(subs) != clip['subtitle_sha256']:
             raise ValueError('Artifact differs from reviewed bytes')
