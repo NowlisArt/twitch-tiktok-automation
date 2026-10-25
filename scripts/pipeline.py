@@ -13,11 +13,18 @@ import textwrap
 import unicodedata
 from pathlib import Path
 from urllib.parse import urlparse
+from storage import write_json
+from quality import digest
+
+SETTINGS = json.loads(Path('config/publishing.json').read_text(encoding='utf-8'))
+WATCHLIST = json.loads(Path('config/watchlist.json').read_text(encoding='utf-8'))
 
 UTC = dt.timezone.utc
 STATE = Path('state/auto20.json')
 OUT = Path('rendered')
 STREAMERS = '''eliasn97 zarbex papaplatte trymacs canerkrd krokoboss xrohat montanablack88 gamerbrother kubafps bonjwa xthesolutiontv handofblood noway4u_sir metashi12 gronkhtv gronkh tolkin gtasty orangemorange schradin dhalucard shlorox mertabimula rumathra elotrix bastighg maxim dracon staiy spontent marli onlyjson naguura phunkroyal niklaswilson pietsmiet scurrows h0llylp rezo letshugotv edopeh amar sterzik repaz gtimetv mckytv rezonfn fregepaul coachlim'''.split()
+RANK = {name: idx + 1 for idx, name in enumerate(STREAMERS)}
+STREAMERS = WATCHLIST['channels']
 RANK = {name: idx + 1 for idx, name in enumerate(STREAMERS)}
 # Permanent bans: BastiGHG and Trymacs already used on TikTok.
 # Previous QA sample rejected for weak narrative. Never recycle it.
@@ -77,8 +84,7 @@ def read_state():
 
 
 def save_state(state):
-    STATE.parent.mkdir(parents=True, exist_ok=True)
-    STATE.write_text(json.dumps(state, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    write_json(STATE, state)
 
 
 def scheduled_slot(now):
@@ -150,7 +156,7 @@ def can_prepare(state, now, event='schedule'):
     monthly = [rec for rec in state['created']
                if rec.get('created_at', '').startswith(now.strftime('%Y-%m'))
                and counts_as_prepared(rec)]
-    if len(monthly) >= 60:
+    if len(monthly) >= SETTINGS['max_monthly_renders']:
         return False, 'GitHub-Pufferlimit von 60 Produktionen in diesem Monat erreicht'
     daily = [rec for rec in monthly
              if rec.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))
@@ -170,7 +176,10 @@ def authorized_channels():
     approved = {line.strip().lower() for line in source.read_text(encoding='utf-8').splitlines()
                 if line.strip() and not line.lstrip().startswith('#')}
     # A stable 50-channel seed list; it is not a live TwitchTracker ranking.
-    return [channel for channel in STREAMERS if channel in approved]
+    revoked = Path('config/revoked_channels.txt')
+    denied = {line.strip().lower() for line in revoked.read_text(encoding='utf-8').splitlines()
+              if line.strip() and not line.lstrip().startswith('#')} if revoked.exists() else set()
+    return [channel for channel in STREAMERS if channel in approved and channel not in denied]
 
 
 def twitch_api_candidates(range_code='24hr', channels=None):
@@ -292,7 +301,12 @@ def helix_verified(phase, now, used, used_urls, failed, channels):
             clip = {'id': clip_id, 'clip_slug': clip_slug, 'url': url,
                     'channel_login': channel, 'rank': RANK[channel],
                     'title': title, 'view_count': views, 'duration': float(duration),
-                    'original_created_at': iso(created), 'age_hours': age}
+                    'original_created_at': iso(created), 'age_hours': age,
+                    'broadcaster_id': info.get('broadcaster_id'),
+                    'creator_id': info.get('creator_id'),
+                    'creator_name': info.get('creator_name'),
+                    'game_id': info.get('game_id'), 'language': info.get('language'),
+                    'vod_id': info.get('video_id'), 'vod_offset': info.get('vod_offset')}
             if not (age <= 48 or very_strong(clip)):
                 rejected('older_without_strong_metrics')
             elif not worth_testing(clip):
@@ -530,7 +544,9 @@ def transcribe(path):
     """Transcribe real German audio; reject low-confidence / nonsensical outputs."""
     from faster_whisper import WhisperModel
     model_name = os.getenv('ASR_MODEL', 'medium')
-    model = WhisperModel(model_name, device='cpu', compute_type='int8', cpu_threads=4)
+    if not hasattr(transcribe, '_model'):
+        transcribe._model = WhisperModel(model_name, device='cpu', compute_type='int8', cpu_threads=4)
+    model = transcribe._model
     print('ASR MODEL', model_name, flush=True)
     segments, _ = model.transcribe(
         str(path), language='de', beam_size=5, word_timestamps=True,
@@ -630,7 +646,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     cues = []
     for group in groups:
         a, b = group[0][0], group[-1][1]
-        label = ' '.join(x[2] for x in group).upper()
+        label = ' '.join(x[2] for x in group)
         label = label.replace('\\', '').replace('{', '(').replace('}', ')').replace('\n', ' ').strip()
         if label:
             cues.append((a, b, label))
@@ -638,13 +654,18 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     for index, (a, b, label) in enumerate(cues):
         # Never render two text cards at once: cap each card before the next begins.
         next_start = cues[index+1][0] if index+1 < len(cues) else length
-        end = min(length, max(a+0.25, b+0.08), next_start-0.02)
+        end = min(length, max(a+0.8, b+0.15, a+len(label)/20), next_start-0.02)
         if end <= a+0.05:
             continue
         events.append(
             f'Dialogue: 0,{ass_time(a)},{ass_time(end)},TikTok,,0,0,0,,{label}')
     path.write_text(header + '\n'.join(events) + '\n', encoding='utf-8')
-    return len(events) >= 3
+    # Timing/readability is a technical gate; never claim word accuracy from ASR confidence.
+    readable = all(len(label) <= 31 and
+                   len(label) / max(.01, min(length, max(a+.8, b+.15, a+len(label)/20),
+                                            (cues[i+1][0] if i+1 < len(cues) else length)-.02)-a) <= 25
+                   for i, (a, b, label) in enumerate(cues))
+    return len(events) >= 3 and readable
 
 def find_face_focus(source, duration):
     """Best-effort reaction camera framing; leave original overview visible below."""
@@ -873,7 +894,8 @@ def main():
     now, state = now_utc(), read_state()
     allowed, reason = can_prepare(state, now, os.getenv('GITHUB_EVENT_NAME', 'schedule'))
     if not allowed:
-        print('PRODUCTION PAUSED:', reason, '- continuing Twitch discovery')
+        print('PRODUCTION PAUSED:', reason)
+        return
     channels = authorized_channels()
     if not channels:
         print('SKIP: no approved channels. No videos prepared.')
@@ -890,10 +912,11 @@ def main():
     strong_already = any(rec.get('views_at_selection', 0) >= 5000 for rec in daily)
     exceptional_fallback = len(daily) == 5 and not strong_already
     daily_remaining = 1 if exceptional_fallback else max(0, 5-len(daily))
-    remaining = min(daily_remaining,
-                    max(0, min(60, int(os.getenv('MAX_MONTHLY_PREPARED', '60')))-len(monthly)))
+    remaining = min(daily_remaining, SETTINGS['max_renders_per_run'],
+                    max(0, SETTINGS['max_monthly_renders']-len(monthly)))
     if remaining <= 0:
-        print('PRODUCTION PAUSED: buffer filled; still scanning approved channels')
+        print('PRODUCTION PAUSED: render budget filled')
+        return
     all_candidates = []
     for phase, verified in fresh_candidates(now, used, used_urls, failed, channels):
         all_candidates.extend((phase, clip) for clip in verified)
@@ -904,7 +927,7 @@ def main():
         ensure_ascii=False), flush=True)
     prepared, attempted = 0, 0
     for phase, clip in all_candidates:
-        if prepared >= remaining or attempted >= 25:
+        if prepared >= remaining or attempted >= SETTINGS['max_attempts_per_run']:
             break
         if exceptional_fallback and clip['view_count'] < 5000:
             continue
@@ -923,15 +946,32 @@ def main():
             # recognition means no release, even if the audio is otherwise valid.
             if not has_subs:
                 raise ValueError('No reliable subtitle transcription; try next clip')
-            video_url, cover_url = release(clip, movie, cover, now)
+            # Keep unreviewed candidates in Actions artifacts, never public Releases.
+            import shutil
+            sample_dir = OUT / 'qa_samples' / slug(clip['channel_login'] + '-' + clip['clip_slug'], 90)
+            sample_dir.mkdir(parents=True, exist_ok=True)
+            for source_file in (movie, cover, OUT / 'subs.ass'):
+                shutil.copyfile(source_file, sample_dir / source_file.name)
+            video_url, cover_url = None, None
             state['created'].append({
                 'clip_id': clip['id'], 'clip_slug': clip['clip_slug'],
                 'streamer': clip['channel_login'], 'source_url': clip['url'],
                 'original_title': clip['title'], 'hook': headline(clip),
                 'caption': caption(clip), 'views_at_selection': clip['view_count'],
                 'original_duration': clip['duration'], 'rendered_duration': probe(movie),
+                'original_metadata': {k: clip.get(k) for k in (
+                    'broadcaster_id', 'creator_id', 'creator_name', 'game_id',
+                    'language', 'vod_id', 'vod_offset')},
                 'original_created_at': clip['original_created_at'],
                 'video_url': video_url, 'cover_url': cover_url,
+                'qa_run_id': os.getenv('GITHUB_RUN_ID'),
+                'qa_artifact_name': 'twitch-video-qa',
+                'qa_sample_folder': sample_dir.name,
+                'video_sha256': digest(movie),
+                'subtitle_sha256': digest(OUT / 'subs.ass'),
+                'technical_qa_passed': True,
+                'watchlist_source': WATCHLIST['source_url'],
+                'watchlist_checked_at': WATCHLIST['checked_at'],
                 'transcript_subtitles': has_subs, 'created_at': iso(now),
                 'status': 'awaiting_review_not_posted',
                 'rights_status': 'user_asserted_not_independently_verified',
@@ -943,7 +983,8 @@ def main():
             state['processed_ids'].extend([clip['id'], clip['clip_slug']])
             used.update([clip['id'], clip['clip_slug']])
             save_state(state)
-            print('VIDEO READY FOR QA, NOT POSTED:', video_url, flush=True)
+            write_json(sample_dir / 'test_manifest.json', state['created'][-1])
+            print('VIDEO READY IN QA ARTIFACT, NOT POSTED:', clip['id'], flush=True)
             prepared += 1
         except Exception as exc:
             remember_failure(state, clip, now, exc)
@@ -1116,8 +1157,8 @@ def source_diagnostic():
     """Read-only test of public Twitch clip listing and source metadata."""
     if os.getenv('TWITCH_CLIENT_ID') and os.getenv('TWITCH_CLIENT_SECRET'):
         channels = authorized_channels()
-        if len(channels) != 50:
-            raise SystemExit('FAILED: expected 50 approved channels')
+        if not channels:
+            raise SystemExit('FAILED: no authorized channels in current top-50 watchlist')
         now = now_utc()
         results = {}
         for window in ('24hr', '7d'):
