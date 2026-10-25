@@ -37,6 +37,7 @@ jobs:
       TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
       TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
       ASR_MODEL: medium
+      ENABLE_AUTO_QA: 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -73,10 +74,14 @@ jobs:
         if: inputs.mode != 'preflight' && inputs.mode != 'diagnose'
         run: python scripts/review_release.py
       - name: Discover and render private QA candidates
+        continue-on-error: true
         if: github.event_name == 'schedule' || inputs.mode == 'run' || inputs.mode == 'prepare'
         env:
           ENABLE_PREPARATION: 'true'
         run: python scripts/pipeline.py
+      - name: Automatically release newly machine-checked clips in this run
+        if: github.event_name == 'schedule' || inputs.mode == 'run'
+        run: python scripts/review_release.py
       - name: Reconcile and schedule eligible clips for Dream Void and Sunshine
         if: github.event_name == 'schedule' || github.event_name == 'push' || inputs.mode == 'run'
         env:

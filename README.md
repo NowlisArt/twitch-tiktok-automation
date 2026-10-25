@@ -20,9 +20,9 @@ The target is **3–5 different suitable authorized TikToks daily per account**,
 
 `config/watchlist.json` is the manually checked **German TwitchTracker overall top-50 snapshot, 25 October 2026**, not an automatic live ranking. New ranking members never receive permission automatically. TwitchTracker prohibits recurring scraping; refresh the documented snapshot through permitted access when needed. Discovery uses the intersection with the user-declared `config/approved_channels.txt`, minus `config/revoked_channels.txt` if present.
 
-Original IDs/URLs, title, timestamp, views, duration and available broadcaster/creator/game/VOD metadata come from Twitch Helix. Existing age, view and unsuitable-title filters remain. No fabricated metadata. FFmpeg retains a wide overview plus reaction framing, 1080×1920, audible normalized audio, real speech cuts, and short high-contrast subtitle groups within safe margins. Subtitle timing/readability checks reject unusable renders; semantic accuracy/context still require the recorded review below.
+Original IDs/URLs, title, timestamp, views, duration and available broadcaster/creator/game/VOD metadata come from Twitch Helix. Existing age, view and unsuitable-title filters remain. No fabricated metadata. FFmpeg retains a wide overview plus reaction framing, 1080×1920, audible normalized audio, real speech cuts, and short high-contrast subtitle groups within safe margins. Subtitle timing/readability checks reject unusable renders; new clips can be accepted by the automatic policy described below; exact human word accuracy and editorial quality are not claimed from ASR confidence.
 
-Unreviewed new media is stored as the `twitch-video-qa` Actions artifact for seven days, not a public Release. Retention is a review deadline; expired artifacts require a new render and review. Repository collaborators and artifact access rules still apply.
+New media starts locally as a QA candidate. New videos passing the configured automatic checks are released and scheduled in the same GitHub run. Failed or manually rejected renders remain unapproved; the `twitch-video-qa` artifact retains QA files for seven days. Retention is a review deadline; expired artifacts require a new render and review. Repository collaborators and artifact access rules still apply.
 
 ## Rights and exact-media review
 
@@ -44,7 +44,7 @@ To enable a source for release, use the existing explicit oral attestation or ad
 }
 ```
 
-After watching/listening to the exact candidate and checking the subtitles against audio, add a review entry to `config/reviews.json`. Copy `clip_id`, `video_sha256`, and `subtitle_sha256` from the candidate manifest. Include actual `reviewer`, timezone-aware `reviewed_at`, substantive `notes`, integer `quality_score` ≥85 and explicit true values for `subtitle_accuracy`, `readability`, `audio_video`, `context`, and `rights_in_clip`. Do not mark a review done merely to fill a quota. Pushing rights/reviews to main invokes the workflow. It downloads the exact run/artifact, verifies both hashes and technical media checks, hosts the approved MP4, and schedules only while current evidence remains valid.
+For optional human review after watching/listening to the exact candidate and checking the subtitles against audio, add a review entry to `config/reviews.json`. Copy `clip_id`, `video_sha256`, and `subtitle_sha256` from the candidate manifest. Include actual `reviewer`, timezone-aware `reviewed_at`, substantive `notes`, integer `quality_score` ≥85 and explicit true values for `subtitle_accuracy`, `readability`, `audio_video`, `context`, and `rights_in_clip`. Do not mark a review done merely to fill a quota. Pushing rights/reviews to main invokes the workflow. It downloads the exact run/artifact, verifies both hashes and technical media checks, hosts the approved MP4, and schedules only while current evidence remains valid.
 
 ## Buffer and credentials
 
@@ -92,3 +92,15 @@ The old `buffer.yml` and promotion workflow have been replaced by the single sta
 ## Two-account expansion, 25 October 2026
 
 Both existing connected accounts are now publishing targets, per the user's request. This expands routing and render capacity only; no quality approvals are invented. Five Berlin slots apply independently to each account. At low supply, accounts with fewer reservations that day take priority; historical service order breaks ties. Tests additionally cover ten unique allocations, fair shortage distribution, independent daily caps, Sunshine live identity checks, cross-account source/media reuse, and correct durable Sunshine intent and payload.
+
+## Autonomous mode (explicitly requested 25 October 2026)
+
+`config/automatic_qa.json` enables machine acceptance of NEW renders, without a per-clip human approval stop. Existing oral source authorization and cross-account duplicate history remain. No paid LLM/API is used for captions or QA: the cached local Whisper model transcribes source and rendered audio, with at least 80% token agreement and mean log probability at least -0.85. These are automated consistency checks, not proof of perfect word accuracy. Other checks cover source metadata, audible decodable media, caption bounds/overlap/two-line readability, basic unsuitable speech filtering and long static gameplay/menu phases.
+
+New evidence is tied to the exact video and subtitle hashes. Machine accepted clips retain `subtitle_verified=false` and `quality_score_verified=false`; `approval_method=automatic_machine_checks` distinguishes them from actual human review. No arbitrary verified editorial score is fabricated. Existing exact-byte human rejections are honored. Changing policy or disabling `enabled` stops machine acceptance. Clips without a manual review or valid machine evidence stay blocked.
+
+Caption timing is checked before expensive encoding; short cards can merge and long German words wrap. The new rendering uses one source view and a dedicated lower subtitle band, avoiding the previous repeated two-panel picture and text. It does not claim to remove every subtitle already burned into source footage.
+
+A second release step after preparation promotes valid local files immediately; no download of an unfinished current-run artifact is required. A broken/expired release candidate logs its error and does not block other clips or Buffer reconciliation. Interrupted public asset uploads reuse matching bytes rather than failing forever on an existing asset name. Ambiguous Buffer submissions retain their reservation to prevent duplicate posts.
+
+The daily target remains 3–5 eligible distinct videos per account. Missing usable content, provider outages or an expired credential can still cause a shortfall; the run summary reports that honestly. Authentication renewal may still require the account owner. Old ChatGPT posting tasks remain paused; GitHub is the starter.
