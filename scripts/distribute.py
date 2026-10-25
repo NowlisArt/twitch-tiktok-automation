@@ -39,7 +39,7 @@ def clip_keys(clip):
     for field in ("clip_id", "clip_slug"):
         value = str(clip.get(field) or "").strip()
         if value:
-            keys.add(field + ":" + value)
+            keys.add("source_id:" + value)
     url = str(clip.get("source_url") or "").strip()
     if url:
         parts = urlsplit(url)

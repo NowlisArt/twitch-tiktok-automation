@@ -1,0 +1,4 @@
+yt-dlp==2026.10.21
+faster-whisper==1.2.1
+av>=11,<19
+opencv-python-headless==4.11.0.86
