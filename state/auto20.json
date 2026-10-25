@@ -106,7 +106,7 @@
       "buffer_post_id": "6ad7f31b8c20162e7ecb719c",
       "buffer_due_at": "2026-10-21T16:00:00.000Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-25T17:13:35.945369+00:00",
+      "buffer_last_checked_at": "2026-10-25T17:25:23.407471+00:00",
       "buffer_sent_at": "2026-10-21T16:06:26.167Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699152703720525088?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -532,7 +532,7 @@
       "buffer_post_id": "6ad7dfb9a40664bdbaeb3d47",
       "buffer_due_at": "2026-10-21T12:00:00.000Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-25T17:13:35.945369+00:00",
+      "buffer_last_checked_at": "2026-10-25T17:25:23.407471+00:00",
       "buffer_sent_at": "2026-10-21T12:05:00.193Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699090478490307872?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -564,7 +564,7 @@
       "buffer_post_id": "6ada3ccc9a8a68d3cd6e1ba2",
       "buffer_due_at": "2026-10-22T16:49:47.667Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-25T17:13:35.945369+00:00",
+      "buffer_last_checked_at": "2026-10-25T17:25:23.407471+00:00",
       "buffer_sent_at": "2026-10-22T16:51:48.326Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699535559319948576?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -596,7 +596,7 @@
       "buffer_post_id": "6ada3cf8399af6f1f7271b5b",
       "buffer_due_at": "2026-10-23T12:00:00.000Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-25T17:13:35.945369+00:00",
+      "buffer_last_checked_at": "2026-10-25T17:25:23.407471+00:00",
       "buffer_sent_at": "2026-10-23T12:04:44.997Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699832679440616737?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -1508,6 +1508,46 @@
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
       "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "AgileBlatantAardvarkThisIsSparta-0Fm7_19XMx8oftDQ",
+      "clip_slug": "AgileBlatantAardvarkThisIsSparta-0Fm7_19XMx8oftDQ",
+      "streamer": "trymacs",
+      "source_url": "https://www.twitch.tv/trymacs/clip/AgileBlatantAardvarkThisIsSparta-0Fm7_19XMx8oftDQ",
+      "original_title": "o7 Erster CA Tod",
+      "hook": "O7 ERSTER CA TOD",
+      "caption": "o7 Erster CA Tod 😂\n#trymacs #twitchde #streamclips",
+      "views_at_selection": 1296,
+      "original_duration": 30.0,
+      "rendered_duration": 28.4,
+      "original_metadata": {
+        "broadcaster_id": "64342766",
+        "creator_id": "955303636",
+        "creator_name": "kevinnorbert1",
+        "game_id": "27471",
+        "language": "de",
+        "vod_id": "2909502093",
+        "vod_offset": 37935
+      },
+      "original_created_at": "2026-10-25T01:15:32Z",
+      "video_url": null,
+      "cover_url": null,
+      "qa_run_id": "40215522087",
+      "qa_artifact_name": "twitch-video-qa",
+      "qa_sample_folder": "trymacs-agileblatantaardvarkthisissparta-0fm7-19xmx8oftdq",
+      "video_sha256": "d93bad090b83053f033b2b6b20b0051104fcbb42c8b7e86f0927fbd81b4a70fe",
+      "subtitle_sha256": "7d772c4a0abf7a934bb870667ccf9a4870009380a36fd18a4242c94504e87d53",
+      "technical_qa_passed": true,
+      "watchlist_source": "https://twitchtracker.com/channels/ranking/german",
+      "watchlist_checked_at": "2026-10-25",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-25T17:18:58Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_attested_oral",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
     }
   ],
   "processed_ids": [
@@ -1627,8 +1667,26 @@
     "BetterSpookyClipsmomDeIlluminati-fEmOBYvPPUYHJSxp",
     "BetterSpookyClipsmomDeIlluminati-fEmOBYvPPUYHJSxp",
     "BigUninterestedPieDoritosChip-118i0gTxNoJl4bJs",
-    "BigUninterestedPieDoritosChip-118i0gTxNoJl4bJs"
+    "BigUninterestedPieDoritosChip-118i0gTxNoJl4bJs",
+    "AgileBlatantAardvarkThisIsSparta-0Fm7_19XMx8oftDQ",
+    "AgileBlatantAardvarkThisIsSparta-0Fm7_19XMx8oftDQ"
   ],
-  "failed_attempts": {},
+  "failed_attempts": {
+    "CarelessDarkPeafowlYouDontSay-j_cMA2HXDRzd5ivk": {
+      "at": "2026-10-25T17:18:58Z",
+      "streamer": "letshugotv",
+      "reason": "ValueError('No reliable subtitle transcription; try next clip')"
+    },
+    "SquareCrunchySkunkANELE-_9rL6Ece0u60BoJn": {
+      "at": "2026-10-25T17:18:58Z",
+      "streamer": "renekreher",
+      "reason": "ValueError('No reliable subtitle transcription; try next clip')"
+    },
+    "TriangularPiercingBaconGOWSkull-sp89P-a_Dn3DSeej": {
+      "at": "2026-10-25T17:18:58Z",
+      "streamer": "edopeh",
+      "reason": "ValueError('No reliable subtitle transcription; try next clip')"
+    }
+  },
   "publication_blocked_until_verified": true
 }
