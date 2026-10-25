@@ -1329,6 +1329,75 @@
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
       "subtitle_verified": false,
       "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "CheerfulPrettiestDurianChefFrank-wuGPZysYgQ-stW0Y",
+      "clip_slug": "CheerfulPrettiestDurianChefFrank-wuGPZysYgQ-stW0Y",
+      "streamer": "trymacs",
+      "source_url": "https://www.twitch.tv/trymacs/clip/CheerfulPrettiestDurianChefFrank-wuGPZysYgQ-stW0Y",
+      "original_title": "Flugschule mkt Trymacs",
+      "hook": "FLUGSCHULE MKT TRYMACS",
+      "caption": "Flugschule mkt Trymacs 😂\n#trymacs #twitchde #streamclips",
+      "views_at_selection": 2730,
+      "original_duration": 30.0,
+      "rendered_duration": 16.633333,
+      "original_created_at": "2026-10-24T21:38:42Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/trymacs-cheerfulprettiestduriancheffrank-wugpzysygq-stw0y.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/trymacs-cheerfulprettiestduriancheffrank-wugpzysygq-stw0y-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-25T00:33:53Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "LuckyHyperRatStinkyCheese-D5_rYXJvXGMvNhOo",
+      "clip_slug": "LuckyHyperRatStinkyCheese-D5_rYXJvXGMvNhOo",
+      "streamer": "letshugotv",
+      "source_url": "https://www.twitch.tv/letshugotv/clip/LuckyHyperRatStinkyCheese-D5_rYXJvXGMvNhOo",
+      "original_title": "Dima heult weil er nicht trinken kann",
+      "hook": "DIMA HEULT WEIL ER NICHT TRINKEN KANN",
+      "caption": "Dima heult weil er nicht trinken kann 😂\n#letshugotv #twitchde #streamclips",
+      "views_at_selection": 1819,
+      "original_duration": 35.6,
+      "rendered_duration": 15.2,
+      "original_created_at": "2026-10-24T19:44:16Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/letshugotv-luckyhyperratstinkycheese-d5-ryxjvxgmvnhoo.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/letshugotv-luckyhyperratstinkycheese-d5-ryxjvxgmvnhoo-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-25T00:33:53Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
+    },
+    {
+      "clip_id": "InventivePoorSrirachaImGlitch-7_kpl-BgT9DFcX6e",
+      "clip_slug": "InventivePoorSrirachaImGlitch-7_kpl-BgT9DFcX6e",
+      "streamer": "letshugotv",
+      "source_url": "https://www.twitch.tv/letshugotv/clip/InventivePoorSrirachaImGlitch-7_kpl-BgT9DFcX6e",
+      "original_title": "HUGO CLUTCH",
+      "hook": "HUGO CLUTCH",
+      "caption": "HUGO CLUTCH 😂\n#letshugotv #twitchde #streamclips",
+      "views_at_selection": 963,
+      "original_duration": 20.9,
+      "rendered_duration": 18.2,
+      "original_created_at": "2026-10-24T21:00:45Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/letshugotv-inventivepoorsrirachaimglitch-7-kpl-bgt9dfcx6e.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/letshugotv-inventivepoorsrirachaimglitch-7-kpl-bgt9dfcx6e-cover.jpg",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-25T00:33:53Z",
+      "status": "awaiting_review_not_posted",
+      "rights_status": "user_asserted_not_independently_verified",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
+      "subtitle_verified": false,
+      "subtitle_review_status": "auto_generated_needs_review"
     }
   ],
   "processed_ids": [
@@ -1436,8 +1505,20 @@
     "DrabFastTruffleDBstyle-hhtIaG3a1FYCm6d-",
     "DrabFastTruffleDBstyle-hhtIaG3a1FYCm6d-",
     "AggressiveCarelessClintmullinsDansGame-zOv-1AkY7p5rxMSW",
-    "AggressiveCarelessClintmullinsDansGame-zOv-1AkY7p5rxMSW"
+    "AggressiveCarelessClintmullinsDansGame-zOv-1AkY7p5rxMSW",
+    "CheerfulPrettiestDurianChefFrank-wuGPZysYgQ-stW0Y",
+    "CheerfulPrettiestDurianChefFrank-wuGPZysYgQ-stW0Y",
+    "LuckyHyperRatStinkyCheese-D5_rYXJvXGMvNhOo",
+    "LuckyHyperRatStinkyCheese-D5_rYXJvXGMvNhOo",
+    "InventivePoorSrirachaImGlitch-7_kpl-BgT9DFcX6e",
+    "InventivePoorSrirachaImGlitch-7_kpl-BgT9DFcX6e"
   ],
-  "failed_attempts": {},
+  "failed_attempts": {
+    "CarelessDarkPeafowlYouDontSay-j_cMA2HXDRzd5ivk": {
+      "at": "2026-10-25T00:33:53Z",
+      "streamer": "letshugotv",
+      "reason": "ValueError('No reliable subtitle transcription; try next clip')"
+    }
+  },
   "publication_blocked_until_verified": true
 }
