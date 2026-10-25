@@ -1,0 +1,46 @@
+{
+  "channel": "dreamvoid26",
+  "new_posts_in_migration": 0,
+  "posts": [
+    {
+      "clip_id": "2577797595",
+      "streamer": "krokoboss",
+      "buffer_post_id": "6ad7f31b8c20162e7ecb719c",
+      "provider_status": "sent",
+      "sent_at_berlin": "2026-10-21T18:06:26.167000+02:00",
+      "tiktok_url": "https://www.tiktok.com/@dreamvoid26/video/7699152703720525088?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
+      "checked_at": "2026-10-25T17:02:42.738844+00:00",
+      "evidence": "Buffer live GraphQL response; destination page not independently audited"
+    },
+    {
+      "clip_id": "PatientVivaciousZucchiniDBstyle-nDA9K6whT0b1mG6w",
+      "streamer": "handofblood",
+      "buffer_post_id": "6ad7dfb9a40664bdbaeb3d47",
+      "provider_status": "sent",
+      "sent_at_berlin": "2026-10-21T14:05:00.193000+02:00",
+      "tiktok_url": "https://www.tiktok.com/@dreamvoid26/video/7699090478490307872?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
+      "checked_at": "2026-10-25T17:02:42.738844+00:00",
+      "evidence": "Buffer live GraphQL response; destination page not independently audited"
+    },
+    {
+      "clip_id": "ResoluteCredulousVampireBrokeBack-HcdcmjPrX1A51xVL",
+      "streamer": "papaplatte",
+      "buffer_post_id": "6ada3ccc9a8a68d3cd6e1ba2",
+      "provider_status": "sent",
+      "sent_at_berlin": "2026-10-22T18:51:48.326000+02:00",
+      "tiktok_url": "https://www.tiktok.com/@dreamvoid26/video/7699535559319948576?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
+      "checked_at": "2026-10-25T17:02:42.738844+00:00",
+      "evidence": "Buffer live GraphQL response; destination page not independently audited"
+    },
+    {
+      "clip_id": "ObeseStrongChowderKappa-nxM-PAK5Y3umCcSY",
+      "streamer": "trymacs",
+      "buffer_post_id": "6ada3cf8399af6f1f7271b5b",
+      "provider_status": "sent",
+      "sent_at_berlin": "2026-10-23T14:04:44.997000+02:00",
+      "tiktok_url": "https://www.tiktok.com/@dreamvoid26/video/7699832679440616737?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
+      "checked_at": "2026-10-25T17:02:42.738844+00:00",
+      "evidence": "Buffer live GraphQL response; destination page not independently audited"
+    }
+  ]
+}

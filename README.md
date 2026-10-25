@@ -60,7 +60,9 @@ All production writers share `twitch-auto20-nowlisart-main`, `cancel-in-progress
 
 `state/auto20.json`, the run summary and `buffer-report.json` distinguish prepared, reviewed, scheduled, sent, error and uncertain. Only Buffer `sent` is provider-confirmed publication; record `sentAt` and `externalLink` where available. A green run and a GitHub Release are not proof of a TikTok upload. Failed posts retain duplicate protection and are not automatically reposted.
 
-An external legacy ChatGPT scheduled task is outside this repository. Pause its posting/watchdog task separately in ChatGPT Tasks after the GitHub preflight passes. This repository cannot prove or change that external task's status. Do not run two independent publishers.
+Migration check on 25 October 2026: all four legacy ChatGPT tasks were paused and visibly verified in ChatGPT Tasks: Twitch TikTok Pipeline Watchdog, TikTok-Upload Ersatzprüfung, GitHub Videotest überwachen, and Twitch-Clips automatisch posten. GitHub is now the sole configured starter. A screenshot of the paused tasks was saved with the migration deliverables.
+
+The complete manual GitHub run [40214301943](https://github.com/NowlisArt/twitch-tiktok-automation/actions/runs/40214301943) succeeded: all 50 channels resolved in Helix, one new private QA video rendered, zero new Buffer posts. Live channel/contract/queue checks passed; all four tracked historical posts returned `sent` with destination links. See [verified upload ledger](docs/verified-uploads-2026-10-25.json). Semantic subtitle/content review of the new video is still pending; no new approval is claimed.
 
 ## Tests
 
