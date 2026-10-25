@@ -96,7 +96,7 @@
       "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/krokoboss-2577797595-cover.jpg",
       "transcript_subtitles": true,
       "created_at": "2026-10-16T00:01:28Z",
-      "status": "buffer_scheduled",
+      "status": "buffer_reported_published",
       "rights_status": "user_asserted_not_independently_verified",
       "video_review_status": "technical_checks_only",
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
@@ -104,7 +104,11 @@
       "subtitle_review_status": "auto_generated_needs_review",
       "reserved_for": "dreamvoid",
       "buffer_post_id": "6ad7f31b8c20162e7ecb719c",
-      "buffer_due_at": "2026-10-21T16:00:00.000Z"
+      "buffer_due_at": "2026-10-21T16:00:00.000Z",
+      "buffer_last_reported_status": "sent",
+      "buffer_last_checked_at": "2026-10-25T16:56:36.005416+00:00",
+      "buffer_sent_at": "2026-10-21T16:06:26.167Z",
+      "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699152703720525088?utm_campaign=tt4d_open_api&utm_source=7103819247981182978"
     },
     {
       "clip_id": "269250108",
@@ -516,7 +520,7 @@
       "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/handofblood-patientvivaciouszucchinidbstyle-nda9k6wht0b1mg6w-cover.jpg",
       "transcript_subtitles": true,
       "created_at": "2026-10-20T06:35:43Z",
-      "status": "buffer_scheduled",
+      "status": "buffer_reported_published",
       "rights_status": "user_asserted_not_independently_verified",
       "video_review_status": "technical_checks_only",
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
@@ -524,7 +528,11 @@
       "subtitle_review_status": "auto_generated_needs_review",
       "reserved_for": "dreamvoid",
       "buffer_post_id": "6ad7dfb9a40664bdbaeb3d47",
-      "buffer_due_at": "2026-10-21T12:00:00.000Z"
+      "buffer_due_at": "2026-10-21T12:00:00.000Z",
+      "buffer_last_reported_status": "sent",
+      "buffer_last_checked_at": "2026-10-25T16:56:36.005416+00:00",
+      "buffer_sent_at": "2026-10-21T12:05:00.193Z",
+      "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699090478490307872?utm_campaign=tt4d_open_api&utm_source=7103819247981182978"
     },
     {
       "clip_id": "ResoluteCredulousVampireBrokeBack-HcdcmjPrX1A51xVL",
@@ -542,7 +550,7 @@
       "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/papaplatte-resolutecredulousvampirebrokeback-hcdcmjprx1a51xvl-cover.jpg",
       "transcript_subtitles": true,
       "created_at": "2026-10-20T06:35:43Z",
-      "status": "buffer_scheduled",
+      "status": "buffer_reported_published",
       "rights_status": "user_asserted_not_independently_verified",
       "video_review_status": "technical_checks_only",
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
@@ -550,7 +558,11 @@
       "subtitle_review_status": "auto_generated_needs_review",
       "reserved_for": "dreamvoid",
       "buffer_post_id": "6ada3ccc9a8a68d3cd6e1ba2",
-      "buffer_due_at": "2026-10-22T16:49:47.667Z"
+      "buffer_due_at": "2026-10-22T16:49:47.667Z",
+      "buffer_last_reported_status": "sent",
+      "buffer_last_checked_at": "2026-10-25T16:56:36.005416+00:00",
+      "buffer_sent_at": "2026-10-22T16:51:48.326Z",
+      "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699535559319948576?utm_campaign=tt4d_open_api&utm_source=7103819247981182978"
     },
     {
       "clip_id": "ObeseStrongChowderKappa-nxM-PAK5Y3umCcSY",
@@ -568,7 +580,7 @@
       "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/trymacs-obesestrongchowderkappa-nxm-pak5y3umccsy-cover.jpg",
       "transcript_subtitles": true,
       "created_at": "2026-10-20T06:35:43Z",
-      "status": "buffer_scheduled",
+      "status": "buffer_reported_published",
       "rights_status": "user_asserted_not_independently_verified",
       "video_review_status": "technical_checks_only",
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
@@ -576,7 +588,11 @@
       "subtitle_review_status": "auto_generated_needs_review",
       "reserved_for": "dreamvoid",
       "buffer_post_id": "6ada3cf8399af6f1f7271b5b",
-      "buffer_due_at": "2026-10-23T12:00:00.000Z"
+      "buffer_due_at": "2026-10-23T12:00:00.000Z",
+      "buffer_last_reported_status": "sent",
+      "buffer_last_checked_at": "2026-10-25T16:56:36.005416+00:00",
+      "buffer_sent_at": "2026-10-23T12:04:44.997Z",
+      "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699832679440616737?utm_campaign=tt4d_open_api&utm_source=7103819247981182978"
     },
     {
       "clip_id": "BoredFurryPassionfruitEagleEye-WlPbjknynP_MsaDA",
