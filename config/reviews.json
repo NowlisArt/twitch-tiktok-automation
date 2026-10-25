@@ -1,4 +1,35 @@
 {
   "schema_version": 1,
-  "reviews": []
+  "reviews": [
+    {
+      "clip_id": "BigUninterestedPieDoritosChip-118i0gTxNoJl4bJs",
+      "video_sha256": "c5fac64124648a6b5850952bf30b93e78a9cd6dc47aed55f0fea6c9ffe3a1de5",
+      "subtitle_sha256": "f0c7bdc67e89a33249727c6e855f046e81d928e06c73928e9275e00e961cf7a8",
+      "reviewer": "Codex visual/technical inspection and user audio/subtitle confirmation",
+      "reviewed_at": "2026-10-25T17:34:39Z",
+      "decision": "approved",
+      "notes": "Exact artifact video/subtitle hashes matched. Codex decoded the video and audio and inspected eight frames spanning 1-21 seconds: legible captions, original gameplay overview, visible reaction, game death/respawn context and complete closing question. User listened to the exact 22.1-second preview and explicitly confirmed that the displayed subtitles match the spoken audio. Codex did not independently listen to the audio. Rights rely on the recorded user oral attestation, not independent verification. Editorial score 85 is a reviewer judgment, not a prediction of popularity.",
+      "subtitle_accuracy": true,
+      "readability": true,
+      "audio_video": true,
+      "context": true,
+      "rights_in_clip": true,
+      "quality_score": 85
+    },
+    {
+      "clip_id": "AgileBlatantAardvarkThisIsSparta-0Fm7_19XMx8oftDQ",
+      "video_sha256": "d93bad090b83053f033b2b6b20b0051104fcbb42c8b7e86f0927fbd81b4a70fe",
+      "subtitle_sha256": "7d772c4a0abf7a934bb870667ccf9a4870009380a36fd18a4242c94504e87d53",
+      "reviewer": "Codex visual/technical inspection only; no audio listening",
+      "reviewed_at": "2026-10-25T17:34:39Z",
+      "decision": "changes_requested",
+      "notes": "Exact artifact hashes matched. Sampled frames show original burned captions plus a second generated subtitle layer, repeated by the two-panel composition. Death/menu screen persists from at least 6.5 to 20 seconds with limited action. Reject this render as-is; edit and review new exact bytes before publication. Spoken word accuracy was not assessed.",
+      "subtitle_accuracy": null,
+      "readability": false,
+      "audio_video": true,
+      "context": true,
+      "rights_in_clip": true,
+      "quality_score": null
+    }
+  ]
 }
