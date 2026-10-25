@@ -51,7 +51,7 @@ def rights_for(streamer, when):
 
 
 def review_for(clip):
-    reviews = json.loads((ROOT / 'config/reviews.json').read_text(encoding='utf-8'))['reviews']
+    reviews = review_records()
     for review in reviews:
         if review.get('clip_id') != clip.get('clip_id'):
             continue
@@ -72,6 +72,38 @@ def review_for(clip):
     return None
 
 
+def review_records():
+    return json.loads((ROOT/'config/reviews.json').read_text(encoding='utf-8'))['reviews']
+
+
+def automatic_review_for(clip):
+    from auto_qa import POLICY, REQUIRED_CHECKS
+    if not POLICY['enabled']:
+        return None
+    for review in review_records():
+        if (review.get('clip_id') == clip.get('clip_id') and
+            review.get('video_sha256') == clip.get('video_sha256') and
+            review.get('decision') == 'changes_requested'):
+            return None
+    evidence = clip.get('automated_qa') or {}
+    if evidence.get('version') != POLICY['version'] or evidence.get('status') != 'passed':
+        return None
+    if any(not clip.get(k) or evidence.get(k) != clip[k] for k in ('video_sha256','subtitle_sha256')):
+        return None
+    if not all(evidence.get('checks',{}).get(k) is True for k in REQUIRED_CHECKS):
+        return None
+    try:
+        if timestamp(evidence['checked_at']) > dt.datetime.now(dt.timezone.utc):
+            return None
+        if not POLICY['minimum_transcript_agreement'] <= evidence['transcript_agreement'] <= 1:
+            return None
+        if not POLICY['minimum_avg_logprob'] <= evidence['avg_logprob'] <= 0:
+            return None
+    except (KeyError, ValueError, TypeError):
+        return None
+    return evidence
+
+
 def publication_reasons(clip, when):
     reasons = []
     if not clip.get('clip_id') or not clip.get('clip_slug'):
@@ -88,7 +120,7 @@ def publication_reasons(clip, when):
         reasons.append('missing verified source views')
     if not rights_for(clip.get('streamer'), when):
         reasons.append('permission evidence missing, expired or revoked')
-    if not review_for(clip):
+    if not review_for(clip) and not automatic_review_for(clip):
         reasons.append('exact video/subtitle review missing')
     if clip.get('technical_qa_passed') is not True:
         reasons.append('technical QA missing')

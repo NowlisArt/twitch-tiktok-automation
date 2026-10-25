@@ -560,6 +560,7 @@ def transcribe(path):
     if len(words) < 8 or len(' '.join(w[2] for w in words)) < 45:
         raise ValueError('Insufficient reliable speech; try another clip')
     quality = sum(seg.avg_logprob for seg in reliable)/len(reliable)
+    transcribe.last_confidence = quality
     print('ASR CONFIDENCE', round(quality,3), 'words', len(words), flush=True)
     return words
 
@@ -622,43 +623,43 @@ Style: TikTok,DejaVu Sans,61,&H00FFFFFF,&H00FFFFFF,&H00000000,&H75000000,-1,0,0,
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 '''
-    selected = [(max(0, a-start), min(length, b-start), w) for a, b, w in words
+    selected = [(max(0, a-start), min(length, b-start), w.strip()) for a, b, w in words
                 if a >= start and b <= start+length and b > a and w.strip()]
     groups, group = [], []
     for item in selected:
-        tentative = ' '.join(x[2] for x in group + [item])
-        if group and (len(tentative) > 31 or len(group) >= 4 or item[0] - group[-1][1] > .5):
+        label = ' '.join(x[2] for x in group+[item])
+        if group and (len(label)>56 or len(group)>=8 or item[0]-group[-1][1]>.6):
             groups.append(group)
-            group = []
+            group=[]
         group.append(item)
-        if re.search(r'[.!?…]$', item[2]):
+        if re.search(r'[.!?…]$',item[2]):
             groups.append(group)
-            group = []
-    if group:
-        groups.append(group)
-    cues = []
-    for group in groups:
-        a, b = group[0][0], group[-1][1]
-        label = ' '.join(x[2] for x in group)
-        label = label.replace('\\', '').replace('{', '(').replace('}', ')').replace('\n', ' ').strip()
-        if label:
-            cues.append((a, b, label))
-    events = []
-    for index, (a, b, label) in enumerate(cues):
-        # Never render two text cards at once: cap each card before the next begins.
-        next_start = cues[index+1][0] if index+1 < len(cues) else length
-        end = min(length, max(a+0.8, b+0.15, a+len(label)/20), next_start-0.02)
-        if end <= a+0.05:
-            continue
-        events.append(
-            f'Dialogue: 0,{ass_time(a)},{ass_time(end)},TikTok,,0,0,0,,{label}')
-    path.write_text(header + '\n'.join(events) + '\n', encoding='utf-8')
-    # Timing/readability is a technical gate; never claim word accuracy from ASR confidence.
-    readable = all(len(label) <= 31 and
-                   len(label) / max(.01, min(length, max(a+.8, b+.15, a+len(label)/20),
-                                            (cues[i+1][0] if i+1 < len(cues) else length)-.02)-a) <= 25
-                   for i, (a, b, label) in enumerate(cues))
-    return len(events) >= 3 and readable
+            group=[]
+    if group: groups.append(group)
+    # Merge overly short adjacent cards before rendering instead of discarding a whole finished video.
+    index=0
+    while index<len(groups)-1:
+        current, following=groups[index], groups[index+1]
+        label=' '.join(w[2] for w in current)
+        end=min(max(current[-1][1]+.15,current[0][0]+.8,current[0][0]+len(label)/24),following[0][0]-.02)
+        combined=' '.join(w[2] for w in current+following)
+        if (end-current[0][0]<.6 or len(label)/max(.01,end-current[0][0])>28) and len(combined)<=56 and following[0][0]-current[-1][1]<.8:
+            groups[index:index+2]=[current+following]
+        else:
+            index+=1
+    events=[]
+    for i,group in enumerate(groups):
+        a,b=group[0][0],group[-1][1]
+        label=' '.join(x[2] for x in group).replace('\\','').replace('{','(').replace('}',')').replace('\n',' ')
+        next_start=groups[i+1][0][0] if i+1<len(groups) else length+.02
+        end=min(length,max(a+.8,b+.15,a+len(label)/24),next_start-.02)
+        lines=textwrap.wrap(label,28,break_long_words=True,break_on_hyphens=False)
+        display='\\N'.join(lines)
+        events.append(f'Dialogue: 0,{ass_time(a)},{ass_time(end)},TikTok,,0,0,0,,{display}')
+    path.write_text(header+'\n'.join(events)+'\n',encoding='utf-8')
+    from auto_qa import caption_checks
+    return caption_checks(path,length)['passed']
+
 
 def find_face_focus(source, duration):
     """Best-effort reaction camera framing; leave original overview visible below."""
@@ -716,6 +717,7 @@ def source_duration_ok(helix_duration, downloaded_duration):
 
 
 def render(clip, source):
+    render.last_automatic_qa = None
     duration = probe(source)
     print('SOURCE DURATION CHECK', clip['channel_login'],
           'helix_seconds', clip['duration'], 'downloaded_seconds', round(duration, 3),
@@ -730,6 +732,7 @@ def render(clip, source):
     # and genuinely broken media still fail closed.
     try:
         words = transcribe(source)
+        source_confidence = transcribe.last_confidence
         start, length = pick_window(duration, words)
     except ValueError as exc:
         if not any(marker in str(exc) for marker in (
@@ -747,11 +750,16 @@ def render(clip, source):
         '\n'.join(textwrap.wrap(headline(clip), 21, break_long_words=False)[:3]),
         encoding='utf-8')
     has_subs = write_subs(words, start, length, OUT / 'subs.ass') if words else False
-    if words and not has_subs:
-        print('QA GAMEPLAY FALLBACK: sparse captions omitted', flush=True)
+    if not has_subs and os.getenv('ENABLE_AUTO_QA') == 'true':
+        raise ValueError('Unreadable or missing captions; skip before expensive render')
+    automatic = os.getenv('ENABLE_AUTO_QA') == 'true'
+    if automatic:
+        from auto_qa import motion_check
+        if not motion_check(source, start, length):
+            raise ValueError('Long static gameplay/menu phase; try another clip')
     # No speech: use the real gameplay and headline, never fabricate captions.
     # Focus on a reaction face if detected, otherwise central gameplay; keep wide view below.
-    focus_roi = find_face_focus(source, duration)
+    focus_roi = None if automatic else find_face_focus(source, duration)
     if focus_roi:
         left, top, cw, ch = focus_roi
         focus_transform = (
@@ -775,6 +783,20 @@ def render(clip, source):
                'bordercolor=black:x=(w-text_w)/2:y=142,'
                + ('ass=rendered/subs.ass,' if has_subs else '') + 'format=yuv420p[v];'
                '[0:a:0]loudnorm=I=-16:LRA=9:TP=-1.5[a]')
+    if automatic:
+        # One source picture avoids repeating native subtitles/overlays in two panels.
+        # Our subtitles occupy a separate lower band; source text never overlaps them.
+        filters = ('[0:v]split=2[b][s];[b]scale=1080:1920:force_original_aspect_ratio=increase,'
+                   'crop=1080:1920,boxblur=18:8[bg];'
+                   '[s]scale=1080:1050:force_original_aspect_ratio=decrease,setsar=1[scene];'
+                   '[bg][scene]overlay=(W-w)/2:(H-h)/2,'
+                   'drawbox=x=0:y=110:w=1080:h=160:color=black@0.8:t=fill,'
+                   'drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:'
+                   'textfile=rendered/headline.txt:fontsize=55:fontcolor=white:borderw=3:'
+                   'bordercolor=black:x=(w-text_w)/2:y=142,'
+                   'drawbox=x=45:y=1460:w=990:h=220:color=black@0.85:t=fill,'
+                   'ass=rendered/subs.ass,format=yuv420p[v];'
+                   '[0:a:0]loudnorm=I=-16:LRA=9:TP=-1.5[a]')
     movie = OUT / 'tiktok.mp4'
     run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', str(start),
          '-t', str(length), '-i', str(source), '-filter_complex', filters,
@@ -791,6 +813,11 @@ def render(clip, source):
     cover = OUT / 'cover.jpg'
     run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', '1',
          '-i', str(movie), '-frames:v', '1', '-q:v', '3', str(cover)], timeout=30)
+    if automatic:
+        from auto_qa import verify
+        expected = ' '.join(w[2] for w in words if w[0] >= start and w[1] <= start+length)
+        render.last_automatic_qa = verify(movie, OUT/'subs.ass', probe(movie), expected,
+                                         source_confidence, transcribe)
     return movie, cover, has_subs
 
 def release(clip, video, cover, now):
@@ -805,9 +832,26 @@ def release(clip, video, cover, now):
     cover_file.write_bytes(cover.read_bytes())
     if run(['gh', 'release', 'view', tag, '-R', repo], check=False, capture_output=True).returncode != 0:
         run(['gh', 'release', 'create', tag, '-R', repo, '--title', f'Video-Kandidaten {now:%Y-%m}', '--notes', 'Automatisch produzierte Kandidaten; Rechte und Duplikate vor Veroeffentlichung pruefen.'], timeout=60)
-    # Never clobber an existing public asset: it might already have been shared.
-    run(['gh', 'release', 'upload', tag, str(video_file), str(cover_file), '-R', repo], timeout=120)
     prefix = f'https://github.com/{repo}/releases/download/{tag}/'
+    # Recover a previously interrupted upload without overwriting or duplicating assets.
+    import urllib.request
+    import urllib.error
+    import hashlib
+    missing = []
+    for local in (video_file, cover_file):
+        try:
+            with urllib.request.urlopen(prefix+local.name, timeout=30) as response:
+                checksum = hashlib.sha256()
+                while block := response.read(1024*1024):
+                    checksum.update(block)
+            if checksum.hexdigest() != digest(local):
+                raise ValueError('Existing release asset differs from accepted media')
+        except urllib.error.HTTPError as exc:
+            if exc.code != 404:
+                raise
+            missing.append(str(local))
+    if missing:
+        run(['gh', 'release', 'upload', tag, *missing, '-R', repo], timeout=120)
     video_url = prefix + video_name
     # This checks PUBLIC reachability, not only asset existence in GitHub's API.
     # A newly created release URL can propagate briefly; curl retries.
@@ -967,6 +1011,11 @@ def main():
                 'subtitle_verified': False,
                 'subtitle_review_status': ('auto_generated_needs_review' if has_subs else 'no_reliable_speech_no_subtitles')
             })
+            if render.last_automatic_qa:
+                state['created'][-1]['automated_qa'] = render.last_automatic_qa
+                state['created'][-1]['status'] = 'automatic_qa_passed_pending_release'
+                state['created'][-1]['subtitle_review_status'] = 'machine_transcript_consistency_passed'
+                state['created'][-1]['editing_status'] = 'single_scene_readable_caption_band_v1'
             state['processed_ids'].extend([clip['id'], clip['clip_slug']])
             used.update([clip['id'], clip['clip_slug']])
             save_state(state)

@@ -1,0 +1,9 @@
+{
+  "enabled": true,
+  "version": 1,
+  "minimum_transcript_agreement": 0.8,
+  "minimum_avg_logprob": -0.85,
+  "maximum_characters_per_second": 28,
+  "maximum_still_seconds": 8,
+  "authorization": "User explicitly requested autonomous daily creation, automatic error handling and Buffer uploads for Dream Void and Sunshine on 2026-10-25. Machine checks do not claim human review or guaranteed word accuracy."
+}
