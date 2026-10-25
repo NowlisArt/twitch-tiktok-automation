@@ -1502,7 +1502,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-10-25T17:00:48Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "9x16_face_focus_fullscreen_overview_15_42s",
@@ -1516,7 +1516,10 @@
       "reservation_id": "d6780254-f558-4ec3-b97f-b20ba91cad82",
       "buffer_channel_id": "6ade2e8c2f1f5ed648cabd2c",
       "buffer_handle": "suhshine28",
-      "buffer_due_at": "2026-10-25T18:00:00+00:00"
+      "buffer_due_at": "2026-10-25T18:00:00.000Z",
+      "buffer_post_id": "6ade3e426887a2efc118408a",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-10-25T17:37:03.077817+00:00"
     },
     {
       "clip_id": "AgileBlatantAardvarkThisIsSparta-0Fm7_19XMx8oftDQ",
