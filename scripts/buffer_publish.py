@@ -13,7 +13,10 @@ from quality import publication_reasons, timestamp
 from storage import ROOT, STATE, write_json, checkpoint
 
 CONFIG = json.loads((ROOT / 'config/publishing.json').read_text(encoding='utf-8'))
-CHANNEL = CONFIG['channel_id']
+ACCOUNTS = CONFIG['accounts']
+if not ACCOUNTS or len({a['channel_id'] for a in ACCOUNTS}) != len(ACCOUNTS) or len({a['id'] for a in ACCOUNTS}) != len(ACCOUNTS):
+    raise ValueError('Publishing accounts must have unique channel IDs and names')
+CHANNEL = ACCOUNTS[0]['channel_id']  # Legacy untagged receipts belong to Dream Void.
 ZONE = ZoneInfo(CONFIG['timezone'])
 POST_FIELDS = 'id channelId dueAt text status sentAt externalLink assets { source }'
 
@@ -35,21 +38,22 @@ def request(query, variables=None):
     return data['data']
 
 
-def verify_channel():
-    account = request('query { account { organizations { id } } }')
-    for org in account['account']['organizations']:
+def verify_channel(account=None):
+    account = account or ACCOUNTS[0]
+    response = request('query { account { organizations { id } } }')
+    for org in response['account']['organizations']:
         channels = request('query($input:ChannelsInput!){ channels(input:$input){ id name service isDisconnected isLocked isQueuePaused } }',
                            {'input': {'organizationId': org['id']}})['channels']
         for channel in channels:
-            if channel['id'] != CHANNEL:
+            if channel['id'] != account['channel_id']:
                 continue
-            if channel['name'].lower().lstrip('@') != CONFIG['expected_handle'] or channel['service'].lower() != 'tiktok':
+            if channel['name'].lower().lstrip('@') != account['expected_handle'] or channel['service'].lower() != 'tiktok':
                 raise RuntimeError('Target channel ID/handle/service mismatch')
             if any(channel[k] for k in ('isDisconnected', 'isLocked', 'isQueuePaused')):
-                raise RuntimeError('Dream Void disconnected, locked or queue paused')
+                raise RuntimeError(account['id'] + ' disconnected, locked or queue paused')
             print('BUFFER CHANNEL VERIFIED', channel['id'], channel['name'], channel['service'])
             return org['id']
-    raise RuntimeError('Dream Void target channel not accessible')
+    raise RuntimeError(account['id'] + ' target channel not accessible')
 
 
 def contract_check():
@@ -61,14 +65,16 @@ def contract_check():
     print('BUFFER CONTRACT VERIFIED: CreatePostInput/createPost; no mutation executed')
 
 
-def fetch_posts(org):
+def fetch_posts(org, account=None):
+    account = account or ACCOUNTS[0]
+    channel_id = account['channel_id']
     """All target-channel pages; an incomplete queue never opens extra slots."""
     posts, after, seen = [], None, set()
     for _ in range(100):
         result = request('query($input:PostsInput!,$after:String){posts(input:$input,first:100,after:$after){edges{node{' +
                          POST_FIELDS + '}} pageInfo{hasNextPage endCursor}}}',
-                         {'input': {'organizationId': org, 'filter': {'channelIds': [CHANNEL]}}, 'after': after})['posts']
-        posts.extend(e['node'] for e in result['edges'] if e['node']['channelId'] == CHANNEL)
+                         {'input': {'organizationId': org, 'filter': {'channelIds': [channel_id]}}, 'after': after})['posts']
+        posts.extend(e['node'] for e in result['edges'] if e['node']['channelId'] == channel_id)
         page = result['pageInfo']
         if not page['hasNextPage']:
             return posts
@@ -83,10 +89,24 @@ def media_sources(post):
     return {a.get('source') for a in post.get('assets', []) if a.get('source')}
 
 
-def reconcile(state, posts, now):
+def clip_channel(clip):
+    if clip.get('buffer_channel_id'):
+        return clip['buffer_channel_id']
+    for account in ACCOUNTS:
+        if clip.get('reserved_for') in (account['id'], account['expected_handle']):
+            return account['channel_id']
+    return CHANNEL
+
+
+def reconcile(state, posts, now, account=None):
+    account = account or ACCOUNTS[0]
+    channel_id = account['channel_id']
+    posts = [p for p in posts if p.get('channelId', CHANNEL) == channel_id]
     by_id = {p['id']: p for p in posts}
     for clip in state['created']:
         if not clip.get('buffer_post_id') and clip.get('status') != 'buffer_submission_pending':
+            continue
+        if clip_channel(clip) != channel_id:
             continue
         post = by_id.get(clip.get('buffer_post_id'))
         if not post and clip.get('status') == 'buffer_submission_pending':
@@ -97,7 +117,8 @@ def reconcile(state, posts, now):
         if not post:
             print('BUFFER STATUS UNKNOWN; reservation retained:', clip.get('clip_id'))
             continue
-        clip.update(buffer_last_reported_status=post['status'], buffer_last_checked_at=now.isoformat(),
+        clip.update(buffer_channel_id=channel_id, buffer_handle=account['expected_handle'],
+                    buffer_last_reported_status=post['status'], buffer_last_checked_at=now.isoformat(),
                     buffer_due_at=post.get('dueAt'))
         if post['status'] == 'sent':
             clip.update(status='buffer_reported_published', buffer_sent_at=post.get('sentAt'),
@@ -109,33 +130,37 @@ def reconcile(state, posts, now):
         print('BUFFER RECEIPT', clip['clip_id'], post['id'], post['status'], post.get('externalLink') or '')
 
 
-def slot(now):
+def slot(now, account=None):
     local = now.astimezone(ZONE)
     for days in range(2):
-        for hour in CONFIG['posting_hours']:
+        for hour in (account or {}).get('posting_hours', CONFIG['posting_hours']):
             value = (local + dt.timedelta(days=days)).replace(hour=hour, minute=0, second=0, microsecond=0)
             if local + dt.timedelta(minutes=15) < value <= local + dt.timedelta(hours=24):
                 yield value
 
 
-def reservations(state, posts):
-    rows = {p['id']: dict(p, dueAt=p.get('sentAt') or p.get('dueAt')) for p in posts}
+def reservations(state, posts, account=None):
+    account = account or ACCOUNTS[0]
+    channel_id = account['channel_id']
+    rows = {p['id']: dict(p, dueAt=p.get('sentAt') or p.get('dueAt')) for p in posts
+            if p.get('channelId', CHANNEL) == channel_id}
     for c in state['created']:
-        if c.get('buffer_channel_id') == CHANNEL and c.get('buffer_due_at'):
+        if clip_channel(c) == channel_id and c.get('buffer_due_at') and unavailable(c):
             key = c.get('buffer_post_id') or 'intent:' + c.get('reservation_id', c['clip_id'])
             rows.setdefault(key, {'dueAt': c['buffer_due_at']})
     return list(rows.values())
 
 
-def plan(state, posts, now):
-    used, all_media = set(), set()
+def plan(state, posts, now, account=None, used_extra=None):
+    account = account or ACCOUNTS[0]
+    used, all_media = set(used_extra or ()), set()
     for c in state['created']:
         if unavailable(c):
             used.update(clip_keys(c))
     for post in posts:
         all_media.update(media_sources(post))
-    reserved, result = reservations(state, posts), []
-    for when in slot(now):
+    reserved, result = reservations(state, posts, account), []
+    for when in slot(now, account):
         dated = []
         for row in reserved:
             try:
@@ -160,6 +185,35 @@ def plan(state, posts, now):
     return result
 
 
+def plan_all(state, posts, now):
+    """Balance scarce clips across accounts, preserving global source exclusivity."""
+    working, used, result = list(posts), set(), []
+    while True:
+        choices = []
+        for index, account in enumerate(ACCOUNTS):
+            proposals = plan(state, working, now, account, used)
+            if not proposals:
+                continue
+            clip, when = proposals[0]
+            dated = []
+            for row in reservations(state, working, account):
+                try:
+                    dated.append(timestamp(row['dueAt']).astimezone(ZONE))
+                except (KeyError, ValueError, TypeError):
+                    continue
+            count = sum(t.date() == when.date() for t in dated)
+            last = max(dated, default=dt.datetime.min.replace(tzinfo=dt.timezone.utc))
+            choices.append(((when.date(), count, last, when, index), clip, when, account))
+        if not choices:
+            return result
+        _, clip, when, account = min(choices, key=lambda c: c[0])
+        result.append((clip, when, account))
+        used.update(clip_keys(clip))
+        working.append({'id': 'planned:' + str(len(result)), 'channelId': account['channel_id'],
+                        'dueAt': when.isoformat(), 'status': 'scheduled',
+                        'assets': [{'source': clip.get('video_url')}]})
+
+
 def verify_media(clip):
     url = str(clip.get('video_url') or '')
     prefix = 'https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/'
@@ -176,15 +230,20 @@ def verify_media(clip):
         raise RuntimeError('Public video hash differs from reviewed bytes')
 
 
-def publish(state, posts, now):
-    for clip, when in plan(state, posts, now):
+def publish(state, posts, now, account=None, planned=None):
+    account = account or ACCOUNTS[0]
+    channel_id = account['channel_id']
+    if planned is None:
+        planned = plan(state, posts, now) if account == ACCOUNTS[0] else plan(state, posts, now, account)
+    for clip, when in planned:
         verify_media(clip)
-        clip.update(status='buffer_submission_pending', reserved_for='dreamvoid',
-                    reservation_id=str(uuid.uuid4()), buffer_channel_id=CHANNEL,
+        clip.update(status='buffer_submission_pending', reserved_for=account['id'],
+                    reservation_id=str(uuid.uuid4()), buffer_channel_id=channel_id,
+                    buffer_handle=account['expected_handle'],
                     buffer_due_at=when.astimezone(dt.timezone.utc).isoformat())
         checkpoint(state)  # Remote commit BEFORE mutation. Cancellation retains the lock.
         query = 'mutation($input:CreatePostInput!){createPost(input:$input){... on PostActionSuccess{post{' + POST_FIELDS + '}} ... on MutationError{message}}}'
-        payload = {'text': clip['caption'], 'channelId': CHANNEL, 'schedulingType': 'automatic',
+        payload = {'text': clip['caption'], 'channelId': channel_id, 'schedulingType': 'automatic',
                    'mode': 'customScheduled', 'dueAt': clip['buffer_due_at'],
                    'assets': [{'video': {'url': clip['video_url']}}]}
         result = request(query, {'input': payload})['createPost']
@@ -193,7 +252,7 @@ def publish(state, posts, now):
             raise RuntimeError('Submission unconfirmed; reservation retained; inspect queue before retry')
         clip.update(buffer_post_id=post['id'], status='buffer_scheduled')
         posts.append(post)
-        reconcile(state, posts, now)
+        reconcile(state, posts, now, account)
         checkpoint(state)
 
 
@@ -204,26 +263,36 @@ def main():
     args = parser.parse_args()
     state = json.loads(STATE.read_text(encoding='utf-8'))
     now = dt.datetime.now(dt.timezone.utc)
-    org = verify_channel()
+    # Verify BOTH exact accounts and fetch BOTH queues before any mutation.
+    organizations = {a['id']: verify_channel(a) for a in ACCOUNTS}
     contract_check()
-    posts = fetch_posts(org)
-    reconcile(state, posts, now)
+    posts = []
+    for account in ACCOUNTS:
+        posts.extend(fetch_posts(organizations[account['id']], account))
+    for account in ACCOUNTS:
+        reconcile(state, posts, now, account)
     write_json(STATE, state)
-    proposed = plan(state, posts, now)
-    print('BUFFER PLAN', json.dumps({'eligible_slots': len(proposed), 'target_daily': '3-5',
+    proposed = plan_all(state, posts, now)
+    print('BUFFER PLAN', json.dumps({'eligible_slots': len(proposed), 'target_daily_per_account': '3-5',
           'live_channel_posts': len(posts), 'confirmed_sent': sum(p['status'] == 'sent' for p in posts)}))
     if not args.preflight and not args.reconcile and os.getenv('ENABLE_BUFFER_POSTING') == 'true':
-        publish(state, posts, now)
-    report = {'checked_at': now.isoformat(), 'channel_id': CHANNEL, 'handle': CONFIG['expected_handle'],
-              'target_minimum': 3, 'maximum_daily': 5, 'candidate_count': len(state['created']),
+        for clip, when, account in proposed:
+            publish(state, posts, now, account, planned=[(clip, when)])
+    report = {'checked_at': now.isoformat(), 'candidate_count': len(state['created']),
               'eligible_next_slots_before_run': len(proposed),
-              'posts': [{'id': p['id'], 'status': p['status'], 'dueAt': p.get('dueAt'),
-                         'sentAt': p.get('sentAt'), 'externalLink': p.get('externalLink')} for p in posts],
+              'accounts': [{**a, 'target_minimum': CONFIG['minimum_target'],
+                            'maximum_daily': CONFIG['maximum_daily'],
+                            'planned_before_run': sum(target['id'] == a['id'] for _, _, target in proposed),
+                            'confirmed_sent': sum(p['status'] == 'sent' for p in posts if p['channelId'] == a['channel_id']),
+                            'posts': [{'id': p['id'], 'status': p['status'], 'dueAt': p.get('dueAt'),
+                                       'sentAt': p.get('sentAt'), 'externalLink': p.get('externalLink')}
+                                      for p in posts if p['channelId'] == a['channel_id']]}
+                           for a in ACCOUNTS],
               'note': 'Only sent is provider-confirmed publication. scheduled is not a publication receipt.'}
     write_json(ROOT / 'rendered/buffer-report.json', report)
     if os.getenv('GITHUB_STEP_SUMMARY'):
         with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as stream:
-            stream.write('## Dream Void\n\n```json\n' + json.dumps(report, ensure_ascii=False, indent=2) + '\n```\n')
+            stream.write('## Dream Void and Sunshine\n\n```json\n' + json.dumps(report, ensure_ascii=False, indent=2) + '\n```\n')
 
 
 if __name__ == '__main__':

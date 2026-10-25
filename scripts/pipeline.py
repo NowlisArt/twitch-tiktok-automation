@@ -148,24 +148,17 @@ def still_fresh_for_posting(record, now):
 
 
 def can_prepare(state, now, event='schedule'):
-    """Production buffer: max 60 prepared / month, max 5 / day.
-
-    GitHub production is NOT the separate Metricool 20-post monthly limit.
-    More production candidates allow genuine replacement when clips fail review.
-    """
+    """Shared render budget for both accounts, independent of posting caps."""
     monthly = [rec for rec in state['created']
                if rec.get('created_at', '').startswith(now.strftime('%Y-%m'))
                and counts_as_prepared(rec)]
     if len(monthly) >= SETTINGS['max_monthly_renders']:
-        return False, 'GitHub-Pufferlimit von 60 Produktionen in diesem Monat erreicht'
+        return False, 'Monthly render budget reached'
     daily = [rec for rec in monthly
              if rec.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))
               and still_fresh_for_posting(rec, now)]
-    # One exceptional fallback: a genuinely popular fresh clip must not be
-    # crowded out by five weak QA renders. This is preparation, NOT posting.
-    strong_already = any(rec.get('views_at_selection', 0) >= 5000 for rec in daily)
-    if len(daily) >= 5 and (len(daily) >= 6 or strong_already):
-        return False, 'Tagespuffer belegt (inklusive starker Ersatzkandidat)'
+    if len(daily) >= SETTINGS['max_daily_renders']:
+        return False, 'Daily shared render budget reached'
     return True, 'OK'
 
 
@@ -906,12 +899,7 @@ def main():
                and counts_as_prepared(r)]
     daily = [r for r in monthly if r.get('created_at', '').startswith(now.strftime('%Y-%m-%d'))
              and still_fresh_for_posting(r, now)]
-    # Normal daily cap: five QA renders. If none reaches 5k genuine Twitch
-    # views, allow exactly one extra high-view fallback (up to six per day).
-    # A low-view clip can never occupy this exceptional sixth slot.
-    strong_already = any(rec.get('views_at_selection', 0) >= 5000 for rec in daily)
-    exceptional_fallback = len(daily) == 5 and not strong_already
-    daily_remaining = 1 if exceptional_fallback else max(0, 5-len(daily))
+    daily_remaining = max(0, SETTINGS['max_daily_renders']-len(daily))
     remaining = min(daily_remaining, SETTINGS['max_renders_per_run'],
                     max(0, SETTINGS['max_monthly_renders']-len(monthly)))
     if remaining <= 0:
@@ -929,8 +917,6 @@ def main():
     for phase, clip in all_candidates:
         if prepared >= remaining or attempted >= SETTINGS['max_attempts_per_run']:
             break
-        if exceptional_fallback and clip['view_count'] < 5000:
-            continue
         if clip['clip_slug'] in failed or clip['id'] in used:
             continue
         if not 0 <= (now_utc() - dt.datetime.fromisoformat(
@@ -1018,9 +1004,9 @@ def self_test():
                        dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
     assert can_prepare({'created': [example_record]*5, 'processed_ids': []},
                        dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
-    assert not can_prepare({'created': [example_record]*6, 'processed_ids': []},
+    assert not can_prepare({'created': [example_record]*SETTINGS['max_daily_renders'], 'processed_ids': []},
                            dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
-    assert not can_prepare({'created': [example_record]*4 +
+    assert can_prepare({'created': [example_record]*4 +
                             [dict(example_record, views_at_selection=9000)],
                             'processed_ids': []},
                            dt.datetime(2026, 10, 13, 14, tzinfo=UTC))[0]
