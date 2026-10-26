@@ -1,4 +1,4 @@
-name: Twitch to Dream Void and Sunshine | GitHub starter
+name: Twitch to Dream Void, Sunshine and Novel Novel | GitHub starter
 
 on:
   schedule:
@@ -34,6 +34,7 @@ jobs:
       PYTHONUNBUFFERED: '1'
       GH_TOKEN: ${{ github.token }}
       BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+      METRICOOL_API_KEY: ${{ secrets.METRICOOL_API_KEY }}
       TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
       TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
       ASR_MODEL: medium
@@ -54,6 +55,10 @@ jobs:
       - name: Live Buffer preflight (no posts)
         if: inputs.mode == 'preflight'
         run: python scripts/buffer_publish.py --preflight
+      - name: Novel Novel Metricool preflight (no posts)
+        if: inputs.mode == 'preflight'
+        continue-on-error: true
+        run: python scripts/metricool_publish.py --preflight
       - name: Install render tools
         if: inputs.mode != 'preflight' && inputs.mode != 'publish'
         run: |
@@ -73,6 +78,12 @@ jobs:
       - name: Promote exact reviewed and authorized artifacts
         if: inputs.mode != 'preflight' && inputs.mode != 'diagnose' && inputs.mode != 'publish'
         run: python scripts/review_release.py
+      - name: Schedule existing ready clips for Novel Novel
+        if: github.event_name == 'schedule' || inputs.mode == 'run'
+        continue-on-error: true
+        env:
+          ENABLE_METRICOOL_POSTING: 'true'
+        run: python scripts/metricool_publish.py
       - name: Schedule existing ready clips before rendering more
         if: github.event_name == 'schedule' || inputs.mode == 'run'
         env:
@@ -88,6 +99,12 @@ jobs:
       - name: Automatically release newly machine-checked clips in this run
         if: github.event_name == 'schedule' || inputs.mode == 'run'
         run: python scripts/review_release.py
+      - name: Reconcile and schedule eligible clips for Novel Novel
+        if: github.event_name == 'schedule' || github.event_name == 'push' || inputs.mode == 'run' || inputs.mode == 'publish'
+        continue-on-error: true
+        env:
+          ENABLE_METRICOOL_POSTING: 'true'
+        run: python scripts/metricool_publish.py
       - name: Reconcile and schedule eligible clips for Dream Void and Sunshine
         if: github.event_name == 'schedule' || github.event_name == 'push' || inputs.mode == 'run' || inputs.mode == 'publish'
         env:
@@ -111,6 +128,7 @@ jobs:
           path: |
             rendered/qa_samples/**
             rendered/buffer-report.json
+            rendered/metricool-report.json
             state/auto20.json
           if-no-files-found: error
           retention-days: 7

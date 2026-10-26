@@ -23,6 +23,9 @@ report = {'starter': 'GitHub Actions schedule/workflow_dispatch', 'target': '3â€
           'buffer_provider_confirmed_sent': [c['buffer_post_id'] for c in state['created']
                                              if c.get('buffer_last_reported_status') == 'sent'],
           'warning': 'Prepared, approved, scheduled and sent are different states.'}
+metricool_report = ROOT / 'rendered/metricool-report.json'
+if metricool_report.exists():
+    report['novel_novel_metricool'] = json.loads(metricool_report.read_text(encoding='utf-8'))
 text = json.dumps(report, ensure_ascii=False, indent=2)
 print(text)
 if os.getenv('GITHUB_STEP_SUMMARY'):

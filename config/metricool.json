@@ -1,0 +1,1 @@
+{"id":"novel","label":"Novel Novel","expected_handle":"novel.novel601","user_id":5794027,"brand_id":7451945,"timezone":"Europe/Berlin","minimum_target":3,"maximum_daily":5,"posting_hours":[11,14,17,19,21],"activation":"requires_provider_api_access_and_METRICOOL_API_KEY_secret"}

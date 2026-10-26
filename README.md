@@ -115,3 +115,19 @@ Automatic transcript consistency compares the actual rendered caption text as we
 Provider-confirmed publications and exact timestamps are recorded in `state/auto20.json`; dated reports in `docs/` distinguish sent posts from scheduled queue entries.
 
 Existing eligible clips are scheduled before new rendering starts. The prepare step has a 12-minute limit and can fail without suppressing later reconciliation. Manual mode publish uses only the standard-library publisher and skips media discovery, render dependencies, ASR and artifact promotion; use it to recover already released candidates cheaply.
+
+## Novel Novel / Metricool (26 October 2026)
+
+The third target is **Novel Novel**, TikTok **@novel.novel601**, Metricool brand **7451945**, user **5794027**, timezone **Europe/Berlin**. The connected Metricool tool verified this identity and an existing published PietSmiet post (406605403, TikTok https://www.tiktok.com/@novel.novel601/video/7700963352545103126). That historical publication was not produced by this integration.
+
+**Activation is blocked:** the account currently uses Metricool Free; its API settings show an upgrade requirement. The official API requires Advanced or Custom, while Free also limits publishing to 20 posts/month. Chat/MCP authorization is not a GitHub API credential. No subscription was purchased and no chat OAuth credential was copied.
+
+Once the account owner has eligible API access, place the token directly in GitHub Actions secret **METRICOOL_API_KEY**, then run mode **preflight**. Never send the token in chat, commit it or use a browser session cookie as a workaround. No token lifetime is assumed; follow the provider's current settings. `config/metricool.json` contains only non-secret target identity.
+
+The same serialized GitHub schedule and `workflow_dispatch` now invoke `scripts/metricool_publish.py` before Buffer allocation, both for ready clips and after preparation. Mode **publish** retries only ready work without ASR/rendering. Without the secret, Metricool reports `blocked_missing_api_credential`, submits nothing and leaves Buffer running. A Metricool-only failure does not suppress Buffer processing; its report/error remains in the run summary and artifact.
+
+The adapter uses official `/api/admin/simpleProfiles` and `/api/v2/scheduler/posts` endpoints, `X-Mc-Auth` authentication and explicit userId/blogId. It checks exact TikTok identity and timezone, reads calendar pages and known exact receipts, reuses existing source/media QA and duplicate history, and commits a Novel-specific reservation before POST. A timeout after creation retains the lock. Exact retained media URLs can recover one unambiguous match; a rewritten/ambiguous URL is not guessed and is never blindly re-submitted. Only provider `PUBLISHED` is called published; PENDING/unknown/error remain distinct.
+
+The daily target is 3–5 suitable distinct clips per account, maximum five. To share scarce supply, Novel's daily reservation allowance stays at most one ahead of the less-served Buffer account. The existing shared cap of 12 renders/day and 372/month remains, so five per day on all three accounts cannot be guaranteed. Pending reservations and manual Metricool calendar posts count against Novel's quota. The current runtime account/API connection and live TikTok delivery still need validation after the owner supplies eligible API access.
+
+Provider references: [API guide](https://help.metricool.com/basic-guide-for-api-integration-r97af), [plans and API access](https://help.metricool.com/plans-add-ons-and-api-access-explained-xux1u), [official OpenAPI](https://app.metricool.com/api/swagger.json).
