@@ -106,7 +106,7 @@
       "buffer_post_id": "6ad7f31b8c20162e7ecb719c",
       "buffer_due_at": "2026-10-21T16:00:00.000Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-25T21:52:11.518776+00:00",
+      "buffer_last_checked_at": "2026-10-26T00:31:04.228752+00:00",
       "buffer_sent_at": "2026-10-21T16:06:26.167Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699152703720525088?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -532,7 +532,7 @@
       "buffer_post_id": "6ad7dfb9a40664bdbaeb3d47",
       "buffer_due_at": "2026-10-21T12:00:00.000Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-25T21:52:11.518776+00:00",
+      "buffer_last_checked_at": "2026-10-26T00:31:04.228752+00:00",
       "buffer_sent_at": "2026-10-21T12:05:00.193Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699090478490307872?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -564,7 +564,7 @@
       "buffer_post_id": "6ada3ccc9a8a68d3cd6e1ba2",
       "buffer_due_at": "2026-10-22T16:49:47.667Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-25T21:52:11.518776+00:00",
+      "buffer_last_checked_at": "2026-10-26T00:31:04.228752+00:00",
       "buffer_sent_at": "2026-10-22T16:51:48.326Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699535559319948576?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -596,7 +596,7 @@
       "buffer_post_id": "6ada3cf8399af6f1f7271b5b",
       "buffer_due_at": "2026-10-23T12:00:00.000Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-25T21:52:11.518776+00:00",
+      "buffer_last_checked_at": "2026-10-26T00:31:04.228752+00:00",
       "buffer_sent_at": "2026-10-23T12:04:44.997Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699832679440616737?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -1519,7 +1519,7 @@
       "buffer_due_at": "2026-10-25T18:00:00.000Z",
       "buffer_post_id": "6ade3e426887a2efc118408a",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-25T21:52:11.518776+00:00",
+      "buffer_last_checked_at": "2026-10-26T00:31:04.228752+00:00",
       "buffer_sent_at": "2026-10-25T18:02:37.087Z",
       "buffer_public_url": "https://tiktok.com/@suhshine28/video/7700666931585568033"
     },
@@ -1634,7 +1634,72 @@
       "buffer_due_at": "2026-10-26T10:00:00.000Z",
       "buffer_post_id": "6ade7a0e3d5b27036bf376eb",
       "buffer_last_reported_status": "scheduled",
-      "buffer_last_checked_at": "2026-10-25T21:52:11.518776+00:00"
+      "buffer_last_checked_at": "2026-10-26T00:31:04.228752+00:00"
+    },
+    {
+      "clip_id": "TriangularPiercingBaconGOWSkull-sp89P-a_Dn3DSeej",
+      "clip_slug": "TriangularPiercingBaconGOWSkull-sp89P-a_Dn3DSeej",
+      "streamer": "edopeh",
+      "source_url": "https://www.twitch.tv/edopeh/clip/TriangularPiercingBaconGOWSkull-sp89P-a_Dn3DSeej",
+      "original_title": "DLDU7 Edopeh Death",
+      "hook": "DLDU7 EDOPEH DEATH",
+      "caption": "DLDU7 Edopeh Death 😂\n#edopeh #twitchde #streamclips",
+      "views_at_selection": 3893,
+      "original_duration": 45.5,
+      "rendered_duration": 27.4,
+      "original_metadata": {
+        "broadcaster_id": "72726363",
+        "creator_id": "33517554",
+        "creator_name": "EvilBloodyEyes",
+        "game_id": "1122982998",
+        "language": "de",
+        "vod_id": "2910430160",
+        "vod_offset": 2149
+      },
+      "original_created_at": "2026-10-25T14:27:38Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/edopeh-triangularpiercingbacongowskull-sp89p-a-dn3dseej.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/edopeh-triangularpiercingbacongowskull-sp89p-a-dn3dseej-cover.jpg",
+      "qa_run_id": "40249272217",
+      "qa_artifact_name": "twitch-video-qa",
+      "qa_sample_folder": "edopeh-triangularpiercingbacongowskull-sp89p-a-dn3dseej",
+      "video_sha256": "b593999801b9d4b2a53eb55ecbd4ec3e720d8ac2562db7b6662b4fe5cd1c9e76",
+      "subtitle_sha256": "dc0e267192b32e41a8b8bab81b171b3df699a6b80ded91ecb0c1e3c5b969e2d7",
+      "technical_qa_passed": true,
+      "watchlist_source": "https://twitchtracker.com/channels/ranking/german",
+      "watchlist_checked_at": "2026-10-25",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-26T00:26:32Z",
+      "status": "approved_for_distribution",
+      "rights_status": "user_attested_oral",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "single_scene_readable_caption_band_v1",
+      "subtitle_verified": false,
+      "subtitle_review_status": "machine_transcript_consistency_passed",
+      "automated_qa": {
+        "version": 1,
+        "status": "passed",
+        "checked_at": "2026-10-26T00:28:22.837844+00:00",
+        "video_sha256": "b593999801b9d4b2a53eb55ecbd4ec3e720d8ac2562db7b6662b4fe5cd1c9e76",
+        "subtitle_sha256": "dc0e267192b32e41a8b8bab81b171b3df699a6b80ded91ecb0c1e3c5b969e2d7",
+        "transcript_agreement": 0.8358,
+        "avg_logprob": -0.5204,
+        "checks": {
+          "media": true,
+          "subtitle_timing": true,
+          "speech_confidence": true,
+          "transcript_consistency": true,
+          "motion": true,
+          "source_metadata": true,
+          "content_filter": true
+        },
+        "method": "media decode/audio level, readable non-overlapping captions, gameplay motion, source metadata/filter and local ASR consistency on rendered audio",
+        "limitations": "Machine acceptance, not human editorial review, perfect word accuracy or viral quality."
+      },
+      "rights_evidence_id": "user-oral-top50-2026-10-25",
+      "editorial_review_status": "automatic_checks_passed",
+      "quality_score_verified": false,
+      "quality_score": null,
+      "approval_method": "automatic_machine_checks"
     }
   ],
   "processed_ids": [
@@ -1758,39 +1823,11 @@
     "AgileBlatantAardvarkThisIsSparta-0Fm7_19XMx8oftDQ",
     "AgileBlatantAardvarkThisIsSparta-0Fm7_19XMx8oftDQ",
     "RefinedSmoothEmuGrammarKing-HzvaC-rpzWNDCqNo",
-    "RefinedSmoothEmuGrammarKing-HzvaC-rpzWNDCqNo"
+    "RefinedSmoothEmuGrammarKing-HzvaC-rpzWNDCqNo",
+    "TriangularPiercingBaconGOWSkull-sp89P-a_Dn3DSeej",
+    "TriangularPiercingBaconGOWSkull-sp89P-a_Dn3DSeej"
   ],
   "failed_attempts": {
-    "CarelessDarkPeafowlYouDontSay-j_cMA2HXDRzd5ivk": {
-      "at": "2026-10-25T17:18:58Z",
-      "streamer": "letshugotv",
-      "reason": "ValueError('No reliable subtitle transcription; try next clip')"
-    },
-    "SquareCrunchySkunkANELE-_9rL6Ece0u60BoJn": {
-      "at": "2026-10-25T17:18:58Z",
-      "streamer": "renekreher",
-      "reason": "ValueError('No reliable subtitle transcription; try next clip')"
-    },
-    "TriangularPiercingBaconGOWSkull-sp89P-a_Dn3DSeej": {
-      "at": "2026-10-25T17:18:58Z",
-      "streamer": "edopeh",
-      "reason": "ValueError('No reliable subtitle transcription; try next clip')"
-    },
-    "AlluringHandsomeCiderMoreCowbell-7apabrRC8z7wrqoY": {
-      "at": "2026-10-25T18:03:21Z",
-      "streamer": "edopeh",
-      "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
-    },
-    "PrettyTangentialMilkMikeHogu-M_vDWEQV3zkSY6rw": {
-      "at": "2026-10-25T18:03:21Z",
-      "streamer": "papaplatte",
-      "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
-    },
-    "PiercingProtectiveDogePrimeMe-IMtggHbHBWnS3y8y": {
-      "at": "2026-10-25T18:03:21Z",
-      "streamer": "trymacs",
-      "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
-    },
     "DelightfulKathishKathyWOOP-5RqiQZ7l8cq9xGVs": {
       "at": "2026-10-25T21:51:22Z",
       "streamer": "zarbex",
@@ -1808,6 +1845,21 @@
     },
     "DignifiedTawdryKuduBatChest-o4TUNaNuLZ-d3rFQ": {
       "at": "2026-10-25T21:51:22Z",
+      "streamer": "papaplatte",
+      "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
+    },
+    "CarelessDarkPeafowlYouDontSay-j_cMA2HXDRzd5ivk": {
+      "at": "2026-10-26T00:26:32Z",
+      "streamer": "letshugotv",
+      "reason": "ValueError('No reliable spoken content for subtitles; try another clip')"
+    },
+    "SquareCrunchySkunkANELE-_9rL6Ece0u60BoJn": {
+      "at": "2026-10-26T00:26:32Z",
+      "streamer": "renekreher",
+      "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
+    },
+    "PrettyTangentialMilkMikeHogu-M_vDWEQV3zkSY6rw": {
+      "at": "2026-10-26T00:26:32Z",
       "streamer": "papaplatte",
       "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
     }
