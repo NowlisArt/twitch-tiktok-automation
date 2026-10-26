@@ -1777,10 +1777,6 @@
       "quality_score_verified": false,
       "quality_score": null,
       "approval_method": "automatic_machine_checks",
-      "media_fetch_error": {
-        "at": "2026-10-26T18:20:06.057007+00:00",
-        "reason": "temporary_public_media_unavailable"
-      },
       "reserved_for": "dreamvoid",
       "reservation_id": "e62ac5d5-f030-453e-a0fc-520fc18405a8",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -1823,7 +1819,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-10-26T18:23:25Z",
-      "status": "approved_for_distribution",
+      "status": "buffer_submission_pending",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -1853,7 +1849,12 @@
       "editorial_review_status": "automatic_checks_passed",
       "quality_score_verified": false,
       "quality_score": null,
-      "approval_method": "automatic_machine_checks"
+      "approval_method": "automatic_machine_checks",
+      "reserved_for": "sunshine",
+      "reservation_id": "086d64d0-dd8c-439c-9bb6-d0e249175227",
+      "buffer_channel_id": "6ade2e8c2f1f5ed648cabd2c",
+      "buffer_handle": "suhshine28",
+      "buffer_due_at": "2026-10-26T20:00:00+00:00"
     }
   ],
   "processed_ids": [
