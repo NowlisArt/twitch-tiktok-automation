@@ -240,7 +240,7 @@ def verify_media(clip):
             if attempt == 3:
                 raise MediaUnavailable('Public video temporarily unavailable; no post submitted') from exc
             print('MEDIA FETCH RETRY', attempt + 1, type(exc).__name__)
-            time.sleep(3 * (attempt + 1))
+            time.sleep(10 * (attempt + 1))
     if digest.hexdigest() != clip.get('video_sha256'):
         raise RuntimeError('Public video hash differs from reviewed bytes')
 

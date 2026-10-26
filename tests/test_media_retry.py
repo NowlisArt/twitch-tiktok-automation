@@ -4,7 +4,7 @@ import sys
 import unittest
 import urllib.error
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import patch, call
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 import buffer_publish as buffer
 
@@ -25,11 +25,12 @@ class MediaRetryTests(unittest.TestCase):
         clip=self.clip()
         failure=urllib.error.HTTPError(clip['video_url'],404,'Not Found',{},None)
         with patch.object(buffer.urllib.request,'urlopen',side_effect=failure) as fetch, \
-             patch('time.sleep'), patch.object(buffer,'checkpoint') as checkpoint, \
+             patch('time.sleep') as sleep, patch.object(buffer,'checkpoint') as checkpoint, \
              patch.object(buffer,'request') as mutation:
             with self.assertRaises(buffer.MediaUnavailable):
                 buffer.publish({'created':[clip]},[],None,planned=[(clip,None)])
         self.assertEqual(4,fetch.call_count)
+        self.assertEqual([call(10),call(20),call(30)],sleep.call_args_list)
         self.assertNotIn('reservation_id',clip)
         checkpoint.assert_not_called()
         mutation.assert_not_called()
