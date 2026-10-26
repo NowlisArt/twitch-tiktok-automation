@@ -106,7 +106,7 @@
       "buffer_post_id": "6ad7f31b8c20162e7ecb719c",
       "buffer_due_at": "2026-10-21T16:00:00.000Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-26T18:20:06.057007+00:00",
+      "buffer_last_checked_at": "2026-10-26T18:31:31.766382+00:00",
       "buffer_sent_at": "2026-10-21T16:06:26.167Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699152703720525088?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -532,7 +532,7 @@
       "buffer_post_id": "6ad7dfb9a40664bdbaeb3d47",
       "buffer_due_at": "2026-10-21T12:00:00.000Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-26T18:20:06.057007+00:00",
+      "buffer_last_checked_at": "2026-10-26T18:31:31.766382+00:00",
       "buffer_sent_at": "2026-10-21T12:05:00.193Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699090478490307872?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -564,7 +564,7 @@
       "buffer_post_id": "6ada3ccc9a8a68d3cd6e1ba2",
       "buffer_due_at": "2026-10-22T16:49:47.667Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-26T18:20:06.057007+00:00",
+      "buffer_last_checked_at": "2026-10-26T18:31:31.766382+00:00",
       "buffer_sent_at": "2026-10-22T16:51:48.326Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699535559319948576?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -596,7 +596,7 @@
       "buffer_post_id": "6ada3cf8399af6f1f7271b5b",
       "buffer_due_at": "2026-10-23T12:00:00.000Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-26T18:20:06.057007+00:00",
+      "buffer_last_checked_at": "2026-10-26T18:31:31.766382+00:00",
       "buffer_sent_at": "2026-10-23T12:04:44.997Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699832679440616737?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -1519,7 +1519,7 @@
       "buffer_due_at": "2026-10-25T18:00:00.000Z",
       "buffer_post_id": "6ade3e426887a2efc118408a",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-26T18:20:06.057007+00:00",
+      "buffer_last_checked_at": "2026-10-26T18:31:31.766382+00:00",
       "buffer_sent_at": "2026-10-25T18:02:37.087Z",
       "buffer_public_url": "https://tiktok.com/@suhshine28/video/7700666931585568033"
     },
@@ -1634,7 +1634,7 @@
       "buffer_due_at": "2026-10-26T10:00:00.000Z",
       "buffer_post_id": "6ade7a0e3d5b27036bf376eb",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-26T18:20:06.057007+00:00",
+      "buffer_last_checked_at": "2026-10-26T18:31:31.766382+00:00",
       "buffer_sent_at": "2026-10-26T10:03:44.294Z",
       "buffer_public_url": "https://tiktok.com/@dreamvoid26/video/7700914545384017185"
     },
@@ -1709,7 +1709,7 @@
       "buffer_due_at": "2026-10-26T16:00:00.000Z",
       "buffer_post_id": "6adf622f04950309ed1f492d",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-26T18:20:06.057007+00:00",
+      "buffer_last_checked_at": "2026-10-26T18:31:31.766382+00:00",
       "buffer_sent_at": "2026-10-26T16:02:31.689Z",
       "buffer_public_url": "https://tiktok.com/@suhshine28/video/7701007290601573665"
     },
@@ -1746,7 +1746,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-10-26T18:16:27Z",
-      "status": "approved_for_distribution",
+      "status": "buffer_submission_pending",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -1780,7 +1780,77 @@
       "media_fetch_error": {
         "at": "2026-10-26T18:20:06.057007+00:00",
         "reason": "temporary_public_media_unavailable"
-      }
+      },
+      "reserved_for": "dreamvoid",
+      "reservation_id": "e62ac5d5-f030-453e-a0fc-520fc18405a8",
+      "buffer_channel_id": "6ad6c095778b240e2f624d3b",
+      "buffer_handle": "dreamvoid26",
+      "buffer_due_at": "2026-10-26T20:00:00+00:00"
+    },
+    {
+      "clip_id": "HelpfulYawningVanillaOSfrog-pWXptmy3n7a87mB6",
+      "clip_slug": "HelpfulYawningVanillaOSfrog-pWXptmy3n7a87mB6",
+      "streamer": "trymacs",
+      "source_url": "https://www.twitch.tv/trymacs/clip/HelpfulYawningVanillaOSfrog-pWXptmy3n7a87mB6",
+      "original_title": "Retter Respatz",
+      "hook": "RETTER RESPATZ",
+      "caption": "Retter Respatz 😂\n#trymacs #twitchde #streamclips",
+      "views_at_selection": 1208,
+      "original_duration": 39.0,
+      "rendered_duration": 22.3,
+      "original_metadata": {
+        "broadcaster_id": "64342766",
+        "creator_id": "775811197",
+        "creator_name": "grantelbart_08",
+        "game_id": "27471",
+        "language": "de",
+        "vod_id": "2909502093",
+        "vod_offset": 21790
+      },
+      "original_created_at": "2026-10-24T20:47:56Z",
+      "video_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/trymacs-helpfulyawningvanillaosfrog-pwxptmy3n7a87mb6.mp4",
+      "cover_url": "https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/tiktok-2026-10/trymacs-helpfulyawningvanillaosfrog-pwxptmy3n7a87mb6-cover.jpg",
+      "qa_run_id": "40377170174",
+      "qa_artifact_name": "twitch-video-qa",
+      "qa_sample_folder": "trymacs-helpfulyawningvanillaosfrog-pwxptmy3n7a87mb6",
+      "video_sha256": "a2e98e6534e5e3a084e4aa23ea1ff05085d8be07e36d6fbeb704bae2ca4ff599",
+      "subtitle_sha256": "bdb7adb200914fa25dc1f0673adf88217bfaf0c92f1270ddf4458893e3c39f0b",
+      "technical_qa_passed": true,
+      "watchlist_source": "https://twitchtracker.com/channels/ranking/german",
+      "watchlist_checked_at": "2026-10-25",
+      "transcript_subtitles": true,
+      "created_at": "2026-10-26T18:23:25Z",
+      "status": "approved_for_distribution",
+      "rights_status": "user_attested_oral",
+      "video_review_status": "technical_checks_only",
+      "editing_status": "single_scene_readable_caption_band_v1",
+      "subtitle_verified": false,
+      "subtitle_review_status": "machine_transcript_consistency_passed",
+      "automated_qa": {
+        "version": 1,
+        "status": "passed",
+        "checked_at": "2026-10-26T18:30:13.690392+00:00",
+        "video_sha256": "a2e98e6534e5e3a084e4aa23ea1ff05085d8be07e36d6fbeb704bae2ca4ff599",
+        "subtitle_sha256": "bdb7adb200914fa25dc1f0673adf88217bfaf0c92f1270ddf4458893e3c39f0b",
+        "transcript_agreement": 0.8,
+        "avg_logprob": -0.8404,
+        "checks": {
+          "media": true,
+          "subtitle_timing": true,
+          "speech_confidence": true,
+          "transcript_consistency": true,
+          "motion": true,
+          "source_metadata": true,
+          "content_filter": true
+        },
+        "method": "media decode/audio level, readable non-overlapping captions, gameplay motion, source metadata/filter and local ASR consistency on rendered audio",
+        "limitations": "Machine acceptance, not human editorial review, perfect word accuracy or viral quality."
+      },
+      "rights_evidence_id": "user-oral-top50-2026-10-25",
+      "editorial_review_status": "automatic_checks_passed",
+      "quality_score_verified": false,
+      "quality_score": null,
+      "approval_method": "automatic_machine_checks"
     }
   ],
   "processed_ids": [
@@ -1908,7 +1978,9 @@
     "TriangularPiercingBaconGOWSkull-sp89P-a_Dn3DSeej",
     "TriangularPiercingBaconGOWSkull-sp89P-a_Dn3DSeej",
     "SullenWanderingGaurPupper-7Y6RtRD5Ik0jBie-",
-    "SullenWanderingGaurPupper-7Y6RtRD5Ik0jBie-"
+    "SullenWanderingGaurPupper-7Y6RtRD5Ik0jBie-",
+    "HelpfulYawningVanillaOSfrog-pWXptmy3n7a87mB6",
+    "HelpfulYawningVanillaOSfrog-pWXptmy3n7a87mB6"
   ],
   "failed_attempts": {
     "CarelessDarkPeafowlYouDontSay-j_cMA2HXDRzd5ivk": {
@@ -1944,6 +2016,21 @@
     "PiercingProtectiveDogePrimeMe-IMtggHbHBWnS3y8y": {
       "at": "2026-10-26T18:16:27Z",
       "streamer": "trymacs",
+      "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
+    },
+    "ChillyBoringDogeDoubleRainbow-rtZ7Wh7QyTr5CW4u": {
+      "at": "2026-10-26T18:23:25Z",
+      "streamer": "letshugotv",
+      "reason": "ValueError('No reliable spoken content for subtitles; try another clip')"
+    },
+    "AnnoyingDeafCatPeoplesChamp-lpeBcX8xV1yHBxdZ": {
+      "at": "2026-10-26T18:23:25Z",
+      "streamer": "papaplatte",
+      "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
+    },
+    "ArborealIncredulousMetalDAESuppy-315qqv3ke1htoywy": {
+      "at": "2026-10-26T18:23:25Z",
+      "streamer": "rumathra",
       "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
     }
   },
