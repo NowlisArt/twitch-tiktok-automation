@@ -131,3 +131,13 @@ The adapter uses official `/api/admin/simpleProfiles` and `/api/v2/scheduler/pos
 The daily target is 3–5 suitable distinct clips per account, maximum five. To share scarce supply, Novel's daily reservation allowance stays at most one ahead of the less-served Buffer account. The existing shared cap of 12 renders/day and 372/month remains, so five per day on all three accounts cannot be guaranteed. Pending reservations and manual Metricool calendar posts count against Novel's quota. The current runtime account/API connection and live TikTok delivery still need validation after the owner supplies eligible API access.
 
 Provider references: [API guide](https://help.metricool.com/basic-guide-for-api-integration-r97af), [plans and API access](https://help.metricool.com/plans-add-ons-and-api-access-explained-xux1u), [official OpenAPI](https://app.metricool.com/api/swagger.json).
+
+## Pure Life added, 26 October 2026
+
+The three active Buffer targets are Dream Void (`dreamvoid26`), Sunshine (`suhshine28`) and **Pure Life (`pure.life.26`, channel `6adfa6322f1f5ed648ddec86`)**. The owner requested the same unattended pipeline for Pure Life. The connected Buffer UI confirmed its TikTok handle. Production preflight must still verify the exact ID, handle, TikTok service and connection/queue flags using the existing API key before any mutation.
+
+The shared GitHub schedule starts all three accounts automatically, with independent 11:00, 14:00, 17:00, 19:00 and 21:00 Europe/Berlin slots and a maximum of five per account per day. Target 3–5/day/account remains conditional on suitable authorized clips and successful provider delivery. Scarce clips go to less-served accounts first; source reuse across any Buffer or Metricool target remains blocked. Pure Life receives its own durable reservations, queue entries and provider receipts; it does not inherit another account's published posts.
+
+Existing production, original metadata, bounded user-attested source permissions, automatic subtitle/media QA and failure handling apply unchanged to Pure Life. Shared preparation capacity is now at most 3 completed candidates and 6 attempts/run, 18/day and 558/month; this replaces the earlier 2-account budget. Six daily runs and the 12-minute preparation timeout remain. These are ceilings, not promised output or a subscription purchase. The existing local cached speech model is reused, without a new paid LLM service.
+
+Novel Novel remains a separate optional Metricool target, blocked until eligible API access and its GitHub secret are available. It is not the Pure Life account.

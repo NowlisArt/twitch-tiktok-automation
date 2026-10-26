@@ -1,4 +1,4 @@
-name: Twitch to Dream Void, Sunshine and Novel Novel | GitHub starter
+name: Twitch to Dream Void, Sunshine, Pure Life | optional Novel Novel
 
 on:
   schedule:
@@ -105,7 +105,7 @@ jobs:
         env:
           ENABLE_METRICOOL_POSTING: 'true'
         run: python scripts/metricool_publish.py
-      - name: Reconcile and schedule eligible clips for Dream Void and Sunshine
+      - name: Reconcile and schedule eligible clips for Dream Void, Sunshine and Pure Life
         if: github.event_name == 'schedule' || github.event_name == 'push' || inputs.mode == 'run' || inputs.mode == 'publish'
         env:
           ENABLE_BUFFER_POSTING: 'true'

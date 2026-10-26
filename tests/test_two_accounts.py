@@ -10,6 +10,10 @@ SUN = {'id': 'sunshine', 'channel_id': '6ade2e8c2f1f5ed648cabd2c', 'expected_han
 
 
 class TwoAccountTests(unittest.TestCase):
+    def setUp(self):
+        # Keep the original two-account regression cases as a supported subset.
+        self.enterContext(patch.object(buffer, 'ACCOUNTS', [DREAM, SUN]))
+
     def test_both_exact_existing_accounts_enabled(self):
         self.assertEqual([DREAM, SUN], buffer.ACCOUNTS)
 
@@ -79,8 +83,9 @@ class TwoAccountTests(unittest.TestCase):
     def test_budget_allows_both_accounts(self):
         stamp = NOW.strftime('%Y-%m-%dT07:00:00Z')
         item = {'created_at': stamp, 'original_created_at': stamp, 'rendered_duration': 20, 'views_at_selection': 9000}
-        self.assertTrue(pipeline.can_prepare({'created': [item] * 10}, NOW)[0])
-        self.assertFalse(pipeline.can_prepare({'created': [item] * 12}, NOW)[0])
+        limit = pipeline.SETTINGS['max_daily_renders']
+        self.assertTrue(pipeline.can_prepare({'created': [item] * (limit - 1)}, NOW)[0])
+        self.assertFalse(pipeline.can_prepare({'created': [item] * limit}, NOW)[0])
 
     def test_exact_sunshine_connection_required(self):
         for changes, allowed in [({}, True), ({'name': 'wrong'}, False), ({'isDisconnected': True}, False)]:

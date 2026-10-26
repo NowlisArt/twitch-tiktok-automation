@@ -278,7 +278,7 @@ def main():
     args = parser.parse_args()
     state = json.loads(STATE.read_text(encoding='utf-8'))
     now = dt.datetime.now(dt.timezone.utc)
-    # Verify BOTH exact accounts and fetch BOTH queues before any mutation.
+    # Verify every exact account and fetch all queues before any mutation.
     organizations = {a['id']: verify_channel(a) for a in ACCOUNTS}
     contract_check()
     posts = []
@@ -313,7 +313,7 @@ def main():
     write_json(ROOT / 'rendered/buffer-report.json', report)
     if os.getenv('GITHUB_STEP_SUMMARY'):
         with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as stream:
-            stream.write('## Dream Void and Sunshine\n\n```json\n' + json.dumps(report, ensure_ascii=False, indent=2) + '\n```\n')
+            stream.write('## Buffer accounts\n\n```json\n' + json.dumps(report, ensure_ascii=False, indent=2) + '\n```\n')
 
 
 if __name__ == '__main__':
