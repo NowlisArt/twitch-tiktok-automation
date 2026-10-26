@@ -104,3 +104,14 @@ Caption timing is checked before expensive encoding; short cards can merge and l
 A second release step after preparation promotes valid local files immediately; no download of an unfinished current-run artifact is required. A broken/expired release candidate logs its error and does not block other clips or Buffer reconciliation. Interrupted public asset uploads reuse matching bytes rather than failing forever on an existing asset name. Ambiguous Buffer submissions retain their reservation to prevent duplicate posts.
 
 The daily target remains 3–5 eligible distinct videos per account. Missing usable content, provider outages or an expired credential can still cause a shortfall; the run summary reports that honestly. Authentication renewal may still require the account owner. Old ChatGPT posting tasks remain paused; GitHub is the starter.
+
+
+## Recovery verification, 26 October 2026
+
+New GitHub release assets can return HTTP 404 on GET briefly after upload even when a HEAD check succeeds. Before any Buffer reservation or mutation, the publisher verifies the public MP4 bytes and retries temporary fetch errors four times, waiting 10, 20 and 30 seconds. Exhausted fetches retain the eligible clip for a later run and do not stop other candidates. This retry applies only to fetching media; ambiguous Buffer mutations are still never blindly retried. Hash mismatches are not accepted or retried as temporary availability errors.
+
+Automatic transcript consistency compares the actual rendered caption text as well as the source transcript against rendered-audio ASR. The stricter comparison does not convert machine evidence into human verification.
+
+Provider-confirmed publications and exact timestamps are recorded in `state/auto20.json`; dated reports in `docs/` distinguish sent posts from scheduled queue entries.
+
+Existing eligible clips are scheduled before new rendering starts. The prepare step has a 12-minute limit and can fail without suppressing later reconciliation. Manual mode publish uses only the standard-library publisher and skips media discovery, render dependencies, ASR and artifact promotion; use it to recover already released candidates cheaply.

@@ -6,10 +6,10 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'preflight: read-only Buffer; run: complete pipeline; prepare: private QA; diagnose: Twitch only'
+        description: 'preflight: read-only Buffer; run: complete pipeline; publish: ready clips only; prepare: private QA; diagnose: Twitch only'
         type: choice
         default: preflight
-        options: [preflight, run, prepare, diagnose]
+        options: [preflight, run, publish, prepare, diagnose]
         required: true
   push:
     branches: [main]
@@ -55,14 +55,14 @@ jobs:
         if: inputs.mode == 'preflight'
         run: python scripts/buffer_publish.py --preflight
       - name: Install render tools
-        if: inputs.mode != 'preflight'
+        if: inputs.mode != 'preflight' && inputs.mode != 'publish'
         run: |
           python -m pip install -r requirements-render.txt
           python -m pip check
           sudo apt-get update -qq
           sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
       - name: Cache speech model
-        if: inputs.mode != 'preflight' && inputs.mode != 'diagnose'
+        if: inputs.mode != 'preflight' && inputs.mode != 'diagnose' && inputs.mode != 'publish'
         uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface/hub
@@ -71,10 +71,16 @@ jobs:
         if: inputs.mode == 'diagnose'
         run: python scripts/pipeline.py --diagnose
       - name: Promote exact reviewed and authorized artifacts
-        if: inputs.mode != 'preflight' && inputs.mode != 'diagnose'
+        if: inputs.mode != 'preflight' && inputs.mode != 'diagnose' && inputs.mode != 'publish'
         run: python scripts/review_release.py
+      - name: Schedule existing ready clips before rendering more
+        if: github.event_name == 'schedule' || inputs.mode == 'run'
+        env:
+          ENABLE_BUFFER_POSTING: 'true'
+        run: python scripts/buffer_publish.py
       - name: Discover and render private QA candidates
         continue-on-error: true
+        timeout-minutes: 12
         if: github.event_name == 'schedule' || inputs.mode == 'run' || inputs.mode == 'prepare'
         env:
           ENABLE_PREPARATION: 'true'
@@ -83,7 +89,7 @@ jobs:
         if: github.event_name == 'schedule' || inputs.mode == 'run'
         run: python scripts/review_release.py
       - name: Reconcile and schedule eligible clips for Dream Void and Sunshine
-        if: github.event_name == 'schedule' || github.event_name == 'push' || inputs.mode == 'run'
+        if: github.event_name == 'schedule' || github.event_name == 'push' || inputs.mode == 'run' || inputs.mode == 'publish'
         env:
           ENABLE_BUFFER_POSTING: 'true'
         run: python scripts/buffer_publish.py
