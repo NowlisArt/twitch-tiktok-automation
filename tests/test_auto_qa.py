@@ -61,6 +61,18 @@ class AutomaticQATests(unittest.TestCase):
         self.assertEqual(1, auto_qa.transcript_agreement('Oh mein Gott, ich bin tot!', 'oh mein gott ich bin tot'))
         self.assertLess(auto_qa.transcript_agreement('ich spiele heute minecraft', 'vielen dank fürs zuschauen'), .5)
 
+    def test_wrong_caption_text_fails_even_when_source_and_rendered_audio_agree(self):
+        expected='Heute spielen wir zusammen ein spannendes Minecraft Abenteuer'
+        def transcribe(path):
+            return [(i,i+.5,w) for i,w in enumerate(expected.split())]
+        transcribe.last_confidence=-.3
+        with tempfile.TemporaryDirectory() as temp:
+            video,subs=Path(temp)/'v.mp4',Path(temp)/'s.ass'
+            video.write_bytes(b'video'); subs.write_bytes(b'subs')
+            with patch.object(auto_qa,'caption_checks',return_value={'passed':True,'text':'Ganz anderer falscher Text'}):
+                with self.assertRaisesRegex(ValueError,'transcript mismatch'):
+                    auto_qa.verify(video,subs,15,expected,-.3,transcribe)
+
     def test_overlapping_or_unreadable_subtitles_fail(self):
         with tempfile.TemporaryDirectory() as temp:
             p = Path(temp)/'subs.ass'

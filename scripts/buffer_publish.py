@@ -4,6 +4,7 @@ import datetime as dt
 import hashlib
 import json
 import os
+import time
 import urllib.error
 import urllib.request
 import uuid
@@ -214,18 +215,32 @@ def plan_all(state, posts, now):
                         'assets': [{'source': clip.get('video_url')}]})
 
 
+class MediaUnavailable(RuntimeError):
+    """Temporary failure before any Buffer mutation; safe to try next run."""
+
+
 def verify_media(clip):
     url = str(clip.get('video_url') or '')
     prefix = 'https://github.com/NowlisArt/twitch-tiktok-automation/releases/download/'
     if not url.startswith(prefix) or not url.endswith('.mp4'):
         raise RuntimeError('Video must use this repository public MP4 release')
-    with urllib.request.urlopen(url, timeout=60) as stream:
-        digest, count = hashlib.sha256(), 0
-        while chunk := stream.read(1024 * 1024):
-            count += len(chunk)
-            if count > 200 * 1024 * 1024:
-                raise RuntimeError('Public video exceeds transfer budget')
-            digest.update(chunk)
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(url, timeout=60) as stream:
+                digest, count = hashlib.sha256(), 0
+                while chunk := stream.read(1024 * 1024):
+                    count += len(chunk)
+                    if count > 200 * 1024 * 1024:
+                        raise RuntimeError('Public video exceeds transfer budget')
+                    digest.update(chunk)
+            break
+        except (urllib.error.URLError, TimeoutError, ConnectionError) as exc:
+            if isinstance(exc, urllib.error.HTTPError) and exc.code not in (404, 408, 429, 500, 502, 503, 504):
+                raise
+            if attempt == 3:
+                raise MediaUnavailable('Public video temporarily unavailable; no post submitted') from exc
+            print('MEDIA FETCH RETRY', attempt + 1, type(exc).__name__)
+            time.sleep(3 * (attempt + 1))
     if digest.hexdigest() != clip.get('video_sha256'):
         raise RuntimeError('Public video hash differs from reviewed bytes')
 
@@ -277,7 +292,13 @@ def main():
           'live_channel_posts': len(posts), 'confirmed_sent': sum(p['status'] == 'sent' for p in posts)}))
     if not args.preflight and not args.reconcile and os.getenv('ENABLE_BUFFER_POSTING') == 'true':
         for clip, when, account in proposed:
-            publish(state, posts, now, account, planned=[(clip, when)])
+            try:
+                publish(state, posts, now, account, planned=[(clip, when)])
+                clip.pop('media_fetch_error', None)
+            except MediaUnavailable:
+                clip['media_fetch_error'] = {'at': now.isoformat(), 'reason': 'temporary_public_media_unavailable'}
+                write_json(STATE, state)
+                print('MEDIA UNAVAILABLE; NO SUBMISSION; CONTINUING', clip['clip_id'])
     report = {'checked_at': now.isoformat(), 'candidate_count': len(state['created']),
               'eligible_next_slots_before_run': len(proposed),
               'accounts': [{**a, 'target_minimum': CONFIG['minimum_target'],

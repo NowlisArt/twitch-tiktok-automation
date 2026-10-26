@@ -79,7 +79,9 @@ def verify(video, subtitles, duration, expected_text, source_confidence, transcr
     if not captions['passed']:
         raise ValueError('Automatic caption QA: ' + ', '.join(captions['reasons']))
     observed = transcribe(video)  # Reuses the cached local model, no API/LLM bill.
-    agreement = transcript_agreement(expected_text, ' '.join(w[2] for w in observed))
+    observed_text = ' '.join(w[2] for w in observed)
+    agreement = min(transcript_agreement(expected_text, observed_text),
+                    transcript_agreement(captions['text'], observed_text))
     confidence = min(source_confidence, getattr(transcribe, 'last_confidence', -99))
     if agreement < POLICY['minimum_transcript_agreement']:
         raise ValueError('Rendered audio/caption transcript mismatch')
