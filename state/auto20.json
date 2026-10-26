@@ -106,7 +106,7 @@
       "buffer_post_id": "6ad7f31b8c20162e7ecb719c",
       "buffer_due_at": "2026-10-21T16:00:00.000Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-26T00:31:04.228752+00:00",
+      "buffer_last_checked_at": "2026-10-26T14:22:35.560322+00:00",
       "buffer_sent_at": "2026-10-21T16:06:26.167Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699152703720525088?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -532,7 +532,7 @@
       "buffer_post_id": "6ad7dfb9a40664bdbaeb3d47",
       "buffer_due_at": "2026-10-21T12:00:00.000Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-26T00:31:04.228752+00:00",
+      "buffer_last_checked_at": "2026-10-26T14:22:35.560322+00:00",
       "buffer_sent_at": "2026-10-21T12:05:00.193Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699090478490307872?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -564,7 +564,7 @@
       "buffer_post_id": "6ada3ccc9a8a68d3cd6e1ba2",
       "buffer_due_at": "2026-10-22T16:49:47.667Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-26T00:31:04.228752+00:00",
+      "buffer_last_checked_at": "2026-10-26T14:22:35.560322+00:00",
       "buffer_sent_at": "2026-10-22T16:51:48.326Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699535559319948576?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -596,7 +596,7 @@
       "buffer_post_id": "6ada3cf8399af6f1f7271b5b",
       "buffer_due_at": "2026-10-23T12:00:00.000Z",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-26T00:31:04.228752+00:00",
+      "buffer_last_checked_at": "2026-10-26T14:22:35.560322+00:00",
       "buffer_sent_at": "2026-10-23T12:04:44.997Z",
       "buffer_public_url": "https://www.tiktok.com/@dreamvoid26/video/7699832679440616737?utm_campaign=tt4d_open_api&utm_source=7103819247981182978",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
@@ -1519,7 +1519,7 @@
       "buffer_due_at": "2026-10-25T18:00:00.000Z",
       "buffer_post_id": "6ade3e426887a2efc118408a",
       "buffer_last_reported_status": "sent",
-      "buffer_last_checked_at": "2026-10-26T00:31:04.228752+00:00",
+      "buffer_last_checked_at": "2026-10-26T14:22:35.560322+00:00",
       "buffer_sent_at": "2026-10-25T18:02:37.087Z",
       "buffer_public_url": "https://tiktok.com/@suhshine28/video/7700666931585568033"
     },
@@ -1596,7 +1596,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-10-25T18:03:21Z",
-      "status": "buffer_scheduled",
+      "status": "buffer_reported_published",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -1633,8 +1633,10 @@
       "buffer_handle": "dreamvoid26",
       "buffer_due_at": "2026-10-26T10:00:00.000Z",
       "buffer_post_id": "6ade7a0e3d5b27036bf376eb",
-      "buffer_last_reported_status": "scheduled",
-      "buffer_last_checked_at": "2026-10-26T00:31:04.228752+00:00"
+      "buffer_last_reported_status": "sent",
+      "buffer_last_checked_at": "2026-10-26T14:22:35.560322+00:00",
+      "buffer_sent_at": "2026-10-26T10:03:44.294Z",
+      "buffer_public_url": "https://tiktok.com/@dreamvoid26/video/7700914545384017185"
     },
     {
       "clip_id": "TriangularPiercingBaconGOWSkull-sp89P-a_Dn3DSeej",
@@ -1669,7 +1671,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-10-26T00:26:32Z",
-      "status": "approved_for_distribution",
+      "status": "buffer_submission_pending",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -1699,7 +1701,12 @@
       "editorial_review_status": "automatic_checks_passed",
       "quality_score_verified": false,
       "quality_score": null,
-      "approval_method": "automatic_machine_checks"
+      "approval_method": "automatic_machine_checks",
+      "reserved_for": "sunshine",
+      "reservation_id": "64f4a631-ac1c-4651-8949-123fe5b2ea38",
+      "buffer_channel_id": "6ade2e8c2f1f5ed648cabd2c",
+      "buffer_handle": "suhshine28",
+      "buffer_due_at": "2026-10-26T16:00:00+00:00"
     }
   ],
   "processed_ids": [
@@ -1828,38 +1835,23 @@
     "TriangularPiercingBaconGOWSkull-sp89P-a_Dn3DSeej"
   ],
   "failed_attempts": {
-    "DelightfulKathishKathyWOOP-5RqiQZ7l8cq9xGVs": {
-      "at": "2026-10-25T21:51:22Z",
-      "streamer": "zarbex",
+    "CarelessDarkPeafowlYouDontSay-j_cMA2HXDRzd5ivk": {
+      "at": "2026-10-26T14:21:12Z",
+      "streamer": "letshugotv",
       "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
     },
     "BlushingToughMonkeyPipeHype-NQLNPT0AZKvILF2f": {
-      "at": "2026-10-25T21:51:22Z",
+      "at": "2026-10-26T14:21:12Z",
       "streamer": "nooreax",
       "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
     },
-    "FaithfulOriginalFlamingoHotPokket-_BnRobp5LrvdKF-V": {
-      "at": "2026-10-25T21:51:22Z",
-      "streamer": "nooreax",
+    "AlluringHandsomeCiderMoreCowbell-7apabrRC8z7wrqoY": {
+      "at": "2026-10-26T14:21:12Z",
+      "streamer": "edopeh",
       "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
     },
     "DignifiedTawdryKuduBatChest-o4TUNaNuLZ-d3rFQ": {
-      "at": "2026-10-25T21:51:22Z",
-      "streamer": "papaplatte",
-      "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
-    },
-    "CarelessDarkPeafowlYouDontSay-j_cMA2HXDRzd5ivk": {
-      "at": "2026-10-26T00:26:32Z",
-      "streamer": "letshugotv",
-      "reason": "ValueError('No reliable spoken content for subtitles; try another clip')"
-    },
-    "SquareCrunchySkunkANELE-_9rL6Ece0u60BoJn": {
-      "at": "2026-10-26T00:26:32Z",
-      "streamer": "renekreher",
-      "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
-    },
-    "PrettyTangentialMilkMikeHogu-M_vDWEQV3zkSY6rw": {
-      "at": "2026-10-26T00:26:32Z",
+      "at": "2026-10-26T14:21:12Z",
       "streamer": "papaplatte",
       "reason": "ValueError('Unreadable or missing captions; skip before expensive render')"
     }
