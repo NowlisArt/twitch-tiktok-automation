@@ -1,0 +1,17 @@
+{
+  "account": "Pure Life",
+  "handle": "pure.life.26",
+  "channel_id": "6adfa6322f1f5ed648ddec86",
+  "source_clip_id": "MiniatureRamshackleBearCurseLit-1q1T8HtOwhkqubh9",
+  "streamer": "trymacs",
+  "original_title": "trimak troll",
+  "source_url": "https://www.twitch.tv/trymacs/clip/MiniatureRamshackleBearCurseLit-1q1T8HtOwhkqubh9",
+  "video_sha256": "6063e98a3c28d12962b45e56c1dec44237ab3298e045042ab51092b04b3ffdee",
+  "subtitle_sha256": "7e0cddefc3b145741a15fc175d9cd18eda988c1824b8dab90b2506d0ff29fc92",
+  "approval_method": "automatic_machine_checks",
+  "buffer_post_id": "6adfa967e0ae5134fabcc68d",
+  "provider_status": "scheduled",
+  "due_at": "2026-10-26T20:00:00.000Z",
+  "publication_confirmed": false,
+  "evidence_run": "https://github.com/NowlisArt/twitch-tiktok-automation/actions/runs/40385491053"
+}
