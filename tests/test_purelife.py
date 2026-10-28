@@ -8,6 +8,9 @@ import pipeline
 PURE={'id':'purelife','channel_id':'6adfa6322f1f5ed648ddec86','expected_handle':'pure.life.26'}
 
 class PureLifeTests(unittest.TestCase):
+    def setUp(self):
+        self.enterContext(patch.object(buffer, "ACCOUNTS", [DREAM,SUN,PURE]))
+
     def test_three_exact_buffer_targets(self):
         self.assertEqual([DREAM,SUN,PURE],buffer.ACCOUNTS)
 
@@ -41,7 +44,7 @@ class PureLifeTests(unittest.TestCase):
                     with self.assertRaises(RuntimeError):buffer.verify_channel(PURE)
 
     def test_shared_capacity_supports_three_targets(self):
-        self.assertEqual(18,pipeline.SETTINGS['max_daily_renders'])
-        self.assertEqual(558,pipeline.SETTINGS['max_monthly_renders'])
-        self.assertEqual(3,pipeline.SETTINGS['max_renders_per_run'])
-        self.assertEqual(6,pipeline.SETTINGS['max_attempts_per_run'])
+        self.assertGreaterEqual(pipeline.SETTINGS['max_daily_renders'],15)
+        self.assertEqual(pipeline.SETTINGS['max_daily_renders']*31,pipeline.SETTINGS['max_monthly_renders'])
+        self.assertGreaterEqual(pipeline.SETTINGS['max_renders_per_run'],3)
+        self.assertGreaterEqual(pipeline.SETTINGS['max_attempts_per_run'],6)

@@ -141,3 +141,13 @@ The shared GitHub schedule starts all three accounts automatically, with indepen
 Existing production, original metadata, bounded user-attested source permissions, automatic subtitle/media QA and failure handling apply unchanged to Pure Life. Shared preparation capacity is now at most 3 completed candidates and 6 attempts/run, 18/day and 558/month; this replaces the earlier 2-account budget. Six daily runs and the 12-minute preparation timeout remain. These are ceilings, not promised output or a subscription purchase. The existing local cached speech model is reused, without a new paid LLM service.
 
 Novel Novel remains a separate optional Metricool target, blocked until eligible API access and its GitHub secret are available. It is not the Pure Life account.
+
+## Novel Novel moved to a separate Buffer account, 28 October 2026
+
+Novel Novel is now configured as the fourth Buffer TikTok target: `novel.novel601`, channel `6ae262582f1f5ed648022a42`. The owner connected it in a separate Buffer account to avoid the paid Metricool API requirement. The existing three-channel Buffer account remains unchanged.
+
+The new account uses only GitHub Actions secret `BUFFER_API_KEY_NOVEL`; existing targets use `BUFFER_API_KEY`. Credentials are scoped per request and restored even after exceptions. Every active account must pass exact channel/handle/TikTok/connection verification and complete queue reads before any mutation. A missing or invalid secondary credential is reported in `blocked_accounts` and submits nothing for Novel while the primary targets continue. An unknown publishing response keeps the durable global lock, regardless of credential group. Fair planning operates across all successfully verified targets; daily limits remain independent and source history global.
+
+The existing schedule and run/publish/preflight modes apply to all four Buffer targets. The previous Metricool workflow calls and credential binding were removed; its adapter remains as history. No paid Metricool plan is required for this route and no subscription was purchased. New credential creation/installation and live connection verification must finish before Novel is described as active.
+
+The shared preparation ceilings are 4 completed clips/8 attempts per run, 24 completed clips/day and 744/month. These replace the prior three-account budget; the 12-minute preparation limit and cached local speech model remain. Target 3–5 suitable distinct clips/day/account, maximum five, remains conditional on eligible supply and provider availability. The planned credential lifetime is the longest offered by Buffer's current UI (one year); report the actual expiry only after generation, and keep the key out of chat and source files.

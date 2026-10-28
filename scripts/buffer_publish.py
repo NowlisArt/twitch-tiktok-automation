@@ -1,5 +1,6 @@
 """Buffer GraphQL publisher: durable intent, exact channel gates and receipts."""
 import argparse
+from contextvars import ContextVar
 import datetime as dt
 import hashlib
 import json
@@ -20,12 +21,14 @@ if not ACCOUNTS or len({a['channel_id'] for a in ACCOUNTS}) != len(ACCOUNTS) or 
 CHANNEL = ACCOUNTS[0]['channel_id']  # Legacy untagged receipts belong to Dream Void.
 ZONE = ZoneInfo(CONFIG['timezone'])
 POST_FIELDS = 'id channelId dueAt text status sentAt externalLink assets { source }'
+KEY_ENV = ContextVar('buffer_key_env', default='BUFFER_API_KEY')
 
 
 def request(query, variables=None):
-    key = os.getenv('BUFFER_API_KEY')
+    key_name = KEY_ENV.get()
+    key = os.getenv(key_name)
     if not key:
-        raise RuntimeError('Missing GitHub secret BUFFER_API_KEY')
+        raise RuntimeError('Missing GitHub secret ' + key_name)
     req = urllib.request.Request('https://api.buffer.com',
         data=json.dumps({'query': query, 'variables': variables or {}}).encode(),
         headers={'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json'}, method='POST')
@@ -39,11 +42,20 @@ def request(query, variables=None):
     return data['data']
 
 
+def account_request(account, query, variables=None):
+    """Select credentials for one request; never leak the selection to another account."""
+    token = KEY_ENV.set(account.get('api_key_env', 'BUFFER_API_KEY'))
+    try:
+        return request(query, variables)
+    finally:
+        KEY_ENV.reset(token)
+
+
 def verify_channel(account=None):
     account = account or ACCOUNTS[0]
-    response = request('query { account { organizations { id } } }')
+    response = account_request(account, 'query { account { organizations { id } } }')
     for org in response['account']['organizations']:
-        channels = request('query($input:ChannelsInput!){ channels(input:$input){ id name service isDisconnected isLocked isQueuePaused } }',
+        channels = account_request(account, 'query($input:ChannelsInput!){ channels(input:$input){ id name service isDisconnected isLocked isQueuePaused } }',
                            {'input': {'organizationId': org['id']}})['channels']
         for channel in channels:
             if channel['id'] != account['channel_id']:
@@ -57,8 +69,8 @@ def verify_channel(account=None):
     raise RuntimeError(account['id'] + ' target channel not accessible')
 
 
-def contract_check():
-    result = request('query { __type(name:"CreatePostInput") { inputFields { name } } __schema { mutationType { fields { name } } } }')
+def contract_check(account=None):
+    result = account_request(account or ACCOUNTS[0], 'query { __type(name:"CreatePostInput") { inputFields { name } } __schema { mutationType { fields { name } } } }')
     fields = {f['name'] for f in result['__type']['inputFields']}
     mutations = {f['name'] for f in result['__schema']['mutationType']['fields']}
     if not {'channelId', 'text', 'assets', 'mode', 'schedulingType', 'dueAt'} <= fields or 'createPost' not in mutations:
@@ -72,7 +84,7 @@ def fetch_posts(org, account=None):
     """All target-channel pages; an incomplete queue never opens extra slots."""
     posts, after, seen = [], None, set()
     for _ in range(100):
-        result = request('query($input:PostsInput!,$after:String){posts(input:$input,first:100,after:$after){edges{node{' +
+        result = account_request(account, 'query($input:PostsInput!,$after:String){posts(input:$input,first:100,after:$after){edges{node{' +
                          POST_FIELDS + '}} pageInfo{hasNextPage endCursor}}}',
                          {'input': {'organizationId': org, 'filter': {'channelIds': [channel_id]}}, 'after': after})['posts']
         posts.extend(e['node'] for e in result['edges'] if e['node']['channelId'] == channel_id)
@@ -186,12 +198,12 @@ def plan(state, posts, now, account=None, used_extra=None):
     return result
 
 
-def plan_all(state, posts, now):
+def plan_all(state, posts, now, accounts=None):
     """Balance scarce clips across accounts, preserving global source exclusivity."""
     working, used, result = list(posts), set(), []
     while True:
         choices = []
-        for index, account in enumerate(ACCOUNTS):
+        for index, account in enumerate(ACCOUNTS if accounts is None else accounts):
             proposals = plan(state, working, now, account, used)
             if not proposals:
                 continue
@@ -261,7 +273,7 @@ def publish(state, posts, now, account=None, planned=None):
         payload = {'text': clip['caption'], 'channelId': channel_id, 'schedulingType': 'automatic',
                    'mode': 'customScheduled', 'dueAt': clip['buffer_due_at'],
                    'assets': [{'video': {'url': clip['video_url']}}]}
-        result = request(query, {'input': payload})['createPost']
+        result = account_request(account, query, {'input': payload})['createPost']
         post = result.get('post')
         if not post or not post.get('id'):
             raise RuntimeError('Submission unconfirmed; reservation retained; inspect queue before retry')
@@ -269,6 +281,31 @@ def publish(state, posts, now, account=None, planned=None):
         posts.append(post)
         reconcile(state, posts, now, account)
         checkpoint(state)
+
+
+def collect_accounts(configured):
+    active, posts, blocked, checked_keys = [], [], [], set()
+    for account in configured:
+        key_name = account.get('api_key_env', 'BUFFER_API_KEY')
+        if account.get('optional') and not os.getenv(key_name):
+            blocked.append({'id': account['id'], 'reason': 'missing_api_key', 'required_secret': key_name})
+            continue
+        try:
+            org = verify_channel(account)
+            if key_name not in checked_keys:
+                contract_check(account)
+                checked_keys.add(key_name)
+            queue = fetch_posts(org, account)
+        except Exception as exc:
+            if not account.get('optional'):
+                raise
+            blocked.append({'id': account['id'], 'reason': 'verification_failed', 'error_type': type(exc).__name__})
+            continue
+        active.append(account)
+        posts.extend(queue)
+    for item in blocked:
+        print('BUFFER ACCOUNT BLOCKED', json.dumps(item))
+    return active, posts, blocked
 
 
 def main():
@@ -279,15 +316,11 @@ def main():
     state = json.loads(STATE.read_text(encoding='utf-8'))
     now = dt.datetime.now(dt.timezone.utc)
     # Verify every exact account and fetch all queues before any mutation.
-    organizations = {a['id']: verify_channel(a) for a in ACCOUNTS}
-    contract_check()
-    posts = []
-    for account in ACCOUNTS:
-        posts.extend(fetch_posts(organizations[account['id']], account))
-    for account in ACCOUNTS:
+    active_accounts, posts, blocked_accounts = collect_accounts(ACCOUNTS)
+    for account in active_accounts:
         reconcile(state, posts, now, account)
     write_json(STATE, state)
-    proposed = plan_all(state, posts, now)
+    proposed = plan_all(state, posts, now, accounts=active_accounts)
     print('BUFFER PLAN', json.dumps({'eligible_slots': len(proposed), 'target_daily_per_account': '3-5',
           'live_channel_posts': len(posts), 'confirmed_sent': sum(p['status'] == 'sent' for p in posts)}))
     if not args.preflight and not args.reconcile and os.getenv('ENABLE_BUFFER_POSTING') == 'true':
@@ -308,7 +341,8 @@ def main():
                             'posts': [{'id': p['id'], 'status': p['status'], 'dueAt': p.get('dueAt'),
                                        'sentAt': p.get('sentAt'), 'externalLink': p.get('externalLink')}
                                       for p in posts if p['channelId'] == a['channel_id']]}
-                           for a in ACCOUNTS],
+                           for a in active_accounts],
+              'blocked_accounts': blocked_accounts,
               'note': 'Only sent is provider-confirmed publication. scheduled is not a publication receipt.'}
     write_json(ROOT / 'rendered/buffer-report.json', report)
     if os.getenv('GITHUB_STEP_SUMMARY'):
