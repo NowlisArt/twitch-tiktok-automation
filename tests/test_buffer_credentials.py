@@ -66,3 +66,24 @@ class SeparateBufferTests(unittest.TestCase):
         self.assertEqual(1,request.call_count)
         self.assertEqual('buffer_submission_pending',clip['status'])
         self.assertEqual('BUFFER_API_KEY',b.KEY_ENV.get())
+
+    def test_ready_only_without_eligible_media_skips_network_reads(self):
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as temp:
+            state=Path(temp)/'state.json';state.write_text('{"created":[]}')
+            with patch.object(b,'STATE',state),patch.object(b,'collect_accounts') as fetch:
+                b.main(['--ready-only'])
+        fetch.assert_not_called()
+
+    def test_ready_only_with_media_still_verifies_live_accounts(self):
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as temp:
+            state=Path(temp)/'state.json';state.write_text('{"created":[]}')
+            with patch.object(b,'STATE',state),patch.object(b,'has_ready_clip',return_value=True), \
+                 patch.object(b,'collect_accounts',return_value=([DREAM],[],[])) as fetch, \
+                 patch.object(b,'plan_all',return_value=[]),patch.object(b,'write_json'), \
+                 patch.dict(b.os.environ,{'GITHUB_STEP_SUMMARY':''}):
+                b.main(['--ready-only','--preflight'])
+        fetch.assert_called_once()

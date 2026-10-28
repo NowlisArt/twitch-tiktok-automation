@@ -308,13 +308,23 @@ def collect_accounts(configured):
     return active, posts, blocked
 
 
-def main():
+def has_ready_clip(state, now):
+    return any(clip.get('video_url') and eligible(clip, CONFIG['minimum_quality'])
+               and not unavailable(clip) and not publication_reasons(clip, now)
+               for clip in state['created'])
+
+
+def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument('--preflight', action='store_true')
     parser.add_argument('--reconcile', action='store_true')
-    args = parser.parse_args()
+    parser.add_argument('--ready-only', action='store_true')
+    args = parser.parse_args(argv)
     state = json.loads(STATE.read_text(encoding='utf-8'))
     now = dt.datetime.now(dt.timezone.utc)
+    if args.ready_only and not has_ready_clip(state, now):
+        print('BUFFER READY PASS: no eligible released media; provider reads deferred to final reconciliation')
+        return
     # Verify every exact account and fetch all queues before any mutation.
     active_accounts, posts, blocked_accounts = collect_accounts(ACCOUNTS)
     for account in active_accounts:

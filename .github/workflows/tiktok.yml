@@ -78,7 +78,7 @@ jobs:
         if: github.event_name == 'schedule' || inputs.mode == 'run'
         env:
           ENABLE_BUFFER_POSTING: 'true'
-        run: python scripts/buffer_publish.py
+        run: python scripts/buffer_publish.py --ready-only
       - name: Discover and render private QA candidates
         continue-on-error: true
         timeout-minutes: 12

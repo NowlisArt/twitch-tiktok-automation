@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-28",
+  "account": "Novel Novel",
+  "handle": "novel.novel601",
+  "channel_id": "6ae262582f1f5ed648022a42",
+  "provider": "buffer",
+  "credential_secret_name": "BUFFER_API_KEY_NOVEL",
+  "credential_expires": "2027-10-28",
+  "credential_value_included": false,
+  "owner_confirmed_access": true,
+  "authentication_verified": true,
+  "verified_run": "https://github.com/NowlisArt/twitch-tiktok-automation/actions/runs/40771816542",
+  "new_submissions_in_verified_run": 0,
+  "reason": "No additional eligible released clips were available",
+  "daily_target_per_account": "3-5 suitable distinct clips",
+  "maximum_daily": 5,
+  "scheduled_starter": "GitHub Actions schedule/workflow_dispatch",
+  "metricool_workflow_calls_removed": true
+}
