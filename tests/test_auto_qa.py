@@ -128,5 +128,34 @@ class AutomaticQATests(unittest.TestCase):
                 os.chdir(previous)
 
 
+class CaptionPackingRegressionTests(unittest.TestCase):
+    def test_only_old_layout_failures_are_retried_after_the_fix(self):
+        stamp=NOW.isoformat()
+        state={'failed_attempts':{
+            'old-layout':{'at':stamp,'reason':'Unreadable or missing captions'},
+            'current-layout':{'at':stamp,'reason':'Unreadable or missing captions','caption_layout_version':2},
+            'no-speech':{'at':stamp,'reason':'Insufficient reliable speech'},
+            'network':{'at':stamp,'reason':'Download timed out'}}}
+        self.assertEqual({'current-layout','no-speech','network'},pipeline.current_failed_ids(state,NOW))
+
+    def test_long_german_words_form_two_line_cards_without_losing_speech(self):
+        words=['Geschwindigkeiten','Unglaublicherweise','Aufmerksamkeit']*3
+        with tempfile.TemporaryDirectory() as temp:
+            path=Path(temp)/'subs.ass'
+            self.assertTrue(pipeline.write_subs([(i*1.5,(i+1)*1.5,w) for i,w in enumerate(words)],0,15,path))
+            result=auto_qa.caption_checks(path,15)
+            self.assertTrue(result['passed'],result['reasons'])
+            self.assertEqual(words,result['text'].split())
+
+    def test_fast_speech_remains_rejected_without_creating_three_line_cards(self):
+        words=['Geschwindigkeiten','Unglaublicherweise','Aufmerksamkeit']*3
+        with tempfile.TemporaryDirectory() as temp:
+            path=Path(temp)/'subs.ass'
+            self.assertFalse(pipeline.write_subs([(i*.4,(i+1)*.4,w) for i,w in enumerate(words)],0,15,path))
+            reasons=auto_qa.caption_checks(path,15)['reasons']
+            self.assertIn('caption too fast',reasons)
+            self.assertNotIn('caption exceeds two readable lines',reasons)
+
+
 if __name__ == '__main__':
     unittest.main()

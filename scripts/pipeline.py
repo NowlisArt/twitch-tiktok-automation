@@ -22,6 +22,7 @@ WATCHLIST = json.loads(Path('config/watchlist.json').read_text(encoding='utf-8')
 UTC = dt.timezone.utc
 STATE = Path('state/auto20.json')
 OUT = Path('rendered')
+CAPTION_LAYOUT_VERSION = 2
 STREAMERS = '''eliasn97 zarbex papaplatte trymacs canerkrd krokoboss xrohat montanablack88 gamerbrother kubafps bonjwa xthesolutiontv handofblood noway4u_sir metashi12 gronkhtv gronkh tolkin gtasty orangemorange schradin dhalucard shlorox mertabimula rumathra elotrix bastighg maxim dracon staiy spontent marli onlyjson naguura phunkroyal niklaswilson pietsmiet scurrows h0llylp rezo letshugotv edopeh amar sterzik repaz gtimetv mckytv rezonfn fregepaul coachlim'''.split()
 RANK = {name: idx + 1 for idx, name in enumerate(STREAMERS)}
 STREAMERS = WATCHLIST['channels']
@@ -612,6 +613,9 @@ def ass_time(seconds):
 
 
 def write_subs(words, start, length, path):
+    def wrap_card(text):
+        return textwrap.wrap(text,28,break_long_words=True,break_on_hyphens=False)
+
     header = '''[Script Info]
 ScriptType: v4.00+
 PlayResX: 1080
@@ -628,7 +632,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     groups, group = [], []
     for item in selected:
         label = ' '.join(x[2] for x in group+[item])
-        if group and (len(label)>56 or len(group)>=8 or item[0]-group[-1][1]>.6):
+        if group and (len(label)>56 or len(wrap_card(label))>2 or len(group)>=8 or item[0]-group[-1][1]>.6):
             groups.append(group)
             group=[]
         group.append(item)
@@ -643,7 +647,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         label=' '.join(w[2] for w in current)
         end=min(max(current[-1][1]+.15,current[0][0]+.8,current[0][0]+len(label)/24),following[0][0]-.02)
         combined=' '.join(w[2] for w in current+following)
-        if (end-current[0][0]<.6 or len(label)/max(.01,end-current[0][0])>28) and len(combined)<=56 and following[0][0]-current[-1][1]<.8:
+        if (end-current[0][0]<.6 or len(label)/max(.01,end-current[0][0])>28) and len(combined)<=56 and len(wrap_card(combined))<=2 and following[0][0]-current[-1][1]<.8:
             groups[index:index+2]=[current+following]
         else:
             index+=1
@@ -653,12 +657,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         label=' '.join(x[2] for x in group).replace('\\','').replace('{','(').replace('}',')').replace('\n',' ')
         next_start=groups[i+1][0][0] if i+1<len(groups) else length+.02
         end=min(length,max(a+.8,b+.15,a+len(label)/24),next_start-.02)
-        lines=textwrap.wrap(label,28,break_long_words=True,break_on_hyphens=False)
+        lines=wrap_card(label)
         display='\\N'.join(lines)
         events.append(f'Dialogue: 0,{ass_time(a)},{ass_time(end)},TikTok,,0,0,0,,{display}')
     path.write_text(header+'\n'.join(events)+'\n',encoding='utf-8')
     from auto_qa import caption_checks
-    return caption_checks(path,length)['passed']
+    checks=caption_checks(path,length)
+    if not checks['passed']:
+        print('CAPTION QA FAILED',json.dumps({'reasons':checks['reasons'],'cue_count':checks['cue_count']}),flush=True)
+    return checks['passed']
 
 
 def find_face_focus(source, duration):
@@ -906,6 +913,9 @@ def current_failed_ids(state, now):
     recent = {}
     for key, rec in state.get('failed_attempts', {}).items():
         try:
+            if ('Unreadable or missing captions' in str(rec.get('reason',''))
+                    and rec.get('caption_layout_version',1) < CAPTION_LAYOUT_VERSION):
+                continue  # Retry old packing failures; all source/rights/QA gates still apply.
             stamp = dt.datetime.fromisoformat(rec['at'].replace('Z', '+00:00'))
             if (now - stamp).total_seconds() < 6 * 3600:
                 recent[key] = rec
@@ -917,7 +927,8 @@ def current_failed_ids(state, now):
 
 def remember_failure(state, clip, now, exc):
     state['failed_attempts'][clip['clip_slug']] = {
-        'at': iso(now), 'streamer': clip['channel_login'], 'reason': repr(exc)[:200]}
+        'at': iso(now), 'streamer': clip['channel_login'], 'reason': repr(exc)[:200],
+        'caption_layout_version': CAPTION_LAYOUT_VERSION}
     save_state(state)
     print('FAILED CANDIDATE - NEXT CLIP', clip['channel_login'],
           clip['clip_slug'], repr(exc)[:170], file=sys.stderr, flush=True)

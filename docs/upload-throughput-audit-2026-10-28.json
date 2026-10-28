@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-28",
+  "scope": "Nine scheduled production runs created from 26 to 28 October 2026; manual setup runs excluded",
+  "totals": {
+    "runs": 9,
+    "attempts": 50,
+    "produced": 6,
+    "rejected": 44,
+    "reasons": {
+      "ValueError('Long static gameplay/menu phase; try another clip')": 5,
+      "ValueError('Unreadable or missing captions; skip before expensive render')": 35,
+      "ValueError('Rendered audio/caption transcript mismatch')": 2,
+      "ValueError('Insufficient reliable speech; try another clip')": 1,
+      "ValueError('No reliable spoken content for subtitles; try another clip')": 1
+    }
+  },
+  "scheduled_run_counts_berlin": {
+    "2026-10-26": 3,
+    "2026-10-27": 4,
+    "2026-10-28": 2
+  },
+  "configured_runs_per_day": 6,
+  "provider_confirmed_sent_on_2026_10_27": {
+    "dreamvoid26": 1,
+    "suhshine28": 1,
+    "pure.life.26": 1
+  },
+  "provider_confirmed_sent_on_2026_10_28": {
+    "dreamvoid26": 1,
+    "suhshine28": 1,
+    "pure.life.26": 0
+  },
+  "public_observations": {
+    "sunshine": {
+      "handle": "suhshine28",
+      "visible_videos": 5,
+      "tile_view_counts": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "publicly_accessible_video": "https://www.tiktok.com/@suhshine28/video/7701749276971470112",
+      "cause_of_zero_views": "Not established; owner analytics/account-status access pending"
+    },
+    "dreamvoid": {
+      "handle": "dreamvoid26",
+      "visible_videos": 8,
+      "tile_view_counts": [
+        234,
+        344,
+        261,
+        249,
+        324,
+        315,
+        943,
+        916
+      ]
+    },
+    "status_disagreements": [
+      {
+        "buffer_post_id": "6adf9cc83faf46bfb54c350b",
+        "provider_status": "error",
+        "public_tiktok_url": "https://www.tiktok.com/@suhshine28/video/7701068905007107361",
+        "title": "Retter Respatz"
+      },
+      {
+        "buffer_post_id": "6adf9c873aaff6c7f595cf87",
+        "provider_status": "error",
+        "public_tiktok_url": "https://www.tiktok.com/@dreamvoid26/video/7701068922891570465",
+        "title": "alphastein wecker"
+      }
+    ]
+  },
+  "confirmed_code_bug": "Character count <=56 does not guarantee <=2 wrapped lines; packing and fast-card merging could generate a third line and reject their own output",
+  "fix": "Pack/merge only when the actual wrapping fits two lines; preserve speech and QA speed limits; retry obsolete layout failures once under version 2",
+  "tests": 79,
+  "unconfirmed_claims": [
+    "No account penalty or recommendation restriction has been established",
+    "No guarantee that all 35 generic caption rejections were caused by the packing bug",
+    "Buffer error status alone does not prove a TikTok post is absent"
+  ]
+}
