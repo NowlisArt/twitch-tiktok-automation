@@ -2,6 +2,7 @@
 import json
 import os
 import subprocess
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -32,4 +33,17 @@ def checkpoint(state):
     git('add', 'state/auto20.json')
     if subprocess.run(['git', 'diff', '--cached', '--quiet'], cwd=ROOT).returncode:
         git('commit', '-m', 'Persist publishing reservation/receipt [skip ci]')
-    git('push', 'origin', 'HEAD:main')
+    for attempt in range(3):
+        try:
+            git('push', 'origin', 'HEAD:main')
+            return
+        except subprocess.CalledProcessError as exc:
+            # Never print raw transport output: URLs can contain credentials.
+            detail=(exc.stderr or '').lower()
+            reason=('remote_advanced' if 'non-fast-forward' in detail or 'fetch first' in detail
+                    else 'permission_denied' if 'permission' in detail or '403' in detail
+                    else 'transport_or_server_error')
+            print('STATE PUSH FAILED', reason, 'attempt', attempt+1, flush=True)
+            if reason!='transport_or_server_error' or attempt==2:
+                raise
+            time.sleep(2*(attempt+1))

@@ -2,7 +2,7 @@ name: Twitch to Dream Void, Sunshine, Pure Life and Novel Novel
 
 on:
   schedule:
-    - cron: '17 7,10,13,16,19,22 * * *'
+    - cron: '37 * * * *'
   workflow_dispatch:
     inputs:
       mode:
@@ -13,7 +13,7 @@ on:
         required: true
   push:
     branches: [main]
-    paths: ['config/reviews.json', 'config/rights.json']
+    paths: ['config/reviews.json', 'config/rights.json', 'config/publishing.json', 'scripts/**', '.github/workflows/tiktok.yml']
 
 permissions:
   contents: read
@@ -75,19 +75,19 @@ jobs:
         if: inputs.mode != 'preflight' && inputs.mode != 'diagnose' && inputs.mode != 'publish'
         run: python scripts/review_release.py
       - name: Schedule existing ready clips before rendering more
-        if: github.event_name == 'schedule' || inputs.mode == 'run'
+        if: github.event_name == 'schedule' || github.event_name == 'push' || inputs.mode == 'run'
         env:
           ENABLE_BUFFER_POSTING: 'true'
         run: python scripts/buffer_publish.py --ready-only
       - name: Discover and render private QA candidates
         continue-on-error: true
-        timeout-minutes: 12
-        if: github.event_name == 'schedule' || inputs.mode == 'run' || inputs.mode == 'prepare'
+        timeout-minutes: 25
+        if: github.event_name == 'schedule' || github.event_name == 'push' || inputs.mode == 'run' || inputs.mode == 'prepare'
         env:
           ENABLE_PREPARATION: 'true'
         run: python scripts/pipeline.py
       - name: Automatically release newly machine-checked clips in this run
-        if: github.event_name == 'schedule' || inputs.mode == 'run'
+        if: github.event_name == 'schedule' || github.event_name == 'push' || inputs.mode == 'run'
         run: python scripts/review_release.py
       - name: Reconcile and schedule eligible clips for all four Buffer channels
         if: github.event_name == 'schedule' || github.event_name == 'push' || inputs.mode == 'run' || inputs.mode == 'publish'
@@ -97,13 +97,7 @@ jobs:
       - name: Save state even after failure
         if: always()
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add state/auto20.json
-          if ! git diff --cached --quiet; then
-            git commit -m 'Persist pipeline state [skip ci]'
-            git push origin HEAD:main
-          fi
+          PYTHONPATH=scripts python -c "import json; from storage import STATE, checkpoint; checkpoint(json.loads(STATE.read_text(encoding='utf-8')))"
       - name: Preserve exact QA files and publication receipts
         if: always()
         uses: actions/upload-artifact@v4

@@ -37,6 +37,6 @@
   "max_daily_renders": 24,
   "max_monthly_renders": 744,
   "max_renders_per_run": 4,
-  "max_attempts_per_run": 8,
+  "max_attempts_per_run": 20,
   "minimum_quality": 85
 }

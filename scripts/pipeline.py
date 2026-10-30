@@ -651,12 +651,28 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             groups[index:index+2]=[current+following]
         else:
             index+=1
+    # Borrow adjacent display time, with at most 650ms delay relative to speech.
+    # A short word/card must not truncate the previous readable card.
+    timings=[]
+    cursor=0.
+    for group in groups:
+        a,b=group[0][0],group[-1][1]
+        label=' '.join(x[2] for x in group)
+        begin=max(a,cursor)
+        end=min(length,max(b+.15,begin+len(label)/28+.02,begin+.8))
+        if begin-a>.65 or end-b>.65:
+            timings=[]
+            break  # Genuine fast speech retains the original strict QA rejection.
+        timings.append((begin,end))
+        cursor=end+.02
     events=[]
     for i,group in enumerate(groups):
         a,b=group[0][0],group[-1][1]
         label=' '.join(x[2] for x in group).replace('\\','').replace('{','(').replace('}',')').replace('\n',' ')
         next_start=groups[i+1][0][0] if i+1<len(groups) else length+.02
         end=min(length,max(a+.8,b+.15,a+len(label)/24),next_start-.02)
+        if timings:
+            a,end=timings[i]
         lines=wrap_card(label)
         display='\\N'.join(lines)
         events.append(f'Dialogue: 0,{ass_time(a)},{ass_time(end)},TikTok,,0,0,0,,{display}')
