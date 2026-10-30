@@ -3279,7 +3279,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-10-30T23:10:38Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -3314,7 +3314,10 @@
       "reservation_id": "0fe2de55-f4c6-4b67-9c9c-fda68252f1b6",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
       "buffer_handle": "dreamvoid26",
-      "buffer_due_at": "2026-10-31T13:00:00+00:00"
+      "buffer_due_at": "2026-10-31T13:00:00.000Z",
+      "buffer_post_id": "6ae5261aa114574349752d84",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-10-30T23:19:36.566878+00:00"
     },
     {
       "clip_id": "UgliestImpossibleSkunkHotPokket-Ne7Ke0SbItuxKHQR",
