@@ -3417,7 +3417,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-10-30T23:10:38Z",
-      "status": "approved_for_distribution",
+      "status": "buffer_submission_pending",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -3447,7 +3447,12 @@
       "editorial_review_status": "automatic_checks_passed",
       "quality_score_verified": false,
       "quality_score": null,
-      "approval_method": "automatic_machine_checks"
+      "approval_method": "automatic_machine_checks",
+      "reserved_for": "sunshine",
+      "reservation_id": "93894739-6623-48b9-bbcc-e1b9513f0461",
+      "buffer_channel_id": "6ade2e8c2f1f5ed648cabd2c",
+      "buffer_handle": "suhshine28",
+      "buffer_due_at": "2026-10-31T13:00:00+00:00"
     }
   ],
   "processed_ids": [
