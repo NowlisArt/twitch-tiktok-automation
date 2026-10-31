@@ -3932,7 +3932,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-10-31T15:51:51Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -3967,7 +3967,10 @@
       "reservation_id": "fd369948-34d2-4423-8630-f5ce1d0e1c28",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-10-31T18:00:00+00:00"
+      "buffer_due_at": "2026-10-31T18:00:00.000Z",
+      "buffer_post_id": "6ae6110237c1acd2a0b9da90",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-10-31T16:02:06.945519+00:00"
     },
     {
       "clip_id": "IntelligentJoyousSkunkBuddhaBar-GXvIqTHAjFWUkKcn",
