@@ -3490,7 +3490,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-10-31T02:41:36Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -3525,7 +3525,10 @@
       "reservation_id": "fc62525e-4c94-41e3-a55f-6cd264916d64",
       "buffer_channel_id": "6adfa6322f1f5ed648ddec86",
       "buffer_handle": "pure.life.26",
-      "buffer_due_at": "2026-10-31T13:00:00+00:00"
+      "buffer_due_at": "2026-10-31T13:00:00.000Z",
+      "buffer_post_id": "6ae55a63406ab8a01896c5dc",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-10-31T03:01:55.178678+00:00"
     },
     {
       "clip_id": "TransparentObliqueWeaselHeyGuys-MZHSKe9eSncCePWv",
