@@ -3624,7 +3624,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-10-31T02:41:36Z",
-      "status": "approved_for_distribution",
+      "status": "buffer_submission_pending",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -3654,7 +3654,12 @@
       "editorial_review_status": "automatic_checks_passed",
       "quality_score_verified": false,
       "quality_score": null,
-      "approval_method": "automatic_machine_checks"
+      "approval_method": "automatic_machine_checks",
+      "reserved_for": "novel",
+      "reservation_id": "ca8c573c-b0b9-40bc-a43d-d6b54d13b71f",
+      "buffer_channel_id": "6ae262582f1f5ed648022a42",
+      "buffer_handle": "novel.novel601",
+      "buffer_due_at": "2026-10-31T13:00:00+00:00"
     },
     {
       "clip_id": "PlainWittyDolphinUncleNox-p4AUqXWo7QIipEY8",
