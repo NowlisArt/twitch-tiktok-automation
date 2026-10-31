@@ -3778,7 +3778,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-10-31T09:56:20Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -3813,7 +3813,10 @@
       "reservation_id": "0c213bea-e550-49ed-b1fe-5d55655ed53f",
       "buffer_channel_id": "6ade2e8c2f1f5ed648cabd2c",
       "buffer_handle": "suhshine28",
-      "buffer_due_at": "2026-10-31T16:00:00+00:00"
+      "buffer_due_at": "2026-10-31T16:00:00.000Z",
+      "buffer_post_id": "6ae5bfa7406ab8a018b054ed",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-10-31T10:14:30.021964+00:00"
     },
     {
       "clip_id": "ThoughtfulDarlingVultureRlyTho-bopgRP4XXWQ1kJWM",
