@@ -4520,7 +4520,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-01T19:09:03Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -4555,7 +4555,10 @@
       "reservation_id": "2de2eddc-3ca3-4733-b756-3d56c23c21e4",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-01T20:00:00+00:00"
+      "buffer_due_at": "2026-11-01T20:00:00.000Z",
+      "buffer_post_id": "6ae790de4117739647984ece",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-01T19:19:45.482177+00:00"
     },
     {
       "clip_id": "BoredEnchantingLarkBabyRage-4bD-nmXPfBphD_2g",
