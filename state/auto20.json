@@ -4749,7 +4749,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-01T23:00:24Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -4784,7 +4784,10 @@
       "reservation_id": "a461fa2a-e663-4c06-89b0-e2b79a181686",
       "buffer_channel_id": "6ade2e8c2f1f5ed648cabd2c",
       "buffer_handle": "suhshine28",
-      "buffer_due_at": "2026-11-02T10:00:00+00:00"
+      "buffer_due_at": "2026-11-02T10:00:00.000Z",
+      "buffer_post_id": "6ae7ca3d779ee9f13cbef4a2",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-01T23:24:40.570432+00:00"
     },
     {
       "clip_id": "SpeedyGracefulPorpoiseHeyGuys-ldeZbXttLHneZIws",
