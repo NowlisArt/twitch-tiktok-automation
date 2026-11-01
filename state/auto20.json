@@ -4597,7 +4597,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-01T19:09:03Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -4636,7 +4636,10 @@
       "reservation_id": "eeda29f0-50db-4ed0-a062-e1264bff4246",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
       "buffer_handle": "dreamvoid26",
-      "buffer_due_at": "2026-11-02T10:00:00+00:00"
+      "buffer_due_at": "2026-11-02T10:00:00.000Z",
+      "buffer_post_id": "6ae7c4872da2578c1888548b",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-01T23:00:17.660054+00:00"
     },
     {
       "clip_id": "ShakingTrustworthyHeronUWot-8cY6Rg_zzdRP7H44",
