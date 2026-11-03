@@ -83,6 +83,14 @@ def verify(video, subtitles, duration, expected_text, source_confidence, transcr
     agreement = min(transcript_agreement(expected_text, observed_text),
                     transcript_agreement(captions['text'], observed_text))
     confidence = min(source_confidence, getattr(transcribe, 'last_confidence', -99))
+    print('TRANSCRIPT QA', json.dumps({
+        'source_render_agreement': round(transcript_agreement(expected_text, observed_text), 4),
+        'caption_render_agreement': round(transcript_agreement(captions['text'], observed_text), 4),
+        'source_word_count': len(words(expected_text)),
+        'caption_word_count': len(words(captions['text'])),
+        'rendered_word_count': len(words(observed_text)),
+        'minimum_agreement': POLICY['minimum_transcript_agreement'],
+        'minimum_confidence': round(confidence, 4)}), flush=True)
     if agreement < POLICY['minimum_transcript_agreement']:
         raise ValueError('Rendered audio/caption transcript mismatch')
     if confidence < POLICY['minimum_avg_logprob']:
