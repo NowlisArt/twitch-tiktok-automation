@@ -6002,7 +6002,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-04T16:31:22Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -6037,7 +6037,10 @@
       "reservation_id": "367bf2ab-947a-491e-9a9d-33fe7c89d2d2",
       "buffer_channel_id": "6adfa6322f1f5ed648ddec86",
       "buffer_handle": "pure.life.26",
-      "buffer_due_at": "2026-11-04T18:00:00+00:00"
+      "buffer_due_at": "2026-11-04T18:00:00.000Z",
+      "buffer_post_id": "6aeb5f8cacc4680b0b55a5c4",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-04T16:37:50.378731+00:00"
     },
     {
       "clip_id": "NaiveFamousCoffeeGrammarKing-1Nqbn91xL6By3JhA",
