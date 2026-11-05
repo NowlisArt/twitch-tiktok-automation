@@ -6616,7 +6616,11 @@
       "editorial_review_status": "automatic_checks_passed",
       "quality_score_verified": false,
       "quality_score": null,
-      "approval_method": "automatic_machine_checks"
+      "approval_method": "automatic_machine_checks",
+      "media_fetch_error": {
+        "at": "2026-11-05T02:53:48.176014+00:00",
+        "reason": "temporary_public_media_unavailable"
+      }
     }
   ],
   "processed_ids": [
