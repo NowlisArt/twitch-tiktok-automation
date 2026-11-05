@@ -6440,7 +6440,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-05T02:44:23Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -6475,7 +6475,10 @@
       "reservation_id": "faee91f9-6a5c-49a1-a343-f33cc7b7e2e9",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-05T10:00:00+00:00"
+      "buffer_due_at": "2026-11-05T10:00:00.000Z",
+      "buffer_post_id": "6aebefc0bc551efdea3b3475",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-05T02:53:48.176014+00:00"
     },
     {
       "clip_id": "CourageousProudVultureFreakinStinkin-tw3e7Csedr4xMfiv",
