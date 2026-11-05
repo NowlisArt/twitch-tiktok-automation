@@ -6671,7 +6671,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-05T11:27:19Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -6706,7 +6706,10 @@
       "reservation_id": "04d24029-e22b-4b09-bb4c-92f54be6e5ea",
       "buffer_channel_id": "6ade2e8c2f1f5ed648cabd2c",
       "buffer_handle": "suhshine28",
-      "buffer_due_at": "2026-11-05T13:00:00+00:00"
+      "buffer_due_at": "2026-11-05T13:00:00.000Z",
+      "buffer_post_id": "6aec6b63f5b4b5564cb5265c",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-05T11:41:08.039626+00:00"
     },
     {
       "clip_id": "ResourcefulWanderingBeanCmonBruh-qdqXXAPw-hYPW5Yi",
