@@ -7190,7 +7190,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-05T21:54:12Z",
-      "status": "approved_for_distribution",
+      "status": "buffer_submission_pending",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -7220,7 +7220,12 @@
       "editorial_review_status": "automatic_checks_passed",
       "quality_score_verified": false,
       "quality_score": null,
-      "approval_method": "automatic_machine_checks"
+      "approval_method": "automatic_machine_checks",
+      "reserved_for": "purelife",
+      "reservation_id": "1a5c9624-ee7c-4066-b5ed-74f4db49f803",
+      "buffer_channel_id": "6adfa6322f1f5ed648ddec86",
+      "buffer_handle": "pure.life.26",
+      "buffer_due_at": "2026-11-06T10:00:00+00:00"
     }
   ],
   "processed_ids": [
