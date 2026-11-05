@@ -7117,7 +7117,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-05T21:54:12Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -7152,7 +7152,10 @@
       "reservation_id": "0d73a1ff-c7d8-4e82-97a8-ff8ff536fbaa",
       "buffer_channel_id": "6ade2e8c2f1f5ed648cabd2c",
       "buffer_handle": "suhshine28",
-      "buffer_due_at": "2026-11-06T10:00:00+00:00"
+      "buffer_due_at": "2026-11-06T10:00:00.000Z",
+      "buffer_post_id": "6aecfdddaa25a700b8da18f3",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-05T22:04:51.288196+00:00"
     },
     {
       "clip_id": "NaiveEnthusiasticFloofEleGiggle-j_bmrbGzR5r0hsMq",
