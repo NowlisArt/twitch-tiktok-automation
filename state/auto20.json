@@ -7344,7 +7344,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-06T01:01:35Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -7379,7 +7379,10 @@
       "reservation_id": "f579f561-cbd9-42bd-8778-81dd30b25196",
       "buffer_channel_id": "6ade2e8c2f1f5ed648cabd2c",
       "buffer_handle": "suhshine28",
-      "buffer_due_at": "2026-11-06T13:00:00+00:00"
+      "buffer_due_at": "2026-11-06T13:00:00.000Z",
+      "buffer_post_id": "6aed2bb17b7e47e8f4fd88d2",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-06T01:21:15.051886+00:00"
     },
     {
       "clip_id": "HealthyGleamingFalconAMPEnergy-sN5d5Q5tCwkudEBL",
