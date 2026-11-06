@@ -7555,7 +7555,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-06T07:19:23Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -7590,7 +7590,10 @@
       "reservation_id": "a439e833-ede2-4f69-93de-ef555ff01ba2",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-06T13:00:00+00:00"
+      "buffer_due_at": "2026-11-06T13:00:00.000Z",
+      "buffer_post_id": "6aed847edbada656befe3251",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-06T07:40:41.789751+00:00"
     },
     {
       "clip_id": "CheerfulCuteSproutDoubleRainbow-UHDS5Ak2jANXO7mM",
