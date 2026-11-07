@@ -8386,7 +8386,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-07T15:04:22Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -8421,7 +8421,10 @@
       "reservation_id": "8a3df0c3-1082-4840-ae49-3008199f4127",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
       "buffer_handle": "dreamvoid26",
-      "buffer_due_at": "2026-11-07T16:00:00+00:00"
+      "buffer_due_at": "2026-11-07T16:00:00.000Z",
+      "buffer_post_id": "6aef4380004e4879a76499d0",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-07T15:26:54.121757+00:00"
     },
     {
       "clip_id": "BoredSaltyHareM4xHeh-k9vI9lLIHRCik7HM",
