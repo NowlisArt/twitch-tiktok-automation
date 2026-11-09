@@ -9195,7 +9195,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-09T08:38:31Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -9230,7 +9230,10 @@
       "reservation_id": "db1d5afb-a55b-4936-ac23-92b517eea460",
       "buffer_channel_id": "6adfa6322f1f5ed648ddec86",
       "buffer_handle": "pure.life.26",
-      "buffer_due_at": "2026-11-09T10:00:00+00:00"
+      "buffer_due_at": "2026-11-09T10:00:00.000Z",
+      "buffer_post_id": "6af18bbde29b1359f0e10068",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-09T08:59:53.347539+00:00"
     },
     {
       "clip_id": "ConfidentScaryAsparagusChefFrank-8oV8F7Olq0irpQqp",
