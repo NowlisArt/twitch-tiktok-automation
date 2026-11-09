@@ -8976,7 +8976,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-09T01:11:17Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -9011,7 +9011,10 @@
       "reservation_id": "2f0ca399-7735-409f-a986-2aebd9b4e460",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-09T10:00:00+00:00"
+      "buffer_due_at": "2026-11-09T10:00:00.000Z",
+      "buffer_post_id": "6af120f5229bf05dafe745ba",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-09T01:24:05.706958+00:00"
     }
   ],
   "processed_ids": [
