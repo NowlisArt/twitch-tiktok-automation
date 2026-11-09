@@ -9351,7 +9351,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-09T13:44:04Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -9390,7 +9390,10 @@
       "reservation_id": "07d465a4-8f1c-4b9c-81a0-8753bce5cad4",
       "buffer_channel_id": "6adfa6322f1f5ed648ddec86",
       "buffer_handle": "pure.life.26",
-      "buffer_due_at": "2026-11-09T18:00:00+00:00"
+      "buffer_due_at": "2026-11-09T18:00:00.000Z",
+      "buffer_post_id": "6af1f9306de9b6a6d7806f82",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-09T16:47:38.699111+00:00"
     }
   ],
   "processed_ids": [
