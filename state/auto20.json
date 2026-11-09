@@ -9049,7 +9049,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-09T08:38:31Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -9084,7 +9084,10 @@
       "reservation_id": "d0f56c45-0d0d-414e-8487-f615e24f65e1",
       "buffer_channel_id": "6ade2e8c2f1f5ed648cabd2c",
       "buffer_handle": "suhshine28",
-      "buffer_due_at": "2026-11-09T10:00:00+00:00"
+      "buffer_due_at": "2026-11-09T10:00:00.000Z",
+      "buffer_post_id": "6af18baee44ddbb57c457e30",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-09T08:59:53.347539+00:00"
     },
     {
       "clip_id": "HealthySillyFlyKappaWealth-KpvRWQtByC9otWGd",
