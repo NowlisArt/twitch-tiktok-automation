@@ -9803,7 +9803,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-10T11:40:48Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -9838,7 +9838,10 @@
       "reservation_id": "83ac0d14-784e-431e-90fb-3ddce2b68752",
       "buffer_channel_id": "6adfa6322f1f5ed648ddec86",
       "buffer_handle": "pure.life.26",
-      "buffer_due_at": "2026-11-10T13:00:00+00:00"
+      "buffer_due_at": "2026-11-10T13:00:00.000Z",
+      "buffer_post_id": "6af3052607659da4c6d6e55c",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-10T11:50:57.206695+00:00"
     },
     {
       "clip_id": "BigTenaciousMonkeyDoritosChip-Ro2vB79msiDqMthH",
