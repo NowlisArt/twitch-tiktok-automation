@@ -10022,7 +10022,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-10T19:58:41Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -10057,7 +10057,10 @@
       "reservation_id": "d55f0977-49ac-4615-a66d-5080f3b3af57",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
       "buffer_handle": "dreamvoid26",
-      "buffer_due_at": "2026-11-11T10:00:00+00:00"
+      "buffer_due_at": "2026-11-11T10:00:00.000Z",
+      "buffer_post_id": "6af37983c0addee3a314929d",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-10T20:06:15.948645+00:00"
     }
   ],
   "processed_ids": [
