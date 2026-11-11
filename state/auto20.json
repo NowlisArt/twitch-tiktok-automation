@@ -9953,7 +9953,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-10T19:58:41Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -9992,7 +9992,10 @@
       "reservation_id": "0322df20-69e0-4337-a653-9e174799caea",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-11T10:00:00+00:00"
+      "buffer_due_at": "2026-11-11T10:00:00.000Z",
+      "buffer_post_id": "6af3bc266be08f4f9c780f54",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-11T00:51:44.691067+00:00"
     },
     {
       "clip_id": "BlushingStylishEggnogTheThing-An9xkq92FE25-5n_",
