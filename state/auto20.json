@@ -10693,7 +10693,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-12T21:03:17Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -10728,7 +10728,10 @@
       "reservation_id": "17483563-9286-4487-89d9-64e27e0af136",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-13T10:00:00+00:00"
+      "buffer_due_at": "2026-11-13T10:00:00.000Z",
+      "buffer_post_id": "6af62e45a01fb6efee4ca829",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-12T21:22:36.698005+00:00"
     },
     {
       "clip_id": "ProudThoughtfulChimpanzeeDoritosChip-FZpc41h74N34wAkT",
