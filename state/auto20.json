@@ -10547,7 +10547,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-12T21:03:17Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -10582,7 +10582,10 @@
       "reservation_id": "16c8264f-795e-493f-bf77-3a40a0cadd79",
       "buffer_channel_id": "6ade2e8c2f1f5ed648cabd2c",
       "buffer_handle": "suhshine28",
-      "buffer_due_at": "2026-11-13T10:00:00+00:00"
+      "buffer_due_at": "2026-11-13T10:00:00.000Z",
+      "buffer_post_id": "6af62e3e48a8bf93e4272c15",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-12T21:22:36.698005+00:00"
     },
     {
       "clip_id": "MoldyResilientKoupreyPicoMause-7LRs398_wmBR3EJr",
