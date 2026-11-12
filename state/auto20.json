@@ -10620,7 +10620,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-12T21:03:17Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -10655,7 +10655,10 @@
       "reservation_id": "cb7c772e-cfd3-4d12-ba95-a921931d3a34",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
       "buffer_handle": "dreamvoid26",
-      "buffer_due_at": "2026-11-13T10:00:00+00:00"
+      "buffer_due_at": "2026-11-13T10:00:00.000Z",
+      "buffer_post_id": "6af62e42f8f0d4b832a01a19",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-12T21:22:36.698005+00:00"
     },
     {
       "clip_id": "HonestShortMoosePanicVis-xPw51P2y6aGo16gQ",
