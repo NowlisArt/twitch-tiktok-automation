@@ -22,7 +22,7 @@ WATCHLIST = json.loads(Path('config/watchlist.json').read_text(encoding='utf-8')
 UTC = dt.timezone.utc
 STATE = Path('state/auto20.json')
 OUT = Path('rendered')
-CAPTION_LAYOUT_VERSION = 2
+CAPTION_LAYOUT_VERSION = 3
 STREAMERS = '''eliasn97 zarbex papaplatte trymacs canerkrd krokoboss xrohat montanablack88 gamerbrother kubafps bonjwa xthesolutiontv handofblood noway4u_sir metashi12 gronkhtv gronkh tolkin gtasty orangemorange schradin dhalucard shlorox mertabimula rumathra elotrix bastighg maxim dracon staiy spontent marli onlyjson naguura phunkroyal niklaswilson pietsmiet scurrows h0llylp rezo letshugotv edopeh amar sterzik repaz gtimetv mckytv rezonfn fregepaul coachlim'''.split()
 RANK = {name: idx + 1 for idx, name in enumerate(STREAMERS)}
 STREAMERS = WATCHLIST['channels']
@@ -565,12 +565,12 @@ def transcribe(path):
     print('ASR CONFIDENCE', round(quality,3), 'words', len(words), flush=True)
     return words
 
-def pick_window(duration, words):
-    """Trim at speech/pause boundaries and prefer complete endings, not random seconds."""
+def ranked_windows(duration, words):
+    """Yield distinct cuts at speech boundaries in editorial preference order."""
     if not words:
         raise ValueError('Cannot cut without speech timing')
     if duration <= 20:
-        return 0.0, round(duration, 2)
+        yield 0.0, round(duration, 2)
     start_candidates = {0.0}
     end_candidates = {round(duration, 2)}
     for i, (a, b, word) in enumerate(words):
@@ -578,7 +578,7 @@ def pick_window(duration, words):
             start_candidates.add(round(max(0.0, a - 0.35), 2))
         if i == len(words)-1 or words[i+1][0] - b >= 0.65 or re.search(r'[.!?…]$', word):
             end_candidates.add(round(min(duration, b + 0.35), 2))
-    best = None
+    cuts = []
     target = min(32.0, duration - 0.4)
     for start in sorted(start_candidates):
         for end in sorted(end_candidates):
@@ -601,18 +601,46 @@ def pick_window(duration, words):
             score_value -= abs(length - target) * 0.13
             if start == 0:
                 score_value += 0.2
-            if best is None or score_value > best[0]:
-                best = (score_value, start, length)
-    if best is None:
+            cuts.append((score_value, start, length))
+    seen = {(0.0, round(duration, 2))} if duration <= 20 else set()
+    for _, start, length in sorted(cuts, key=lambda row: -row[0]):
+        cut = round(start, 2), round(length, 2)
+        if cut not in seen:
+            seen.add(cut)
+            yield cut
+
+
+def pick_window(duration, words):
+    """Prefer complete endings over arbitrary time cuts."""
+    cut = next(ranked_windows(duration, words), None)
+    if cut is None:
         raise ValueError('No coherent 15-42s speech window; try next clip')
-    return round(best[1], 2), round(best[2], 2)
+    return cut
+
+
+def readable_caption_window(duration, words, first, path):
+    """Try a few distinct alternatives without transcribing or rendering again."""
+    if write_subs(words, *first, path):
+        return first
+    tried = [first]
+    for cut in ranked_windows(duration, words):
+        # Ignore near copies that retain essentially the same speech.
+        if any(abs(cut[0] - a) < 1 and abs(sum(cut) - (a + b)) < 1 for a, b in tried):
+            continue
+        tried.append(cut)
+        if write_subs(words, *cut, path, log_failure=False):
+            print('CAPTION QA RECOVERED WITH ALTERNATE CUT', cut, flush=True)
+            return cut
+        if len(tried) >= 8:
+            break
+    return None
 
 def ass_time(seconds):
     ticks = int(max(0, seconds) * 100)
     return f'{ticks // 360000}:{(ticks // 6000) % 60:02}:{(ticks // 100) % 60:02}.{ticks % 100:02}'
 
 
-def write_subs(words, start, length, path):
+def write_subs(words, start, length, path, *, log_failure=True):
     def wrap_card(text):
         return textwrap.wrap(text,28,break_long_words=True,break_on_hyphens=False)
 
@@ -679,7 +707,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     path.write_text(header+'\n'.join(events)+'\n',encoding='utf-8')
     from auto_qa import caption_checks
     checks=caption_checks(path,length)
-    if not checks['passed']:
+    if log_failure and not checks['passed']:
         print('CAPTION QA FAILED',json.dumps({'reasons':checks['reasons'],'cue_count':checks['cue_count']}),flush=True)
     return checks['passed']
 
@@ -772,10 +800,16 @@ def render(clip, source):
     (OUT / 'headline.txt').write_text(
         '\n'.join(textwrap.wrap(headline(clip), 21, break_long_words=False)[:3]),
         encoding='utf-8')
-    has_subs = write_subs(words, start, length, OUT / 'subs.ass') if words else False
-    if not has_subs and os.getenv('ENABLE_AUTO_QA') == 'true':
-        raise ValueError('Unreadable or missing captions; skip before expensive render')
     automatic = os.getenv('ENABLE_AUTO_QA') == 'true'
+    subtitles = OUT / 'subs.ass'
+    if automatic:
+        cut = readable_caption_window(duration, words, (start, length), subtitles) if words else None
+        if cut is None:
+            raise ValueError('Unreadable or missing captions; skip before expensive render')
+        start, length = cut
+        has_subs = True
+    else:
+        has_subs = write_subs(words, start, length, subtitles) if words else False
     if automatic:
         from auto_qa import motion_check
         if not motion_check(source, start, length):

@@ -133,10 +133,27 @@ class CaptionPackingRegressionTests(unittest.TestCase):
         stamp=NOW.isoformat()
         state={'failed_attempts':{
             'old-layout':{'at':stamp,'reason':'Unreadable or missing captions'},
-            'current-layout':{'at':stamp,'reason':'Unreadable or missing captions','caption_layout_version':2},
+            'current-layout':{'at':stamp,'reason':'Unreadable or missing captions',
+                              'caption_layout_version':pipeline.CAPTION_LAYOUT_VERSION},
             'no-speech':{'at':stamp,'reason':'Insufficient reliable speech'},
             'network':{'at':stamp,'reason':'Download timed out'}}}
         self.assertEqual({'current-layout','no-speech','network'},pipeline.current_failed_ids(state,NOW))
+
+    def test_alternate_cut_recovers_readable_captions_without_changing_limits(self):
+        fast = [(i*.35,(i+1)*.35,'Geschwindigkeiten') for i in range(18)]
+        calm = [(9+i*1.3,10+i*1.3,w) for i,w in enumerate(
+            'Jetzt ist das Tempo normal. Wir können wieder ruhig weiterreden. Das ist besser.'.split())]
+        words = fast + calm
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp)/'subs.ass'
+            first = pipeline.pick_window(29,words)
+            self.assertFalse(pipeline.write_subs(words,*first,path))
+            cut = pipeline.readable_caption_window(29,words,first,path)
+            self.assertIsNotNone(cut)
+            result = auto_qa.caption_checks(path,cut[1])
+            self.assertTrue(result['passed'],result['reasons'])
+            self.assertEqual([w for a,b,w in words if a>=cut[0] and b<=sum(cut)],
+                             result['text'].split())
 
     def test_long_german_words_form_two_line_cards_without_losing_speech(self):
         words=['Geschwindigkeiten','Unglaublicherweise','Aufmerksamkeit']*3
