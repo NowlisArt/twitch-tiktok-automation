@@ -10912,7 +10912,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-13T02:05:45Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -10947,7 +10947,10 @@
       "reservation_id": "05e4c3a0-4922-441c-b98b-a4cae545f732",
       "buffer_channel_id": "6ade2e8c2f1f5ed648cabd2c",
       "buffer_handle": "suhshine28",
-      "buffer_due_at": "2026-11-13T13:00:00+00:00"
+      "buffer_due_at": "2026-11-13T13:00:00.000Z",
+      "buffer_post_id": "6af6734afb90ccefdd13266c",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-13T02:17:06.615857+00:00"
     },
     {
       "clip_id": "CarelessFlaccidLarkFeelsBadMan-C4tRLpZu13ItwC15",
