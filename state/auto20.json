@@ -11670,7 +11670,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-14T14:27:14Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -11709,7 +11709,10 @@
       "reservation_id": "c0ea22c1-d6ab-4cd4-ad0f-d08482b9fdba",
       "buffer_channel_id": "6adfa6322f1f5ed648ddec86",
       "buffer_handle": "pure.life.26",
-      "buffer_due_at": "2026-11-14T20:00:00+00:00"
+      "buffer_due_at": "2026-11-14T20:00:00.000Z",
+      "buffer_post_id": "6af8b603e5a113497aa33002",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-14T19:26:56.188396+00:00"
     },
     {
       "clip_id": "WanderingCuriousZebraBCWarrior-H8CNOIcMn7P7nAPG",
