@@ -12580,7 +12580,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-15T23:07:49Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -12615,7 +12615,10 @@
       "reservation_id": "aeb8a412-5c9e-4269-aebd-4d1d0947621c",
       "buffer_channel_id": "6ad6c095778b240e2f624d3b",
       "buffer_handle": "dreamvoid26",
-      "buffer_due_at": "2026-11-16T10:00:00+00:00"
+      "buffer_due_at": "2026-11-16T10:00:00.000Z",
+      "buffer_post_id": "6afa3cef60a910801c545b15",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-15T23:14:19.181265+00:00"
     },
     {
       "clip_id": "RepleteTenaciousOysterPJSalt-WgRgOkuXzQysj8wS",
