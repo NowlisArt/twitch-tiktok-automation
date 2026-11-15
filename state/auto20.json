@@ -12357,7 +12357,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-15T17:57:49Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -12392,7 +12392,10 @@
       "reservation_id": "447aace2-a1dc-4081-b218-8529e944c758",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-15T20:00:00+00:00"
+      "buffer_due_at": "2026-11-15T20:00:00.000Z",
+      "buffer_post_id": "6af9f8c855ad64be504d88d6",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-15T18:23:02.733556+00:00"
     },
     {
       "clip_id": "MuddyUgliestAsparagusHotPokket-LD49ILldn4eq8yI8",
