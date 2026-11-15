@@ -12280,7 +12280,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-15T11:26:58Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -12315,7 +12315,10 @@
       "reservation_id": "de0c6ea5-37be-434f-8809-5cb09b9fa7d3",
       "buffer_channel_id": "6ade2e8c2f1f5ed648cabd2c",
       "buffer_handle": "suhshine28",
-      "buffer_due_at": "2026-11-15T13:00:00+00:00"
+      "buffer_due_at": "2026-11-15T13:00:00.000Z",
+      "buffer_post_id": "6af99ac9e86a5789a608d71f",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-15T11:42:32.374950+00:00"
     }
   ],
   "processed_ids": [
