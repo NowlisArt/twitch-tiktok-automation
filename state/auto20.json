@@ -12653,7 +12653,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-15T23:07:49Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -12688,7 +12688,10 @@
       "reservation_id": "3f67f2b6-74e6-40e1-9867-49a5c80faaf4",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-16T10:00:00+00:00"
+      "buffer_due_at": "2026-11-16T10:00:00.000Z",
+      "buffer_post_id": "6afa3cf2ff465c57dabb5137",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-15T23:14:19.181265+00:00"
     },
     {
       "clip_id": "PoliteChillyCheddarMoreCowbell-4wxTMxIClPOPkmki",
