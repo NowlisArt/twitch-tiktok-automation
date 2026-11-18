@@ -297,7 +297,7 @@ def collect_accounts(configured):
                 checked_keys.add(key_name)
             queue = fetch_posts(org, account)
         except Exception as exc:
-            if not account.get('optional'):
+            if not account.get('optional') and not (isinstance(exc, RuntimeError) and str(exc).startswith('Buffer HTTP 401;')):
                 raise
             blocked.append({'id': account['id'], 'reason': 'verification_failed', 'error_type': type(exc).__name__})
             continue
