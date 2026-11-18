@@ -13172,7 +13172,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-17T23:16:34Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -13207,7 +13207,10 @@
       "reservation_id": "266de26e-9e75-428b-999c-0be966ac90a9",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-19T13:00:00+00:00"
+      "buffer_due_at": "2026-11-19T13:00:00.000Z",
+      "buffer_post_id": "6afe3a314cace847b381ac30",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-18T23:52:10.452195+00:00"
     },
     {
       "clip_id": "ArtisticGentleYogurtTwitchRaid-S4lVvdMc3CvBAI6J",
