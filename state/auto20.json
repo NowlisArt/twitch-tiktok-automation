@@ -13610,7 +13610,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-18T23:52:22Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -13645,7 +13645,10 @@
       "reservation_id": "abef8f9f-1e03-4f04-8db6-623ba8b33368",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-20T13:00:00+00:00"
+      "buffer_due_at": "2026-11-20T13:00:00.000Z",
+      "buffer_post_id": "6afefe6acac0791c5d8c67a5",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-19T13:49:23.446150+00:00"
     },
     {
       "clip_id": "CalmElatedPrariedog4Head-r1jQrPTSP5J2vEkV",
