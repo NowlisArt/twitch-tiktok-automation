@@ -13689,7 +13689,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-19T03:49:10Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -13724,7 +13724,10 @@
       "reservation_id": "8ed24c19-4476-4b63-ab72-083f5e6c77d5",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-20T16:00:00+00:00"
+      "buffer_due_at": "2026-11-20T16:00:00.000Z",
+      "buffer_post_id": "6aff775c5a09fa1760f28f7e",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-19T22:25:28.613051+00:00"
     },
     {
       "clip_id": "SeductiveCredulousMonitorGivePLZ-uCewVuJyBaHZSRbt",
