@@ -14202,7 +14202,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-19T13:49:32Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -14237,7 +14237,10 @@
       "reservation_id": "8b74e505-a3dc-47df-a6fd-8eb9314ee940",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-21T18:00:00+00:00"
+      "buffer_due_at": "2026-11-21T18:00:00.000Z",
+      "buffer_post_id": "6b00bbd0dd205ed779998773",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-20T21:29:45.829947+00:00"
     },
     {
       "clip_id": "RockyDeadHeronRedCoat-_3-Uexjte8o8-u9V",
