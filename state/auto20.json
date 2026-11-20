@@ -13977,7 +13977,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-19T13:49:32Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -14012,7 +14012,10 @@
       "reservation_id": "d56e2a27-7781-4822-a696-241f2cb39782",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-21T10:00:00+00:00"
+      "buffer_due_at": "2026-11-21T10:00:00.000Z",
+      "buffer_post_id": "6b004bc877e195b722053a7a",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-20T13:31:49.173044+00:00"
     },
     {
       "clip_id": "DignifiedEndearingDotterelMVGame-uyYcerHqX-Y4vC40",
