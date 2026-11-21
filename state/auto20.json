@@ -14805,7 +14805,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-20T13:31:57Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -14840,7 +14840,10 @@
       "reservation_id": "1cacb56b-6ba7-4a2d-97fb-20f5b7eb8ae4",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-22T10:00:00+00:00"
+      "buffer_due_at": "2026-11-22T10:00:00.000Z",
+      "buffer_post_id": "6b018356943aa0abf4529c8c",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-21T11:41:06.769389+00:00"
     },
     {
       "clip_id": "SquareWittyLaptopFutureMan-CxC7OBJXoQGVpd9G",
