@@ -14884,7 +14884,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-20T13:31:57Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -14919,7 +14919,10 @@
       "reservation_id": "2c052611-6131-43b0-a9e9-1b9242cd4ba6",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-22T13:00:00+00:00"
+      "buffer_due_at": "2026-11-22T13:00:00.000Z",
+      "buffer_post_id": "6b01f46c0247969092f9bdf8",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-21T19:43:36.313955+00:00"
     },
     {
       "clip_id": "TemperedProductiveDelicataMikeHogu-JgFr1TZjB4dovHIY",
