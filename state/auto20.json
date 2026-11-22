@@ -15899,7 +15899,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-21T19:43:50Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -15934,7 +15934,10 @@
       "reservation_id": "429c6a59-0975-4df5-83b4-8efb6f696f9a",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-23T10:00:00+00:00"
+      "buffer_due_at": "2026-11-23T10:00:00.000Z",
+      "buffer_post_id": "6b0324a7846b0ee907a3dc48",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-22T17:21:39.813407+00:00"
     },
     {
       "clip_id": "MiniatureRamshackleClintmullinsThisIsSparta-OklAxj9EOHl3W3i7",
