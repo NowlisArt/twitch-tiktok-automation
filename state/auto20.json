@@ -16195,7 +16195,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-22T00:38:30Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -16230,7 +16230,10 @@
       "reservation_id": "083488ea-f44a-41f7-8455-8b89503e5ba6",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-23T20:00:00+00:00"
+      "buffer_due_at": "2026-11-23T20:00:00.000Z",
+      "buffer_post_id": "6b037067846b0ee907c32b7a",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-22T22:44:47.996470+00:00"
     },
     {
       "clip_id": "ScrumptiousCharmingGoldfishKreygasm-UoF6A7lu02lK2ElY",
