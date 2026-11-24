@@ -17090,7 +17090,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-22T22:44:56Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -17125,7 +17125,10 @@
       "reservation_id": "4d43b824-8196-4f72-8ab7-3f7eb165af33",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-24T20:00:00+00:00"
+      "buffer_due_at": "2026-11-24T20:00:00.000Z",
+      "buffer_post_id": "6b04f757f0d7b1e0dea5d0f6",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-24T02:32:43.993316+00:00"
     },
     {
       "clip_id": "CautiousAstuteDragonfruitGingerPower-tJVL53V4kbgh8dIx",
