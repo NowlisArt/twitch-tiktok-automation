@@ -17171,7 +17171,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-23T03:57:35Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -17206,7 +17206,10 @@
       "reservation_id": "d33da192-8314-45f0-a493-2bb129e0f2fe",
       "buffer_channel_id": "6adfa6322f1f5ed648ddec86",
       "buffer_handle": "pure.life.26",
-      "buffer_due_at": "2026-11-24T16:00:00+00:00"
+      "buffer_due_at": "2026-11-24T16:00:00.000Z",
+      "buffer_post_id": "6b0588d6266407f9433823aa",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-24T12:53:36.260285+00:00"
     },
     {
       "clip_id": "ShyKitschyPineappleItsBoshyTime-QO3Fe2Fss2CZSXSo",
