@@ -18128,7 +18128,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-24T23:15:16Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -18163,7 +18163,10 @@
       "reservation_id": "f02ef8d4-3607-4c3f-8b7c-3dab596cd660",
       "buffer_channel_id": "6ade2e8c2f1f5ed648cabd2c",
       "buffer_handle": "suhshine28",
-      "buffer_due_at": "2026-11-25T10:00:00+00:00"
+      "buffer_due_at": "2026-11-25T10:00:00.000Z",
+      "buffer_post_id": "6b061d207faf016216347c6a",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-24T23:26:13.282737+00:00"
     },
     {
       "clip_id": "BoringObeseCockroachTwitchRaid-3byzyp9l8oekNIlv",
