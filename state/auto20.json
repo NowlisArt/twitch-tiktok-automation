@@ -19030,7 +19030,7 @@
       "watchlist_checked_at": "2026-10-25",
       "transcript_subtitles": true,
       "created_at": "2026-11-26T19:48:09Z",
-      "status": "buffer_submission_pending",
+      "status": "buffer_scheduled",
       "rights_status": "user_attested_oral",
       "video_review_status": "technical_checks_only",
       "editing_status": "single_scene_readable_caption_band_v1",
@@ -19069,7 +19069,10 @@
       "reservation_id": "213a9f6f-988d-44f2-af5a-9b5e6593f0d1",
       "buffer_channel_id": "6ae262582f1f5ed648022a42",
       "buffer_handle": "novel.novel601",
-      "buffer_due_at": "2026-11-27T10:00:00+00:00"
+      "buffer_due_at": "2026-11-27T10:00:00.000Z",
+      "buffer_post_id": "6b08f515776ce21276df1a17",
+      "buffer_last_reported_status": "scheduled",
+      "buffer_last_checked_at": "2026-11-27T03:12:17.190021+00:00"
     },
     {
       "clip_id": "ScaryCuteGoblinPanicBasket-nbVmw65h--aYK2uu",
